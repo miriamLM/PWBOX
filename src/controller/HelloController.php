@@ -200,9 +200,11 @@ class HelloController
         echo "hola2";
         if ($errors[0] == "" && $errors[1] == "" && $errors[2] == "" && $errors[3] == "" && $errors[4] == "") {            $servei($data);
             $servei($data);
+            $user = [$data['username'],$data['email'],$data['birthdate'],$data['psw'],$data['psw']];
+            var_dump($user);
             return $this->container
                 ->get('view')
-                ->render($response, 'profile.twig',['errors' => $errors]);
+                ->render($response, 'profileUpdate.twig', ['user'=> $user],['errors' => $errors]);
         }
     }
 
