@@ -1,0 +1,37 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: carmeperseguerbarragan
+ * Date: 12/4/18
+ * Time: 20:23
+ */
+
+namespace SlimApp\model\Interfaces;
+
+
+use SlimApp\model\User;
+
+interface bbddRepository
+{
+
+    //Funcio que ens guarde un nou usuari a la bbdd
+    public function save(User $user);
+
+    //Funcio que comprova si existeis el usuari, alhora de fer login
+    //public function exists($email,$psw);
+    public function exists($email,$psw);
+
+    /**
+     *Coger informacion del usuario, cuando este este logueado, para poder llegar
+     * a utilizarlo en el update
+     */
+    public function check($id);
+
+    /**
+     *   Actualiza información usuario
+     */
+
+    public function update($email,$psw);
+
+
+}

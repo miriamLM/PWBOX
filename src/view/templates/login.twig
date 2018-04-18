@@ -1,0 +1,23 @@
+{% extends "base.twig" %}
+
+{%  block content  %}
+<form action="/login" method="POST">
+    <div class="container">
+        <h1>Login</h1>
+        <hr>
+
+        <label for="email"><b>Email/Username</b></label>
+        <input type="text" placeholder="Enter Email/Username" name="email" >
+        <p>{{ errors[0] }}</p>
+
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" >
+        <p>{{ errors[1] }}</p>
+
+        <input type="submit" name="submit" value="Login">
+
+
+    </div>
+
+</form>
+{% endblock %}
