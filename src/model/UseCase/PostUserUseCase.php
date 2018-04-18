@@ -21,6 +21,9 @@ class PostUserUseCase
     public function __invoke(array $rawData) {
         $now = new \DateTime('now');
         $psswH = md5($rawData['psw']);
+
+
+
         $user = new User(
             null,
             $rawData['username'],

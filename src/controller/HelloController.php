@@ -17,6 +17,7 @@ class HelloController
     protected $container;
     const DATA = 'Y/m/d';
 
+
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -252,7 +253,8 @@ class HelloController
                 if (empty($rawData["birthdate"])) {
                     $birthErr = "Birth Date cannot be empty";
                 } else {
-                    if (!preg_match("/[0-9]{4}\/[0-9]{2}\/[0-9]{2}/", $rawData["birthdate"])) {
+                    var_dump($rawData["birthdate"]);
+                    if (!preg_match("/[0-9]{4}-[0-9]{2}-[0-9]{2}/",  $rawData["birthdate"])){
                         $birthErr = "Birthdate wrong format";
                     }
 
