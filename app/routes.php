@@ -46,7 +46,7 @@ $app->post('/profileUpdate','SlimApp\controller\HelloController:profileUpdate');
 
 $app->post('/lp','SlimApp\controller\HelloController:postLandingProfile');
 
-$app->post('/folder','SlimApp\controller\HelloController:folder');
+$app->get('/folder','SlimApp\controller\HelloController:folder');
 
 
 

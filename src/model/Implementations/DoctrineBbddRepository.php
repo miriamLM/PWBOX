@@ -85,17 +85,23 @@ class DoctrineBbddRepository implements bbddRepository
 
     public function addfile($file, $id,$id_folder)
     {
-        $sql = "INSERT INTO file(id_user,name,id_folder) VALUES(:id_user, :name,:id_folder)";
+        $sql = "INSERT INTO item(id_user,name,id_folder) VALUES(:id_user, :name,:id_folder)";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue("id_user", $id);
         $stmt->bindValue("name", $file['name'],'string');
         $stmt->bindValue("id_folder",$id_folder);
         if($stmt->execute()){
-            $sql = "SELECT COUNT(*) FROM file";
+            $sql = "SELECT COUNT(*) FROM item";
             $stmt = $this->connection->query($sql);
             $num_items= $stmt->fetchColumn();
             var_dump($num_items);
-            return $num_items;
+
+            $query = "SELECT * FROM item";
+            $info = $this->connection->fetchAll($query);
+            var_dump($info);
+
+            return [$num_items,$info];
+
         }
     }
 }

@@ -10,6 +10,8 @@ use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Dflydev\FigCookies\FigRequestCookies;
+use SlimApp\model\Item;
+
 
 class HelloController
 {
@@ -119,64 +121,6 @@ class HelloController
             ->render($response, 'dashboard.twig');
     }
 
-    public function postLandingProfile(Request $request, Response $response)
-    {
-        try {
-            if(isset($_POST['delete'])){
-                echo "ENTRA";
-                $id = $_SESSION['id'];
-                $servei= $this->container->get('delete_user_use_case');
-                $stmt = $servei($id);
-                if($stmt->execute()){
-                    echo "<script>alert('Record deleted.')</script>";
-
-                    return $this->container->get('view')->render($response, 'landing.twig');
-                }
-            }
-            if(isset($_POST['upload'])){
-                echo "entra addfile";
-                $file = $_FILES['addFile'];
-                var_dump($file);
-                $id = $_SESSION['id'];
-                $id_folder = 0;
-                $servei = $this->container->get('add_file_user_use_case');
-                $num_it = $servei($file,$id,$id_folder);
-                // Pq mho guardava com a string i ho vui amb int
-                $num_items = (int) $num_it;
-                var_dump($num_items);
-                $img = "/assets/img/file.png";
-
-                for($i=0;$i<$num_items;$i++){
-                    $array[$i] = $img;
-                    $id;
-                }
-
-                var_dump($array);
-                return $this->container
-                    ->get('view')
-                    ->render($response, 'dashboard.twig', ['img' => $array]);
-
-            }
-
-            if(isset($_POST['deleteFile'])){
-
-            }
-
-
-            if(isset($_POST['folder'])){
-                $id = $_SESSION['id'];
-                $servei = $this->container->get('folder_user_use_case');
-                $servei($id);
-
-            }
-
-        } catch (NotFoundExceptionInterface $e) {
-        } catch (ContainerExceptionInterface $e) {
-        }
-    }
-
-
-
     public function profileAction(Request $request, Response $response)
     {
         $errors = ["", "", "", "", ""];
@@ -193,6 +137,8 @@ class HelloController
         } catch (ContainerExceptionInterface $e) {
         }
     }
+
+
 
 
     public function registerMe(Request $request, Response $response)
@@ -284,6 +230,74 @@ class HelloController
         }
 
     }
+
+    public function postLandingProfile(Request $request, Response $response)
+    {
+        try {
+            if(isset($_POST['delete'])){
+                echo "ENTRA";
+                $id = $_SESSION['id'];
+                $servei= $this->container->get('delete_user_use_case');
+                $stmt = $servei($id);
+                if($stmt->execute()){
+                    echo "<script>alert('Record deleted.')</script>";
+
+                    return $this->container->get('view')->render($response, 'landing.twig');
+                }
+            }
+            if(isset($_POST['upload'])){
+                echo "entra addfile";
+                $file = $_FILES['addFile'];
+                //var_dump($file);
+                $id = $_SESSION['id'];
+                $id_folder = 0;
+                $servei = $this->container->get('add_file_user_use_case');
+
+
+                /**
+                 * Et retorna el número de fitxers
+                 * i tota la informació dels fitxers
+                 */
+                $info = $servei($file,$id,$id_folder);
+
+
+                // Pq mho guardava com a string i ho vui amb int
+                $num_items = (int) $info[0];
+               // var_dump($num_items);
+                $img = "/assets/img/file.png";
+
+
+
+                $array = [];
+                for($i=0;$i<$num_items;$i++){
+                    $item = new Item($info[1][$i]['name'],$img,$id,$info[1][$i]['id'],0);
+                    array_push($array,$item);
+                }
+
+
+
+                return $this->container
+                    ->get('view')
+                    ->render($response, 'dashboard.twig', ['item' => $array]);
+
+            }
+
+            if(isset($_POST['deleteFile'])){
+            }
+
+
+            if(isset($_POST['folder'])){
+                $id = $_SESSION['id'];
+                $servei = $this->container->get('folder_user_use_case');
+                $servei($id);
+
+            }
+
+        } catch (NotFoundExceptionInterface $e) {
+        } catch (ContainerExceptionInterface $e) {
+        }
+    }
+
 
 
 
