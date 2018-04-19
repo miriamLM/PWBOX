@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: carmeperseguerbarragan
- * Date: 10/5/18
- * Time: 9:41
+ * Date: 11/5/18
+ * Time: 12:12
  */
 
 namespace SlimApp\model\UseCase;
@@ -11,9 +11,8 @@ namespace SlimApp\model\UseCase;
 
 use SlimApp\model\Interfaces\bbddRepository;
 
-class DeleteFileUserUseCase
+class RenameFileUserUseCase
 {
-
     /** @var bbddRepository */
     private $repository;
 
@@ -23,12 +22,9 @@ class DeleteFileUserUseCase
 
     }
 
-    public function __invoke($file_id) {
+    public function __invoke($name) {
 
-        $info = $this->repository->deletefile($file_id);
+        $info = $this->repository->renamefile($name);
         return $info;
     }
-
-
-
 }

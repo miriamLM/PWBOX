@@ -124,5 +124,16 @@ $container['check_file_user_use_case'] = function($container){
     return $useCase;
 };
 
+/*
+ * Servei rename file
+ */
+
+$container['rename_file_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\RenameFileUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
 
 ?>

@@ -21,27 +21,25 @@
         <div class="upload-btn-wrapper">
             <button type="submit" class="btn" name="upload" value="upload">Upload File</button>
         </div>
+        <button type="submit" class="btn" name="folder" value="folder">Add Folder</button>
+
     </form>
 
 
 
     <form action="/lp" method="post" enctype="multipart/form-data" >
-        <button type="submit" class="btn" name="folder" value="folder">Add Folder</button>
         <br>
-
-        {% for array in item %}
-                     <div>
-                        <a href="/folder">
-                            <img src= "{{ array.img }}" width="82" height="86">
-                            <input type="text"  id="{{ array.id }}" name="nombre" value= "{{ array.nom }}"/>
-                            <button type="submit" class="btn" name="deleteFile" value="deleteFile">Delete</button>
-                            <button type="submit" class="btn" name="renameFile" value="renameFile">Rename</button>
-                        </a>
-                    </div>
-        {% endfor %}
-
-
-    </form>
+            {% for array in item %}
+                    <form action="/lp" method="post">
+                        <img src= "{{ array.img }}" width="82" height="86">
+                        <input type="text"  name="nombre" value= "{{ array.nom }}"/>
+                        <input type="hidden"  value="{{ array.id }}" name="file_id"/>
+                        <button type="submit" class="btn" name="deleteFile" value="deleteFile">Delete</button>
+                        <input type="hidden"  value="{{ array.id }}" name="file_id"/>
+                        <button type="submit" class="btn" name="renameFile" value="renameFile">Rename</button>
+                    </form>
+             {% endfor %}
+      </form>
 
 
         <br>

@@ -111,4 +111,29 @@ class DoctrineBbddRepository implements bbddRepository
         $info = $this->connection->fetchAll($query);
         return $info;
     }
+
+
+    public function deletefile($file_id){
+        $sql = "DELETE FROM item WHERE id = ? ";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(1, $file_id);
+        if($stmt->execute()){
+            $info = $this->checkfiles();
+        }
+        return $info;
+    }
+
+    public function renamefile($name)
+    {
+        $sql = "UPDATE item  AS i SET i.name = :name";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue("name", $name, 'string');
+        if($stmt->execute()){
+            $info = $this->checkfiles();
+        }
+        return $info;
+
+    }
+
+
 }

@@ -112,6 +112,23 @@ class HelloController
 
     }
 
+    public function profileAction(Request $request, Response $response)
+    {
+        $errors = ["", "", "", "", ""];
+        $id = $_SESSION['id'];
+        var_dump($id);
+        $servei = $this->container->get('check_user_use_case');
+        $user = $servei($id);
+        var_dump($user[0]);
+        try {
+            return $this->container
+                ->get('view')
+                ->render($response, 'profile.twig',['user' => $user[0]],['errors' => $errors]);
+        } catch (NotFoundExceptionInterface $e) {
+        } catch (ContainerExceptionInterface $e) {
+        }
+    }
+
     public function getLandingProfile(Request $request, Response $response)
     {
         $id = $_SESSION['id'];
@@ -139,24 +156,6 @@ class HelloController
             ->render($response, 'dashboard.twig', ['item' => $array]);
 
     }
-
-    public function profileAction(Request $request, Response $response)
-    {
-        $errors = ["", "", "", "", ""];
-        $id = $_SESSION['id'];
-        var_dump($id);
-        $servei = $this->container->get('check_user_use_case');
-        $user = $servei($id);
-        var_dump($user[0]);
-        try {
-            return $this->container
-                ->get('view')
-                ->render($response, 'profile.twig',['user' => $user[0]],['errors' => $errors]);
-        } catch (NotFoundExceptionInterface $e) {
-        } catch (ContainerExceptionInterface $e) {
-        }
-    }
-
 
 
 
@@ -253,6 +252,9 @@ class HelloController
     public function postLandingProfile(Request $request, Response $response)
     {
         try {
+            /**
+             * Delete Account
+             */
             if(isset($_POST['delete'])){
                 echo "ENTRA";
                 $id = $_SESSION['id'];
@@ -264,6 +266,10 @@ class HelloController
                     return $this->container->get('view')->render($response, 'landing.twig');
                 }
             }
+
+            /**
+             * Upload file
+             */
             if(isset($_POST['upload'])){
                 echo "entra addfile";
                 $file = $_FILES['addFile'];
@@ -301,11 +307,62 @@ class HelloController
 
             }
 
+            /**
+             * Delete file
+             */
             if(isset($_POST['deleteFile'])){
-                var_dump($id);
+                $file = $request->getParsedBody();
+                $file_id = $file['file_id'];
+                $servei = $this->container->get('delete_file_user_use_case');
+                $info = $servei($file_id);
+
+                $num_items = sizeof($info);
+
+
+
+                $img = "/assets/img/file.png";
+
+                $array = [];
+                for($i=0;$i<$num_items;$i++){
+                    $item = new Item($info[$i]['name'],$img,$info[$i]['id_user'],$info[$i]['id'],0);
+                    array_push($array,$item);
+                }
+
+                return $this->container
+                    ->get('view')
+                    ->render($response, 'dashboard.twig', ['item' => $array]);
             }
 
 
+            /**
+             * Rename file
+             */
+             if(isset($_POST['renameFile'])){
+                 $file = $request->getParsedBody();
+                 $file_name = $file['name'];
+                 $servei = $this->container->get('rename_file_user_use_case');
+                 $info = $servei($file_name);
+
+                 $num_items = sizeof($info);
+                 
+                 $img = "/assets/img/file.png";
+
+                 $array = [];
+                 for($i=0;$i<$num_items;$i++){
+                     $item = new Item($info[$i]['name'],$img,$info[$i]['id_user'],$info[$i]['id'],0);
+                     array_push($array,$item);
+                 }
+
+                 return $this->container
+                     ->get('view')
+                     ->render($response, 'dashboard.twig', ['item' => $array]);
+
+             }
+
+
+            /**
+             * Upload folder
+             */
             if(isset($_POST['folder'])){
                 $id = $_SESSION['id'];
                 $servei = $this->container->get('folder_user_use_case');

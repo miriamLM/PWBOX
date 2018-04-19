@@ -58,6 +58,17 @@ interface bbddRepository
 
     public function checkfiles();
 
+    /**
+     * Delete files
+     */
+
+    public function deletefile($file_id);
+
+    /**
+     * Rename files
+     */
+
+    public function renamefile($name);
 
 
 }
