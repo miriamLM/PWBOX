@@ -148,7 +148,7 @@ class HelloController
 
                 for($i=0;$i<$num_items;$i++){
                     $array[$i] = $img;
-                    
+                    $id;
                 }
 
                 var_dump($array);
