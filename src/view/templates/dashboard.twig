@@ -29,12 +29,13 @@
         <button type="submit" class="btn" name="folder" value="folder">Add Folder</button>
         <br>
             {% if img %}
-                {% for array in img %}
+                    {% for array in img %}
                     <a  href="/folder">
                         <img src="{{ array }}" width="82" height="86">
+                        <button type="submit" class="btn" name="deleteFile" value="deleteFile">Delete</button>
+                        <button type="submit" class="btn" name="renameFile" value="renameFile">Rename</button>
                     </a>
-                    <button type="submit" class="btn" name="deleteFile" value="deleteFile">Delete</button>
-                    <button type="submit" class="btn" name="renameFile" value="renameFile">Rename</button>
+
                  <!-- sdfghui-->
                 {% endfor %}
 

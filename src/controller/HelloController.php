@@ -146,19 +146,23 @@ class HelloController
                 var_dump($num_items);
                 $img = "/assets/img/file.png";
 
-                for($i=0;$i<=$num_items;$i++){
+                for($i=0;$i<$num_items;$i++){
                     $array[$i] = $img;
+                    
                 }
 
                 var_dump($array);
-
-
                 return $this->container
                     ->get('view')
                     ->render($response, 'dashboard.twig', ['img' => $array]);
 
+            }
+
+            if(isset($_POST['deleteFile'])){
 
             }
+
+
             if(isset($_POST['folder'])){
                 $id = $_SESSION['id'];
                 $servei = $this->container->get('folder_user_use_case');

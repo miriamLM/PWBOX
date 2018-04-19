@@ -102,5 +102,18 @@ $container['add_file_user_use_case'] = function($container){
 };
 
 
+/*
+ * Servei delete file
+ */
+
+$container['delete_file_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\DeleteFileUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+
+
 
 ?>

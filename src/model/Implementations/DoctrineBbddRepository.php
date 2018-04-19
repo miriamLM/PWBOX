@@ -97,6 +97,5 @@ class DoctrineBbddRepository implements bbddRepository
             var_dump($num_items);
             return $num_items;
         }
-
     }
 }
