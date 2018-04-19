@@ -46,4 +46,11 @@ interface bbddRepository
     public function delete($id);
 
 
+    /**
+     * Add new file
+     */
+
+    public function addfile($file,$id,$id_folder);
+
+
 }

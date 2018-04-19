@@ -80,4 +80,18 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->bindParam(1, $id);
         return $stmt;
     }
+
+
+
+    public function addfile($file, $id,$id_folder)
+    {
+        $sql = "INSERT INTO file(id_user,name,id_folder) VALUES(:id_user, :name,:id_folder)";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue("id_user", $id);
+        $stmt->bindValue("name", $file['name'],'string');
+        $stmt->bindValue("id_folder",$id_folder);
+        $stmt->execute();
+
+
+    }
 }

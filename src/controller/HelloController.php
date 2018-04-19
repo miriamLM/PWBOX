@@ -16,6 +16,7 @@ class HelloController
 
     protected $container;
     const DATA = 'Y/m/d';
+    const FOLDER_IMAGE = '/assets/img/folder.jpg';
 
 
     public function __construct(ContainerInterface $container)
@@ -109,10 +110,18 @@ class HelloController
 
     }
 
-    public function landingProfile(Request $request, Response $response)
+    public function getLandingProfile(Request $request, Response $response)
+    {
+        //$id = $_SESSION['id'];
+
+        return $this->container
+            ->get('view')
+            ->render($response, 'dashboard.twig');
+    }
+
+    public function postLandingProfile(Request $request, Response $response)
     {
         try {
-            $this->container->get('view')->render($response, 'dashboard.twig');
             if(isset($_POST['delete'])){
                 echo "ENTRA";
                 $id = $_SESSION['id'];
@@ -127,7 +136,19 @@ class HelloController
             if(isset($_POST['upload'])){
                 echo "entra addfile";
                 $file = $_FILES['addFile'];
-                var_dump($_FILES);
+                var_dump($file);
+                $id = $_SESSION['id'];
+                $id_folder = 0;
+                $servei = $this->container->get('add_file_user_use_case');
+                $servei($file,$id,$id_folder);
+                $img = "/assets/img/file.png";
+
+
+                return $this->container
+                    ->get('view')
+                    ->render($response, 'dashboard.twig', ['img' => $img]);
+
+
             }
             if(isset($_POST['folder'])){
                 $id = $_SESSION['id'];
@@ -203,7 +224,8 @@ class HelloController
                     ->get('view')
                     ->render($response, 'dashboard.twig');*/
 
-                return $this->landingProfile($request,$response);
+                return $response->withStatus(302)->withHeader('Location', '/lp');
+                //return $this->landingProfile($request,$response);
 
             } else {
                 echo "<script>alert('NO EXISTE USUARIO.')</script>";

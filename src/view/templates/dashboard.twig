@@ -23,18 +23,16 @@
         </div>
     </form>
 
-    <form action="/folder" method="post" >
-        <div class="upload-btn-wrapper">
-                    <button type="submit" class="btn" name="folder" value="folder">Add Folder</button>
-            {% if ok == true %}
-                <br>
-                    <a  href="/folder">
-                        <img src="IMG_7469.jpg" width="82" height="86">
-                    </a>
-                <br>
+    <form action="/lp" method="post" enctype="multipart/form-data" >
+        <button type="submit" class="btn" name="folder" value="folder">Add Folder</button>
+        <br>
+            {% if img %}
+            <a  href="/folder">
+                <img src="{{ img }}" width="82" height="86">
+            </a>
+            {% endif %}
+        <br>
 
-            {% endif  %}
-        </div>
 
     </form>
 
