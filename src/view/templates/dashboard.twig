@@ -16,14 +16,30 @@
 
     </form>
 
-    <form action="/lp" method="post" enctype="multipart/form-data">
-        <input type="file" id="addFile" name="addFile" />
-        <div class="upload-btn-wrapper">
-            <button type="submit" class="btn" name="upload" value="upload">Upload File</button>
-        </div>
-        <button type="submit" class="btn" name="folder" value="folder">Add Folder</button>
 
-    </form>
+
+    <button type="submit" class="btn" data-toggle="modal" data-target="#ModalUploadForm" name="uploadFile" value="uploadFile">Upload File</button>
+    <div class="modal fade" id="ModalUploadForm">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload File</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/uploadFile" method="post" enctype="multipart/form-data">
+                        <input type="file" id="addFile" name="addFile" />
+                        <input type="submit" name="uploadSubmit" value="Upload"/>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+
+    <button type="submit" class="btn" name="folder" value="folder">Add Folder</button>
+
 
 
     {% for array in item %}

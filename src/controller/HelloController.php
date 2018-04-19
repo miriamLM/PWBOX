@@ -270,7 +270,7 @@ class HelloController
             /**
              * Upload file
              */
-            if(isset($_POST['upload'])){
+            /*if(isset($_POST['upload'])){
                 echo "entra addfile";
                 $file = $_FILES['addFile'];
                 //var_dump($file);
@@ -279,10 +279,7 @@ class HelloController
                 $servei = $this->container->get('add_file_user_use_case');
 
 
-                /**
-                 * Et retorna el número de fitxers
-                 * i tota la informació dels fitxers
-                 */
+
                 $info = $servei($file,$id,$id_folder);
 
 
@@ -305,59 +302,7 @@ class HelloController
                     ->get('view')
                     ->render($response, 'dashboard.twig', ['item' => $array]);
 
-            }
-
-            /**
-             * Delete file
-             */
-           /* if(isset($_POST['deleteFile'])){
-                $file = $request->getParsedBody();
-                $file_id = $file['file_id'];
-                $servei = $this->container->get('delete_file_user_use_case');
-                $info = $servei($file_id);
-
-                $num_items = sizeof($info);
-
-
-
-                $img = "/assets/img/file.png";
-
-                $array = [];
-                for($i=0;$i<$num_items;$i++){
-                    $item = new Item($info[$i]['name'],$img,$info[$i]['id_user'],$info[$i]['id'],0);
-                    array_push($array,$item);
-                }
-
-                return $this->container
-                    ->get('view')
-                    ->render($response, 'dashboard.twig', ['item' => $array]);
             }*/
-
-
-            /**
-             * Rename file
-             */
-             /*if(isset($_POST['renameFile'])){
-                 $file = $request->getParsedBody();
-                 $file_name = $file['name'];
-                 $servei = $this->container->get('rename_file_user_use_case');
-                 $info = $servei($file_name);
-
-                 $num_items = sizeof($info);
-
-                 $img = "/assets/img/file.png";
-
-                 $array = [];
-                 for($i=0;$i<$num_items;$i++){
-                     $item = new Item($info[$i]['name'],$img,$info[$i]['id_user'],$info[$i]['id'],0);
-                     array_push($array,$item);
-                 }
-
-                 return $this->container
-                     ->get('view')
-                     ->render($response, 'dashboard.twig', ['item' => $array]);
-
-             }*/
 
 
             /**
@@ -374,6 +319,8 @@ class HelloController
         } catch (ContainerExceptionInterface $e) {
         }
     }
+
+
 
     public function renameFileProfile(Request $request, Response $response)
     {
@@ -435,7 +382,48 @@ class HelloController
 
     }
 
+    public function uploadFileProfile(Request $request, Response $response){
 
+        /**
+         * Upload file
+         */
+        if(isset($_POST['uploadSubmit'])){
+            echo "entra addfile";
+            $file = $_FILES['addFile'];
+            //var_dump($file);
+            $id = $_SESSION['id'];
+            $id_folder = 0;
+            $servei = $this->container->get('add_file_user_use_case');
+
+
+            /**
+             * Et retorna el número de fitxers
+             * i tota la informació dels fitxers
+             */
+            $info = $servei($file,$id,$id_folder);
+
+
+            // Pq mho guardava com a string i ho vui amb int
+            $num_items = (int) $info[0];
+            // var_dump($num_items);
+            $img = "/assets/img/file.png";
+
+
+
+            $array = [];
+            for($i=0;$i<$num_items;$i++){
+                $item = new Item($info[1][$i]['name'],$img,$id,$info[1][$i]['id'],0);
+                array_push($array,$item);
+            }
+
+
+
+            return $this->container
+                ->get('view')
+                ->render($response, 'dashboard.twig', ['item' => $array]);
+
+        }
+    }
 
 
     public function validacions($rawData, $opcio)

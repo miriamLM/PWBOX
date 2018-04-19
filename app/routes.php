@@ -50,7 +50,7 @@ $app->post('/delete','SlimApp\controller\HelloController:deleteFileProfile');
 
 $app->post('/renameFile','SlimApp\controller\HelloController:renameFileProfile');
 
-
+$app->post('/uploadFile','SlimApp\controller\HelloController:uploadFileProfile');
 
 
 
