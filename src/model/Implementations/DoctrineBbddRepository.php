@@ -90,8 +90,13 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->bindValue("id_user", $id);
         $stmt->bindValue("name", $file['name'],'string');
         $stmt->bindValue("id_folder",$id_folder);
-        $stmt->execute();
-
+        if($stmt->execute()){
+            $sql = "SELECT COUNT(*) FROM file";
+            $stmt = $this->connection->query($sql);
+            $num_items= $stmt->fetchColumn();
+            var_dump($num_items);
+            return $num_items;
+        }
 
     }
 }

@@ -140,13 +140,22 @@ class HelloController
                 $id = $_SESSION['id'];
                 $id_folder = 0;
                 $servei = $this->container->get('add_file_user_use_case');
-                $servei($file,$id,$id_folder);
+                $num_it = $servei($file,$id,$id_folder);
+                // Pq mho guardava com a string i ho vui amb int
+                $num_items = (int) $num_it;
+                var_dump($num_items);
                 $img = "/assets/img/file.png";
+
+                for($i=0;$i<=$num_items;$i++){
+                    $array[$i] = $img;
+                }
+
+                var_dump($array);
 
 
                 return $this->container
                     ->get('view')
-                    ->render($response, 'dashboard.twig', ['img' => $img]);
+                    ->render($response, 'dashboard.twig', ['img' => $array]);
 
 
             }
