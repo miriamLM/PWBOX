@@ -130,9 +130,9 @@ class HelloController
                 var_dump($_FILES);
             }
             if(isset($_POST['folder'])){
-                mkdir(__DIR__.$_POST['folder']);
-                $this->folder($request,$response);
-                //return $this->container->get('view')->render($response,'dashboard.twig',['ok' => $ok]);
+                $id = $_SESSION['id'];
+                $servei = $this->container->get('folder_user_use_case');
+                $servei($id);
 
             }
 
@@ -141,15 +141,6 @@ class HelloController
         }
     }
 
-
-    public function folder(Request $request,Response $response){
-        try {
-            return $this->container->get('view')->render($response, 'dashboard.twig', ['ok' => true]);
-        } catch (NotFoundExceptionInterface $e) {
-        } catch (ContainerExceptionInterface $e) {
-        }
-
-    }
 
 
     public function profileAction(Request $request, Response $response)
