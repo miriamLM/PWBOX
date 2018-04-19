@@ -69,6 +69,8 @@ class HelloController
     }
 
 
+
+
     public function landingAction(Request $request, Response $response)
     {
         try {
@@ -110,7 +112,7 @@ class HelloController
     public function landingProfile(Request $request, Response $response)
     {
         try {
-            $this->container->get('view')->render($response, 'landingProfile.twig');
+            $this->container->get('view')->render($response, 'dashboard.twig');
             if(isset($_POST['delete'])){
                 echo "ENTRA";
                 $id = $_SESSION['id'];
@@ -122,11 +124,33 @@ class HelloController
                     return $this->container->get('view')->render($response, 'landing.twig');
                 }
             }
+            if(isset($_POST['upload'])){
+                echo "entra addfile";
+                $file = $_FILES['addFile'];
+                var_dump($_FILES);
+            }
+            if(isset($_POST['folder'])){
+                mkdir(__DIR__.$_POST['folder']);
+                $this->folder($request,$response);
+                //return $this->container->get('view')->render($response,'dashboard.twig',['ok' => $ok]);
+
+            }
 
         } catch (NotFoundExceptionInterface $e) {
         } catch (ContainerExceptionInterface $e) {
         }
     }
+
+
+    public function folder(Request $request,Response $response){
+        try {
+            return $this->container->get('view')->render($response, 'dashboard.twig', ['ok' => true]);
+        } catch (NotFoundExceptionInterface $e) {
+        } catch (ContainerExceptionInterface $e) {
+        }
+
+    }
+
 
     public function profileAction(Request $request, Response $response)
     {
@@ -186,7 +210,7 @@ class HelloController
 
                 /*return $this->container
                     ->get('view')
-                    ->render($response, 'landingProfile.twig');*/
+                    ->render($response, 'dashboard.twig');*/
 
                 return $this->landingProfile($request,$response);
 

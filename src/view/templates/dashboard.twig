@@ -1,0 +1,45 @@
+{% extends "base.twig" %}
+
+{%  block content  %}
+
+    <header>
+        <h1> CONTENIDO USUARIO </h1>
+            <nav>
+                <ul>
+                    <li><a  href="/prof">Profile</a></li>
+                </ul>
+            </nav>
+    </header>
+
+    <form action="/lp" method="post">
+        <input type="submit" name="delete" value="Delete Account">
+
+    </form>
+
+    <form action="/lp" method="post" enctype="multipart/form-data">
+        <input type="file" id="addFile" name="addFile" />
+        <div class="upload-btn-wrapper">
+            <button type="submit" class="btn" name="upload" value="upload">Upload File</button>
+        </div>
+    </form>
+
+    <form action="/folder" method="post" >
+        <div class="upload-btn-wrapper">
+                <button type="submit" class="btn" name="folder" value="folder">Add Folder</button>
+            {% if ok == true %}
+                <br>
+                    <a  href="/folder">
+                        <img src="IMG_7469.jpg" width="82" height="86">
+                    </a>
+                <br>
+
+            {% endif  %}
+        </div>
+
+    </form>
+
+
+
+
+{% endblock %}
+

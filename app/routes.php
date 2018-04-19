@@ -45,6 +45,10 @@ $app->post('/profileUpdate','SlimApp\controller\HelloController:profileUpdate');
 
 $app->post('/lp','SlimApp\controller\HelloController:landingProfile');
 
+$app->post('/folder','SlimApp\controller\HelloController:folder');
+
+
+
 
 
 //->add('SlimApp\controller\Middleware\TestMiddleware') // afegir mes middlewares
