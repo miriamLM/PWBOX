@@ -68,7 +68,7 @@ interface bbddRepository
      * Rename files
      */
 
-    public function renamefile($name);
+    public function renamefile($name,$new_name);
 
 
 }

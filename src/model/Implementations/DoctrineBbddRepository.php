@@ -123,13 +123,15 @@ class DoctrineBbddRepository implements bbddRepository
         return $info;
     }
 
-    public function renamefile($name)
+    public function renamefile($name,$new_name)
     {
-        $sql = "UPDATE item  AS i SET i.name = :name";
+        $sql = "UPDATE item AS i SET i.name = :newname WHERE i.name = :name";
         $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue("newname", $new_name, 'string');
         $stmt->bindValue("name", $name, 'string');
         if($stmt->execute()){
             $info = $this->checkfiles();
+
         }
         return $info;
 

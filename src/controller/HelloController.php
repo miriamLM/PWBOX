@@ -310,7 +310,7 @@ class HelloController
             /**
              * Delete file
              */
-            if(isset($_POST['deleteFile'])){
+           /* if(isset($_POST['deleteFile'])){
                 $file = $request->getParsedBody();
                 $file_id = $file['file_id'];
                 $servei = $this->container->get('delete_file_user_use_case');
@@ -331,20 +331,20 @@ class HelloController
                 return $this->container
                     ->get('view')
                     ->render($response, 'dashboard.twig', ['item' => $array]);
-            }
+            }*/
 
 
             /**
              * Rename file
              */
-             if(isset($_POST['renameFile'])){
+             /*if(isset($_POST['renameFile'])){
                  $file = $request->getParsedBody();
                  $file_name = $file['name'];
                  $servei = $this->container->get('rename_file_user_use_case');
                  $info = $servei($file_name);
 
                  $num_items = sizeof($info);
-                 
+
                  $img = "/assets/img/file.png";
 
                  $array = [];
@@ -357,7 +357,7 @@ class HelloController
                      ->get('view')
                      ->render($response, 'dashboard.twig', ['item' => $array]);
 
-             }
+             }*/
 
 
             /**
@@ -373,6 +373,66 @@ class HelloController
         } catch (NotFoundExceptionInterface $e) {
         } catch (ContainerExceptionInterface $e) {
         }
+    }
+
+    public function renameFileProfile(Request $request, Response $response)
+    {
+        /**
+         * Rename file
+         */
+
+        if (isset($_POST['submit'])) {
+            var_dump($request->getParsedBody());
+            $file = $request->getParsedBody();
+            $file_name = $file['file_name'];
+            $file_new_name = $file['titleFile'];
+
+            $servei = $this->container->get('rename_file_user_use_case');
+            $info = $servei($file_name,$file_new_name);
+
+            $num_items = sizeof($info);
+
+            $img = "/assets/img/file.png";
+
+            $array = [];
+            for ($i = 0; $i < $num_items; $i++) {
+                $item = new Item($info[$i]['name'], $img, $info[$i]['id_user'], $info[$i]['id'], 0);
+                array_push($array, $item);
+            }
+
+            return $this->container
+                ->get('view')
+                ->render($response, 'dashboard.twig', ['item' => $array]);
+        }
+    }
+
+    public function deleteFileProfile(Request $request, Response $response){
+        /**
+         * Delete file
+         */
+        if(isset($_POST['deleteFile'])){
+            $file = $request->getParsedBody();
+            $file_id = $file['file_id'];
+            $servei = $this->container->get('delete_file_user_use_case');
+            $info = $servei($file_id);
+
+            $num_items = sizeof($info);
+
+
+
+            $img = "/assets/img/file.png";
+
+            $array = [];
+            for($i=0;$i<$num_items;$i++){
+                $item = new Item($info[$i]['name'],$img,$info[$i]['id_user'],$info[$i]['id'],0);
+                array_push($array,$item);
+            }
+
+            return $this->container
+                ->get('view')
+                ->render($response, 'dashboard.twig', ['item' => $array]);
+        }
+
     }
 
 
