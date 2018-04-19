@@ -283,6 +283,7 @@ class HelloController
             }
 
             if(isset($_POST['deleteFile'])){
+                var_dump($id);
             }
 
 
