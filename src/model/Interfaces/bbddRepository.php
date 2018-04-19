@@ -52,5 +52,12 @@ interface bbddRepository
 
     public function addfile($file,$id,$id_folder);
 
+    /**
+     * Check files
+     */
+
+    public function checkfiles();
+
+
 
 }

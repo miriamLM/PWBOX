@@ -114,11 +114,30 @@ class HelloController
 
     public function getLandingProfile(Request $request, Response $response)
     {
-        //$id = $_SESSION['id'];
+        $id = $_SESSION['id'];
+        $id_folder = 0;
+        $servei = $this->container->get('check_file_user_use_case');
+
+        /**
+         *Tota la informació dels fitxers
+         */
+        $info = $servei();
+
+        $img = "/assets/img/file.png";
+
+        $num_items = sizeof($info);
+
+        $array = [];
+        for($i=0;$i<$num_items;$i++){
+            $item = new Item($info[$i]['name'],$img,$id,$info[$i]['id'],0);
+            array_push($array,$item);
+        }
+
 
         return $this->container
             ->get('view')
-            ->render($response, 'dashboard.twig');
+            ->render($response, 'dashboard.twig', ['item' => $array]);
+
     }
 
     public function profileAction(Request $request, Response $response)

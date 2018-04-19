@@ -104,4 +104,11 @@ class DoctrineBbddRepository implements bbddRepository
 
         }
     }
+
+    public function checkfiles()
+    {
+        $query = "SELECT * FROM item";
+        $info = $this->connection->fetchAll($query);
+        return $info;
+    }
 }

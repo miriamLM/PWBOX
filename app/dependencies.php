@@ -113,7 +113,16 @@ $container['delete_file_user_use_case'] = function($container){
     return $useCase;
 };
 
+/*
+ * Servei check file
+ */
 
+$container['check_file_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\CheckFileUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
 
 
 ?>
