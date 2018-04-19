@@ -78,4 +78,16 @@ $container['update_user_use_case'] = function($container){
 };
 
 
+/*
+ * Servei delete usuari
+ */
+
+$container['delete_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\DeleteUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+
 ?>

@@ -34,11 +34,17 @@ $app->get('/prof','SlimApp\controller\HelloController:profileAction')->add('Slim
 
 
 
+
+
+
 $app->post('/registration','SlimApp\controller\HelloController:registerMe');
 
 $app->post('/login','SlimApp\controller\HelloController:loginMe');
 
 $app->post('/profileUpdate','SlimApp\controller\HelloController:profileUpdate');
+
+$app->post('/lp','SlimApp\controller\HelloController:landingProfile');
+
 
 
 //->add('SlimApp\controller\Middleware\TestMiddleware') // afegir mes middlewares

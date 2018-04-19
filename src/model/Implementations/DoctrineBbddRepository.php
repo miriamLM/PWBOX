@@ -34,7 +34,6 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->execute();
     }
 
-    //$email, $psw
     public function exists($email,$psw)
     {
         $sql = "SELECT id FROM user WHERE email= ? AND password = ?";
@@ -71,5 +70,14 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->bindValue("password", $psw, 'string');
         $stmt->bindValue("id", $_SESSION['id'], 'integer');
         $stmt->execute();
+    }
+
+
+    public function delete($id)
+    {
+        $sql = "DELETE FROM user WHERE id = ? ";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(1, $id);
+        return $stmt;
     }
 }

@@ -2,19 +2,18 @@
 /**
  * Created by PhpStorm.
  * User: carmeperseguerbarragan
- * Date: 20/4/18
- * Time: 11:04
+ * Date: 8/5/18
+ * Time: 19:37
  */
 
 namespace SlimApp\model\UseCase;
 
 
 use SlimApp\model\Interfaces\bbddRepository;
-use SlimApp\model\User;
 
-
-class CheckUserUseCase
+class DeleteUserUseCase
 {
+
     /** @var bbddRepository */
     private $repository;
 
@@ -27,19 +26,15 @@ class CheckUserUseCase
     public function __invoke( $id) {
 
         /**
-         * Me recoge toda la info del usuario , del id que ha iniciado session
-         **/
-        $usuari = $this->repository->check($id);
-
-        /**
-         * 
+         * Elimina usuario , del id que ha iniciado session
          **/
 
+        $stmt = $this->repository->delete($id);
 
 
-        return $usuari;
+        return $stmt;
+
 
     }
-
 
 }

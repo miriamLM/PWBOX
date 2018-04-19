@@ -91,6 +91,7 @@ class HelloController
         } catch (NotFoundExceptionInterface $e) {
         } catch (ContainerExceptionInterface $e) {
         }
+
     }
 
     public function loginAction(Request $request, Response $response)
@@ -100,6 +101,28 @@ class HelloController
             return $this->container
                 ->get('view')
                 ->render($response, 'login.twig', ['errors' => $errors]);
+        } catch (NotFoundExceptionInterface $e) {
+        } catch (ContainerExceptionInterface $e) {
+        }
+
+    }
+
+    public function landingProfile(Request $request, Response $response)
+    {
+        try {
+            $this->container->get('view')->render($response, 'landingProfile.twig');
+            if(isset($_POST['delete'])){
+                echo "ENTRA";
+                $id = $_SESSION['id'];
+                $servei= $this->container->get('delete_user_use_case');
+                $stmt = $servei($id);
+                if($stmt->execute()){
+                    echo "<script>alert('Record deleted.')</script>";
+
+                    return $this->container->get('view')->render($response, 'landing.twig');
+                }
+            }
+
         } catch (NotFoundExceptionInterface $e) {
         } catch (ContainerExceptionInterface $e) {
         }
@@ -161,9 +184,11 @@ class HelloController
                 $_SESSION['id'] = $id;
 
 
-                return $this->container
+                /*return $this->container
                     ->get('view')
-                    ->render($response, 'landingProfile.twig');
+                    ->render($response, 'landingProfile.twig');*/
+
+                return $this->landingProfile($request,$response);
 
             } else {
                 echo "<script>alert('NO EXISTE USUARIO.')</script>";
@@ -207,7 +232,9 @@ class HelloController
                 ->get('view')
                 ->render($response, 'profileUpdate.twig', ['user'=> $user],['errors' => $errors]);
         }
+
     }
+
 
 
     public function validacions($rawData, $opcio)
