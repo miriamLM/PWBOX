@@ -483,9 +483,12 @@ class HelloController
         if(isset($_POST['addSubmit']))
         {
 
+
             $id = $_SESSION['id'];
             $id_parent= "0";
             $foldern = $request->getParsedBody();
+            var_dump($foldern);
+
             $folder_name = $foldern['nameFolder'];
             $servei = $this->container->get('add_folder_user_use_case');
             $info = $servei((int)$id,$folder_name,$id_parent);
@@ -498,18 +501,9 @@ class HelloController
 
             $array = [];
             for ($i = 0; $i < $num_folders; $i++) {
-
-                /**
-                 * Si solo hay una carpeta, id_parent lo fijamos como 0
-                 */
-                if($num_folders == 1){
-                    $folder = new Folder($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], 0);
-                    array_push($array, $folder);
-                }else {
-                    
                     $folder = new Folder($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], $folder_id);
                     array_push($array, $folder);
-                }
+
 
             }
             $this->container
