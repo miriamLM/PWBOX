@@ -11,10 +11,25 @@
             </nav>
     </header>
 
-    <form action="/lp" method="post">
-        <input type="submit" name="delete" value="Delete Account">
 
-    </form>
+    <button type="submit" class="btn" data-toggle="modal" data-target="#ModalDeleteForm" name="deleteAccount" value="deleteAccount">Delete Account</button>
+    <div class="modal fade" id="ModalDeleteForm">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Account</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/deleteAccount" method="post" enctype="multipart/form-data">
+                        <h6>Warning: Estas seguro que quieres eliminar tu cuenta?</h6>
+                        <input type="submit" name="cancel" value="Cancel"/>
+                        <input type="submit" name="continue" value="Continue"/>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
 
 
@@ -44,7 +59,7 @@
     {% for array in item %}
         <img src= "{{ array.img }}" width="82" height="86">
         <input type="text"  name="nombre" value= "{{ array.nom }}"/>
-        <form action="/delete" method="post">
+        <form action="/deleteFile" method="post">
             <input type="hidden"  value="{{ array.id }}" name="file_id"/>
             <button type="submit" class="btn" name="deleteFile" value="deleteFile">Delete</button>
         </form>

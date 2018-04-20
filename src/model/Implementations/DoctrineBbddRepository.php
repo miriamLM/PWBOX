@@ -135,6 +135,15 @@ class DoctrineBbddRepository implements bbddRepository
         return $info;
 
     }
+    public function newFolder($id, $folder_name, $id_parent)
+    {
+        $sql = "INSERT INTO folder (name, id_parent, id_user) VALUES (:name, :id_parent, :id_user)";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue("name", $folder_name, 'string');
+        $stmt->bindValue("id_parent", $id_parent, 'int');
+        $stmt->bindValue("id_user", $id, 'int');
+        $stmt->execute();
+    }
 
 
 }

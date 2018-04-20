@@ -1,56 +1,56 @@
 body{
-  background-color: ghostwhite;
+    background-color: ghostwhite;
 }
 .h1menu{
-  text-align: center;
-  font-size: 1000%;
-  padding-top: 100px;
-  color: darkslateblue;
-  /*padding-left: 400px;
-  font-size: 70px;
-  margin-top: 25px;
-  text-align: center;
-  color: whitesmoke;
-  */
+    text-align: center;
+    font-size: 1000%;
+    padding-top: 100px;
+    color: darkslateblue;
+    /*padding-left: 400px;
+    font-size: 70px;
+    margin-top: 25px;
+    text-align: center;
+    color: whitesmoke;
+    */
 }
 .h1-reg-log{
- /* text-align: left;
-  margin-left: -200px;
-  margin-right: -200px;
-  padding-top: 10px;
-  margin-top: -5px;
-  margin-top: -5px;
-  padding-bottom: 10px;
-  background-color: darkslateblue;
-  color: whitesmoke;
-  */
-  color: darkslateblue;
-  position: absolute;
-  margin-top: -2px;
+    /* text-align: left;
+     margin-left: -200px;
+     margin-right: -200px;
+     padding-top: 10px;
+     margin-top: -5px;
+     margin-top: -5px;
+     padding-bottom: 10px;
+     background-color: darkslateblue;
+     color: whitesmoke;
+     */
+    color: darkslateblue;
+    position: absolute;
+    margin-top: -2px;
     margin-left: -500px;
 }
 hr{
-  margin-top: 50px;
+    margin-top: 20px;
     margin-left: -500px;
     padding-bottom: 20px;
 }
 h2{
-  color: darkslateblue;
-  text-align: center;
+    color: darkslateblue;
+    text-align: center;
 }
 header{
-  padding: 20px;
-  height: 130px;
-  margin-left: -20px;
-  margin-right: -20px;
-  margin-top: -25px;
-  background-color: darkslateblue;
+    padding: 20px;
+    height: 130px;
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-top: -25px;
+    background-color: darkslateblue;
 }
 #links{
-  margin-top: 50px;
-  margin-bottom: 0px;
-  text-align: right;
-  padding: 20px;
+    margin-top: 50px;
+    margin-bottom: 0px;
+    text-align: right;
+    padding: 20px;
 }
 /*a{
   padding-right: 60px;
@@ -59,52 +59,52 @@ header{
   text-decoration: none;
 }
 */
-a{
-  font-size: 200%;
-  margin-right: 40px;
-  margin-top: 40px;
+.a{
+    font-size: 200%;
+    margin-right: 40px;
+    margin-top: 40px;
 
-  color: whitesmoke;
+    color: whitesmoke;
 
 }
-a:link{
-  color: whitesmoke;
-  text-decoration: whitesmoke;
+.a:link{
+    color: whitesmoke;
+    text-decoration: whitesmoke;
 }
-a:hover {
-  color: whitesmoke;
-  text-decoration: underline whitesmoke;
+.a:hover {
+    color: whitesmoke;
+    text-decoration: underline whitesmoke;
 }
 #top-right{
-  text-align: right;
-  margin-top: 20px;
+    text-align: right;
+    margin-top: 20px;
 }
 
 #p1{
-  font-size: 300%;
-  text-align: left;
-  margin-left: 40px;
-  margin-top: 20px;
-  color: whitesmoke;
+    font-size: 300%;
+    text-align: left;
+    margin-left: 40px;
+    margin-top: 20px;
+    color: whitesmoke;
 }
 
 .sec-center{
     text-align: center;
 }
 form{
-  text-align: left;
-  padding: 20px;
+    text-align: left;
+    padding: 20px;
     margin-left: 500px;
 }
 input{
     border-radius: 8px;
-  margin-top: 0px;
-  padding-left: 10px;
-  margin-bottom: 10px;
-  width: 250px;
-  border:none;
+    margin-top: 0px;
+    padding-left: 10px;
+    margin-bottom: 10px;
+    width: 250px;
+    border:none;
     text-align: center;
-  /*border-bottom: 1.5px solid gray;*/
+    /*border-bottom: 1.5px solid gray;*/
 }
 label{
     font-weight: bold;
@@ -113,22 +113,43 @@ label{
     cursor: pointer;
 }
 .submit{
-  background-color: darkslateblue;
-  color: whitesmoke;
+    background-color: darkslateblue;
+    color: whitesmoke;
     width: 400px;
     padding-top: 10px;
     padding-bottom: 10px;
     border-radius: 10px;
 }
 .submit:link{
-  background-color: ghostwhite;
-  color: darkslateblue;
-  border: solid 1.5px darkslateblue;
+    background-color: ghostwhite;
+    color: darkslateblue;
+    border: solid 1.5px darkslateblue;
 }
 .submit:hover{
-  background-color: ghostwhite;
-  color: darkslateblue;
-  border: solid 1.5px darkslateblue;
+    background-color: ghostwhite;
+    color: darkslateblue;
+    border: solid 1.5px darkslateblue;
+
+}
+
+.delete{
+    background-color: darkslateblue;
+    color: whitesmoke;
+    width: 150px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+    margin-left: 800px;
+}
+.delete:link{
+    background-color: ghostwhite;
+    color: darkslateblue;
+    border: solid 1.5px darkslateblue;
+}
+.delete:hover{
+    background-color: ghostwhite;
+    color: darkslateblue;
+    border: solid 1.5px darkslateblue;
 
 }
 #col-username{
@@ -191,4 +212,21 @@ label{
 .error-r{
     color: darkred;
     margin-left: 200px;
+}
+
+.redirect{
+    color: darkslateblue;
+    text-decoration: none;
+    font-size: 150%;
+    margin-left: 800px;
+    margin-top: 40px;
+
+}
+.redirect:link{
+    color: darkslateblue;
+    text-decoration: darkslateblue;
+}
+.redirect:hover {
+    color: darkslateblue;
+    text-decoration: underline darkslateblue;
 }

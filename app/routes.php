@@ -32,7 +32,7 @@ $app->get('/log','SlimApp\controller\HelloController:loginAction');
 
 $app->get('/prof','SlimApp\controller\HelloController:profileAction')->add('SlimApp\controller\Middleware\UserLoggedMiddleware');
 
-$app->get('/lp','SlimApp\controller\HelloController:getLandingProfile');
+$app->get('/lp','SlimApp\controller\HelloController:getLandingProfile')->add('SlimApp\controller\Middleware\UserLoggedMiddleware');
 
 
 
@@ -46,7 +46,10 @@ $app->post('/profileUpdate','SlimApp\controller\HelloController:profileUpdate');
 
 $app->post('/lp','SlimApp\controller\HelloController:postLandingProfile');
 
-$app->post('/delete','SlimApp\controller\HelloController:deleteFileProfile');
+
+$app->post('/deleteAccount','SlimApp\controller\HelloController:deleteAccount');
+
+$app->post('/deleteFile','SlimApp\controller\HelloController:deleteFileProfile');
 
 $app->post('/renameFile','SlimApp\controller\HelloController:renameFileProfile');
 

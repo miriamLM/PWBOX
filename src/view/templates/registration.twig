@@ -2,9 +2,10 @@
 
 {%  block content  %}
     <section class="sec-center">
-        <form action="/registration" method="POST">
+        <form action="/registration" method="POST" enctype="multipart/form-data">
             <div class="container">
                 <h1 class="h1-reg-log">Registration</h1>
+                <a  href="/log" class="redirect">Login</a>
                 <hr>
                 <div class="row">
                     <div class="col-lg-2">
@@ -58,29 +59,26 @@
                 </div>
                 <p class="error-r">{{ errors[4] }}</p>
 
-<!--
-                <div class="row">
-                    <div class="col-lg-2">
-                         <label><b>Profile Image</b></label>
-                    </div>
-                    <div class="col-lg-6" id="col-file">
-                         <input type="file" name="img" class="file-img">
-                    </div>
-                </div>
--->
+                <!--
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                         <label><b>Profile Image</b></label>
+                                    </div>
+                                    <div class="col-lg-6" id="col-file">
+                                         <input type="file" name="img" class="file-img">
+                                    </div>
+                                </div>
+                -->
                 <div class="row">
                     <div class="col-lg-2">
                         <label>Profile Image</label>
                     </div>
-                    <div class="col-lg-6" id="col-file">
-                        <div class="upload-btn-wrapper">
-                            <button class="btn">Upload a file</button>
-                            <input type="file" name="myfile" />
-                        </div>
-                    </div>
-                </div>
-                <!--<button id="submit" type="button" class="btn btn-primary" name="submit">Sign up</button> -->
-                <input type="submit" name="submit" value="Sign Up" class="submit">
+                    <input type="file" name="myfile" multiple accept=".jpg, .jpeg, .png"/> </div>
+            </div>
+            <!-- <p class="error-r">{{ errors[5] }}</p> -->
+            <!--<button id="submit" type="button" class="btn btn-primary" name="submit">Sign up</button> -->
+            <input type="submit" name="submit" value="Sign Up" class="submit">
+
 
 
             </div>

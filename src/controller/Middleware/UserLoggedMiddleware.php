@@ -19,7 +19,6 @@ class UserLoggedMiddleware
             //NO ESTA LOGGEADO
             //es una redireccion
             return $response->withStatus(302)->withHeader('Location','/');
-
         }else{
             return $next($request, $response);
 
