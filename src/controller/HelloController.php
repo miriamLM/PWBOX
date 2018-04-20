@@ -425,11 +425,11 @@ class HelloController
          if(isset($_POST['downloadFile'])){
              $file = $request->getParsedBody();
              $file_name = $file['file_name'];
-             $file_path  = "/Downloads/" .$file_name;
+             if(file_exists($file_name)){
                  flush();
-                 readfile($file_path);
+                 readfile($file_name);
                  exit;
-
+             }
          }
     }
 

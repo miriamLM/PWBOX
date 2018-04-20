@@ -28,7 +28,6 @@ class PostLoginUseCase
         $psswH = md5($rawData['psw']);
 
 
-
         $result = $this->repository->exists($rawData["emailuser"],$psswH);
 
         return $result;
