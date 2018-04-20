@@ -21,7 +21,6 @@ class HelloController
     const DATA = 'Y/m/d';
     const FOLDER_IMAGE = '/assets/img/folder.jpg';
 
-
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -166,6 +165,7 @@ class HelloController
 
         $num_folders = sizeof($info2);
 
+
         $array2 = [];
         for($i=0;$i<$num_folders;$i++){
             $folder = new Folder($info2[$i]['name'],$img2,$id,$info2[$i]['id'],0);
@@ -174,61 +174,11 @@ class HelloController
 
         return $this->container
             ->get('view')
-            ->render($response, 'dashboard.twig', ['item' => $array , 'folder' => $array2]);
+            ->render($response, 'dashboard.twig', ['item' => $array , 'folder' => $array2, 'idParent']);
 
     }
 
 
-
-    public  function newFolderProfile(Request $request, Response $response){
-
-        var_dump($request->getParsedBody());
-
-        $fold = $request->getParsedBody();
-
-        $id = $_SESSION['id'];
-        $id_folder = $fold['folder_id'];
-        $servei = $this->container->get('check_file_user_use_case');
-
-        /**
-         *Tota la informació dels fitxers
-         */
-        $info = $servei($id_folder);
-
-        $img = "/assets/img/file.png";
-
-        $num_items = sizeof($info);
-
-        $array = [];
-        for($i=0;$i<$num_items;$i++){
-            $item = new Item($info[$i]['name'],$img,$id,$info[$i]['id'],$id_folder);
-            array_push($array,$item);
-        }
-        /*
-         * folders
-         */
-        $servei2 = $this->container->get('check_folder_user_use_case');
-
-        /**
-         *Tota la informació de la carpeta
-         */
-        $info2 = $servei2($id_folder);
-
-        $img2 = "/assets/img/folder.jpg";
-
-        $num_folders = sizeof($info2);
-
-        $array2 = [];
-        for($i=0;$i<$num_folders;$i++){
-            $folder = new Folder($info2[$i]['name'],$img2,$id,$info2[$i]['id'],0);
-            array_push($array2,$folder);
-        }
-
-
-        return $this->container
-            ->get('view')
-            ->render($response, 'dashboard.twig');
-    }
 
 
 
@@ -290,24 +240,7 @@ class HelloController
         }
     }
 
-    public function postLandingProfile(Request $request, Response $response)
-    {
-        try {
 
-            /**
-             * Upload folder
-             */
-            if(isset($_POST['folder'])){
-                $id = $_SESSION['id'];
-                $servei = $this->container->get('folder_user_use_case');
-                $servei($id);
-
-            }
-
-        } catch (NotFoundExceptionInterface $e) {
-        } catch (ContainerExceptionInterface $e) {
-        }
-    }
 
     public function deleteAccount(Request $request, Response $response){
         /**
@@ -334,6 +267,12 @@ class HelloController
     /**
      * ROLE ADMIN
      */
+
+
+
+    /**
+     * FILE
+     */
     public function renameFileProfile(Request $request, Response $response)
     {
         /**
@@ -345,25 +284,15 @@ class HelloController
             $file = $request->getParsedBody();
             $file_name = $file['file_name'];
             $file_new_name = $file['titleFile'];
-            $id_folder = $file['id_folder'];
             $servei = $this->container->get('rename_file_user_use_case');
-            $info = $servei($file_name,$file_new_name,$id_folder);
 
-            $num_items = sizeof($info);
+            $servei($file_name,$file_new_name);
 
-            $img = "/assets/img/file.png";
 
-            $array = [];
-            for ($i = 0; $i < $num_items; $i++) {
-                $item = new Item($info[$i]['name'], $img, $info[$i]['id_user'], $info[$i]['id'], 0);
-                array_push($array, $item);
-            }
+            $response->withStatus(302)->withHeader('Location', '/insideFolder');
 
-             $this->container
-                ->get('view')
-                ->render($response, 'dashboard.twig', ['item' => $array]);
+            return  $response->withStatus(302)->withHeader('Location', '/lp');
 
-            return $response->withStatus(302)->withHeader('Location', '/lp');
 
         }
     }
@@ -375,27 +304,14 @@ class HelloController
         if(isset($_POST['deleteFile'])){
             $file = $request->getParsedBody();
             $file_id = $file['file_id'];
-            $folder_id= $file['folder_id'];
             $servei = $this->container->get('delete_file_user_use_case');
-            $info = $servei($file_id,$folder_id);
-
-            $num_items = sizeof($info);
+            $servei($file_id);
 
 
+            $response->withStatus(302)->withHeader('Location', '/insideFolder');
 
-            $img = "/assets/img/file.png";
+            return  $response->withStatus(302)->withHeader('Location', '/lp');
 
-            $array = [];
-            for($i=0;$i<$num_items;$i++){
-                $item = new Item($info[$i]['name'],$img,$info[$i]['id_user'],$info[$i]['id'],0);
-                array_push($array,$item);
-            }
-
-            $this->container
-                ->get('view')
-                ->render($response, 'dashboard.twig', ['item' => $array]);
-
-            return $response->withStatus(302)->withHeader('Location', '/lp');
 
         }
 
@@ -439,10 +355,18 @@ class HelloController
                         ->getBody()->write($message);*/
                 }else {
 
-                    $id = $_SESSION['id'];
-                    $id_folder = 0;
-                    $servei = $this->container->get('add_file_user_use_case');
 
+
+                    $id = $_SESSION['id'];
+
+                    $item = $request->getParsedBody();
+                    $id_folder = $item['uploadSubmit'];
+
+                    if($id_folder == ''){
+                        $id_folder=0;
+                    }
+
+                    $servei = $this->container->get('add_file_user_use_case');
 
                     /**
                      * Et retorna el número de fitxers
@@ -459,7 +383,7 @@ class HelloController
 
                     $array = [];
                     for ($i = 0; $i < $num_items; $i++) {
-                        $item = new Item($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], 0);
+                        $item = new Item($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], $id_folder);
                         array_push($array, $item);
                     }
 
@@ -477,16 +401,26 @@ class HelloController
     }
 
 
+    /**
+     *FOLDER
+     */
 
     public function addFolderProfile(Request $request, Response $response)
     {
         if(isset($_POST['addSubmit']))
         {
 
+
             $id = $_SESSION['id'];
-            $id_parent= "0";
+
             $foldern = $request->getParsedBody();
             $folder_name = $foldern['nameFolder'];
+            $id_parent = $foldern['addSubmit'];
+
+            if($id_parent == ''){
+                $id_parent=0;
+            }
+
             $servei = $this->container->get('add_folder_user_use_case');
             $info = $servei((int)$id,$folder_name,$id_parent);
 
@@ -496,47 +430,76 @@ class HelloController
 
 
             $array = [];
-            for ($i = 0; $i < $num_folders; $i++) {
-
-
-                if($num_folders == 1){
-                    $id_parent = $info[1][$i]['id'] -1;
-                    $folder = new Folder($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], 0);
-                    array_push($array, $folder);
-                }else {
-                    $id_parent = (int)$info[1][$i]['id'] -1;
-                    var_dump($id_parent);
+            for ($i = 0; $i < $num_folders -1; $i++) {
 
                     $folder = new Folder($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], $id_parent);
                     array_push($array, $folder);
-                }
 
             }
 
-
-
-            /*for ($i = 0; $i < $num_folders; $i++) {
-
-
-                if($num_folders == 1){
-                    $folder = new Folder($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], 0);
-                    array_push($array, $folder);
-                }else {
-
-                    $folder = new Folder($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], $folder_id);
-                    array_push($array, $folder);
-                }
-
-            }
-            */
-            $this->container
+              $this->container
                 ->get('view')
                 ->render($response, 'dashboard.twig', ['folder' => $array]);
 
+                return $response->withStatus(302)->withHeader('Location', '/lp');
 
-
-            return $response->withStatus(302)->withHeader('Location', '/lp');
         }
+    }
+
+    public  function printFileFolder(Request $request, Response $response){
+
+
+        $fold = $request->getParsedBody();
+
+        var_dump($fold);
+
+        $id = $_SESSION['id'];
+        $id_folder = $fold['folder_id'];
+
+
+        $servei = $this->container->get('check_file_user_use_case');
+
+        /**
+         *Tota la informació dels fitxers
+         */
+        $info = $servei($id_folder);
+
+        $img = "/assets/img/file.png";
+
+        $num_items = sizeof($info);
+
+        $array = [];
+        for($i=0;$i<$num_items;$i++){
+            $item = new Item($info[$i]['name'],$img,$id,$info[$i]['id'],$id_folder);
+            array_push($array,$item);
+        }
+        /*
+         * folders
+         */
+        $servei2 = $this->container->get('check_folder_user_use_case');
+
+        /**
+         *Tota la informació de la carpeta
+         */
+        $info2 = $servei2($id_folder);
+
+        $img2 = "/assets/img/folder.png";
+
+        $num_folders = sizeof($info2);
+
+
+        $array2 = [];
+        for($i=0;$i<$num_folders;$i++){
+            $folder = new Folder($info2[$i]['name'],$img2,$id,$info2[$i]['id'],$id_folder);
+            array_push($array2,$folder);
+        }
+
+
+        return $this->container
+            ->get('view')
+            ->render($response, 'dashboard.twig', ['folder' => $array2,'item' => $array ,"idParent" => $id_folder , "idFolder" => $id_folder]);
+
+
     }
 
     public function renameFolderProfile(Request $request, Response $response)
@@ -550,27 +513,15 @@ class HelloController
             $folder = $request->getParsedBody();
             $folder_name = $folder['folder_name'];
             $folder_new_name = $folder['titleFolder'];
-            $id_parent = $folder['id_folder'];
 
             $servei = $this->container->get('rename_folder_user_use_case');
-            $info = $servei($folder_name,$folder_new_name,$id_parent);
-            var_dump($info);
 
-            $num_folders = sizeof($info);
+            $servei($folder_name,$folder_new_name);
 
-            $img = "/assets/img/folder.png";
+            $response->withStatus(302)->withHeader('Location', '/insideFolder');
 
-            $array = [];
-            for ($i = 0; $i < $num_folders; $i++) {
-                $folder = new Folder($info[$i]['name'], $img, $info[$i]['id_user'], $info[$i]['id'], 0);
-                array_push($array, $folder);
-            }
+            return  $response->withStatus(302)->withHeader('Location', '/lp');
 
-            $this->container
-                ->get('view')
-                ->render($response, 'dashboard.twig', ['folder' => $array]);
-
-            return $response->withStatus(302)->withHeader('Location', '/lp');
 
         }
     }
@@ -582,28 +533,17 @@ class HelloController
         if(isset($_POST['deleteFolder'])){
             $folder = $request->getParsedBody();
             $folder_id = $folder['folder_id'];
-            $id_parent = $folder['id_folder'];
+
             var_dump($folder);
             $servei = $this->container->get('delete_folder_user_use_case');
-            $info = $servei($folder_id, $id_parent);
-
-            $num_folders = sizeof($info);
+            $servei($folder_id);
 
 
 
-            $img = "/assets/img/file.png";
+            $response->withStatus(302)->withHeader('Location', '/insideFolder');
 
-            $array = [];
-            for($i=0;$i<$num_folders;$i++){
-                $folder = new Folder($info[$i]['name'],$img,$info[$i]['id_user'],$info[$i]['id'],0);
-                array_push($array,$folder);
-            }
+            return  $response->withStatus(302)->withHeader('Location', '/lp');
 
-            $this->container
-                ->get('view')
-                ->render($response, 'dashboard.twig', ['folder' => $array]);
-
-            return $response->withStatus(302)->withHeader('Location', '/lp');
 
         }
 

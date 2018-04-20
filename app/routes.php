@@ -44,7 +44,7 @@ $app->post('/login','SlimApp\controller\HelloController:loginMe');
 
 $app->post('/prof','SlimApp\controller\HelloController:profileUpdate');
 
-$app->post('/lp','SlimApp\controller\HelloController:postLandingProfile');
+//$app->post('/lp','SlimApp\controller\HelloController:postLandingProfile');
 
 
 $app->post('/deleteAccount','SlimApp\controller\HelloController:deleteAccount');
@@ -59,11 +59,16 @@ $app->post('/downloadFile','SlimApp\controller\HelloController:downloadFileProfi
 
 $app->post('/addFolder','SlimApp\controller\HelloController:addFolderProfile');
 
+
+
+
 $app->post('/renameFolder','SlimApp\controller\HelloController:renameFolderProfile');
 
 $app->post('/deleteFolder','SlimApp\controller\HelloController:deleteFolderProfile');
 
-$app->post('/newFolder','SlimApp\controller\HelloController:newFolderProfile');
+$app->post('/lp/{id}','SlimApp\controller\HelloController:printFileFolder');
+
+
 
 
 

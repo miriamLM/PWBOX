@@ -8,9 +8,6 @@
     </header>
 
 
-
-
-
     <div class="add-upload">
         <button type="submit" class="btn" data-toggle="modal" data-target="#ModalUploadForm" name="uploadFile" value="uploadFile">Upload File</button>
         <div class="modal fade" id="ModalUploadForm">
@@ -22,7 +19,7 @@
                     <div class="modal-body">
                         <form action="/uploadFile" method="post" enctype="multipart/form-data">
                             <input type="file" id="addFile" name="addFile" size="2Mb" />
-                            <input type="submit" name="uploadSubmit" value="Upload"/>
+                            <button type="submit" name="uploadSubmit" value="{{ idFolder }}">Upload</button>
                         </form>
                     </div>
                 </div>
@@ -44,7 +41,7 @@
                     <div class="modal-body">
                         <form action="/addFolder" method="post" enctype="multipart/form-data">
                             <input type="text" id="nameFolder" name="nameFolder" />
-                            <input type="submit" name="addSubmit" value="Add"/>
+                            <button type="submit" name="addSubmit" value="{{ idParent }}">Add</button>
                         </form>
                     </div>
                 </div>
@@ -54,15 +51,13 @@
     </div>
 
     {% for array in folder %}
+        <form action="/lp/{{ array.id }}" method="post">
+            <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
+            <button type="submit" class="btn" name="folder" value="{{ array.nom }}">
+                <img src="{{ array.img }}" width="82" height="86">
+            </button>
+        </form>
         <div class="items">
-            <form action="/newFolder" method="post">
-                <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
-                <button type="submit" class="btn" name="folder" value="{{ array.nom }}">
-                     <img src="{{ array.img }}" width="82" height="86">
-                </button>
-            </form>
-
-
             <input type="text"  name="nombre" readonly="readonly" value= "{{ array.nom }}"/>
             <form action="/deleteFolder" method="post">
             <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
@@ -91,8 +86,8 @@
             </div>
         </div>
 
-    {% endfor %}
 
+    {% endfor %}
 
 
 

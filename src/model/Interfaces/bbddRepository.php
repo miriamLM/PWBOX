@@ -62,13 +62,13 @@ interface bbddRepository
      * Delete files
      */
 
-    public function deletefile($file_id,$folder_id);
+    public function deletefile($file_id);
 
     /**
      * Rename files
      */
 
-    public function renamefile($name,$new_name,$folder_id);
+    public function renamefile($name,$new_name);
 
     /**
      * Add folder
@@ -78,7 +78,7 @@ interface bbddRepository
     /**
      * Rename folder
      */
-    public function renamefolder($name,$new_name,$id_parent);
+    public function renamefolder($name,$new_name);
 
     /**
      * Check folders
@@ -88,6 +88,6 @@ interface bbddRepository
     /**
      * Delete folder
      */
-    public function deletefolder($folder_id,$id_parent);
+    public function deletefolder($folder_id);
 
 }
