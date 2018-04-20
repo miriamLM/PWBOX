@@ -25,9 +25,9 @@ class RenameFolderUserUseCase
     }
 
 
-    public function __invoke($name,$new_name) {
+    public function __invoke($name,$new_name,$id_parent) {
 
-        $info = $this->repository->renamefolder($name,$new_name);
+        $info = $this->repository->renamefolder($name,$new_name,$id_parent);
 
         return $info;
     }

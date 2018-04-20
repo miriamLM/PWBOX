@@ -15,17 +15,17 @@ class Folder
     private $id_user;
     private $img;
     private $nom;
-    private $id_folder;
+    private $id_parent;
 
 
 
-    public function __construct($nom,$img,$id_user,$id,$id_folder)
+    public function __construct($nom,$img,$id_user,$id,$id_parent)
     {
         $this->nom = $nom;
         $this->img = $img;
         $this->id_user= $id_user;
         $this->id= $id;
-        $this->id_folder= $id_folder;
+        $this->id_parent= $id_parent;
 
     }
 
@@ -96,18 +96,19 @@ class Folder
     /**
      * @return mixed
      */
-    public function getIdFolder()
+    public function getIdParent()
     {
-        return $this->id_folder;
+        return $this->id_parent;
     }
 
     /**
-     * @param mixed $id_folder
+     * @param mixed $id_parent
      */
-    public function setIdFolder($id_folder): void
+    public function setIdParent($id_parent)
     {
-        $this->id_folder = $id_folder;
+        $this->id_parent = $id_parent;
     }
+
 
 
 

@@ -24,9 +24,9 @@ class CheckFolderUserUseCase
     {
         $this->repository= $repository;
     }
-    public function __invoke()
+    public function __invoke($folder_id)
     {
-        $info = $this->repository->checkfolders();
+        $info = $this->repository->checkfolders($folder_id);
 
         return $info;
     }

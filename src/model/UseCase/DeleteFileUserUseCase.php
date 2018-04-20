@@ -23,9 +23,9 @@ class DeleteFileUserUseCase
 
     }
 
-    public function __invoke($file_id) {
+    public function __invoke($file_id,$folder_id) {
 
-        $info = $this->repository->deletefile($file_id);
+        $info = $this->repository->deletefile($file_id,$folder_id);
         return $info;
     }
 

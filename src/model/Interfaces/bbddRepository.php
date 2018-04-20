@@ -56,19 +56,19 @@ interface bbddRepository
      * Check files
      */
 
-    public function checkfiles();
+    public function checkfiles($folder_id);
 
     /**
      * Delete files
      */
 
-    public function deletefile($file_id);
+    public function deletefile($file_id,$folder_id);
 
     /**
      * Rename files
      */
 
-    public function renamefile($name,$new_name);
+    public function renamefile($name,$new_name,$folder_id);
 
     /**
      * Add folder
@@ -78,16 +78,16 @@ interface bbddRepository
     /**
      * Rename folder
      */
-    public function renamefolder($name,$new_name);
+    public function renamefolder($name,$new_name,$id_parent);
 
     /**
      * Check folders
      */
-    public function checkfolders();
+    public function checkfolders($folder_id);
 
     /**
      * Delete folder
      */
-    public function deletefolder($folder_id);
+    public function deletefolder($folder_id,$id_parent);
 
 }

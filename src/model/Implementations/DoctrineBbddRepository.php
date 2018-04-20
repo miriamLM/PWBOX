@@ -104,37 +104,45 @@ class DoctrineBbddRepository implements bbddRepository
         }
     }
 
-    public function checkfiles()
+    public function checkfiles($folder_id)
     {
-        $query = "SELECT * FROM item";
-        $info = $this->connection->fetchAll($query);
+        $query = "SELECT * FROM item WHERE id_folder =? ";
+
+        $info = $this->connection->fetchAll($query,array($folder_id));
         return $info;
     }
 
-
-    public function deletefile($file_id){
-        $sql = "DELETE FROM item WHERE id = ? ";
+    public function deletefile($file_id,$folder_id){
+        $sql = "DELETE FROM item WHERE id = ? AND id_folder = ? ";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(1, $file_id);
+        $stmt->bindParam(2, $folder_id);
         if($stmt->execute()){
-            $info = $this->checkfiles();
+            $info = $this->checkfiles($folder_id);
         }
         return $info;
     }
 
-    public function renamefile($name,$new_name)
+    public function renamefile($name,$new_name,$folder_id)
     {
-        $sql = "UPDATE item AS i SET i.name = :newname WHERE i.name = :name";
+        $sql = "UPDATE item AS i SET i.name = :newname WHERE i.name = :name AND i.id_folder = :folderid";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue("newname", $new_name, 'string');
         $stmt->bindValue("name", $name, 'string');
+        $stmt->bindValue("folderid", $folder_id);
+
         if($stmt->execute()){
-            $info = $this->checkfiles();
+            $info = $this->checkfiles($folder_id);
 
         }
         return $info;
 
     }
+
+
+
+
+
     public function newFolder($id, $folder_name, $id_parent)
     {
         $sql = "INSERT INTO folder (id_user,name, id_parent) VALUES (:id_user,:name, :id_parent)";
@@ -155,31 +163,35 @@ class DoctrineBbddRepository implements bbddRepository
         }
     }
 
-    public function renamefolder($name, $new_name)
+    public function renamefolder($name, $new_name,$id_parent)
     {
-        $sql = "UPDATE folder AS f SET f.name = :newname WHERE f.name = :name";
+        $sql = "UPDATE folder AS f SET f.name = :newname WHERE f.name = :name AND f.id_parent =:folderid";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue("newname", $new_name, 'string');
         $stmt->bindValue("name", $name, 'string');
+        $stmt->bindValue("folderid", $id_parent);
+
         if($stmt->execute()){
-            $info = $this->checkfolders();
+            $info = $this->checkfolders($id_parent);
 
         }
         return $info;
     }
-    public function checkfolders()
+
+    public function checkfolders($folder_id)
     {
-        $query = "SELECT * FROM folder";
-        $info = $this->connection->fetchAll($query);
+        $query = "SELECT * FROM folder WHERE id_parent = ? ";
+        $info = $this->connection->fetchAll($query,array($folder_id));
         return $info;
     }
 
-    public function deletefolder($folder_id){
-        $sql = "DELETE FROM folder WHERE id = ? ";
+    public function deletefolder($folder_id,$id_parent){
+        $sql = "DELETE FROM folder WHERE id = ? AND id_parent = ?  ";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(1, $folder_id);
+        $stmt->bindParam(2, $id_parent);
         if($stmt->execute()){
-            $info = $this->checkfolders();
+            $info = $this->checkfolders($id_parent);
         }
         return $info;
     }

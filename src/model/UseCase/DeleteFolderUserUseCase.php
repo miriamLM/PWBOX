@@ -22,9 +22,9 @@ class DeleteFolderUserUseCase
         $this->repository = $repository;
     }
 
-    public function __invoke($folder_id) {
+    public function __invoke($folder_id,$id_parent) {
 
-        $info = $this->repository->deletefolder($folder_id);
+        $info = $this->repository->deletefolder($folder_id,$id_parent);
         return $info;
     }
 

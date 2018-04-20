@@ -22,11 +22,11 @@ class CheckFileUserUseCase
 
     }
 
-    public function __invoke() {
+    public function __invoke($folder_id) {
 
 
 
-        $info = $this->repository->checkfiles();
+        $info = $this->repository->checkfiles($folder_id);
 
         return $info;
 

@@ -63,6 +63,9 @@ $app->post('/renameFolder','SlimApp\controller\HelloController:renameFolderProfi
 
 $app->post('/deleteFolder','SlimApp\controller\HelloController:deleteFolderProfile');
 
+$app->post('/newFolder','SlimApp\controller\HelloController:newFolderProfile');
+
+
 
 
 

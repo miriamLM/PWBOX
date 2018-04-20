@@ -22,9 +22,9 @@ class RenameFileUserUseCase
 
     }
 
-    public function __invoke($name,$new_name) {
+    public function __invoke($name,$new_name,$folder_id) {
 
-        $info = $this->repository->renamefile($name,$new_name);
+        $info = $this->repository->renamefile($name,$new_name,$folder_id);
 
         return $info;
     }
