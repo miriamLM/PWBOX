@@ -62,6 +62,10 @@
         <input type="text" name="shareName" value="Share" readonly="readonly" />
     </form>
 
+
+
+
+
     {% for array in folder %}
         <form action="/lp/{{ array.id }}" method="post">
             <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
@@ -75,6 +79,7 @@
                 <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
                 <button type="submit" class="btn" name="deleteFolder" value="deleteFolder">Delete</button>
             </form>
+
             <button type="submit" class="btn" data-toggle="modal" data-target="#ModalRenameFolderForm" name="renameFolder" value="renameFolder">Rename</button>
             <div class="modal fade" id="ModalRenameFolderForm">
                 <div class="modal-dialog">
@@ -96,7 +101,6 @@
                     </div>
                 </div>
             </div>
-
 
             <button type="submit" class="btn" data-toggle="modal" data-target="#ModalSharedFolderForm" name="shareFolder" value="shareFolder">Share</button>
             <div class="modal fade" id="ModalSharedFolderForm">
@@ -124,6 +128,10 @@
         </div>
 
     {% endfor %}
+
+        {% for array in folder %}
+
+        {% endfor %}
 
 
 

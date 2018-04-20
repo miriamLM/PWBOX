@@ -510,6 +510,8 @@ class HelloController
 
         if (isset($_POST['submit'])) {
             $folder = $request->getParsedBody();
+            var_dump($folder);
+            die();
             $folder_name = $folder['folder_name'];
             $folder_new_name = $folder['titleFolder'];
 
