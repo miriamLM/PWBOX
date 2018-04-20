@@ -12,6 +12,7 @@ class User
     private $password;
     private $createdAt;
     private $updatedAt;
+    private $image;
 
     /**
      * User constructor.
@@ -22,8 +23,9 @@ class User
      * @param $password
      * @param $createdAt
      * @param $updatedAt
+     * @param $image
      */
-    public function __construct($id, $username, $email,$birthdate ,$password,$createdAt, $updatedAt)
+    public function __construct($id, $username, $email,$birthdate ,$password,$createdAt, $updatedAt,$image)
     {
         $this->id = $id;
         $this->username = $username;
@@ -32,6 +34,23 @@ class User
         $this->password = $password;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->image = $image;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param mixed $image
+     */
+    public function setImage($image): void
+    {
+        $this->image = $image;
     }
 
     /**
