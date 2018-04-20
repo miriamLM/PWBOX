@@ -80,7 +80,7 @@
                 <button type="submit" class="btn" name="deleteFolder" value="deleteFolder">Delete</button>
             </form>
 
-            <button type="submit" class="btn" data-toggle="modal" data-target="#ModalRenameFolderForm" name="renameFolder" value="renameFolder">Rename</button>
+            <button type="submit" class="btn" data-toggle="modal" data-target="#ModalRenameFolderForm" name="renameFolder">Rename</button>
             <div class="modal fade" id="ModalRenameFolderForm">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -92,8 +92,8 @@
                         </div>
                         <div class="modal-body">
                             <form action="/renameFolder" method="post">
-                                <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
-                                <input type="hidden"  value="{{ array.nom }}" name="folder_name"/>
+                                <input type="hidden" value="{{ array.id }}" name="folder_id"/>
+                                <input type="hidden" value="{{ array.nom }}" name="folder_name"/>
                                 <input type="text" name="titleFolder" placeholder="New Folder Name"/>
                                 <input type="submit" name="submit" value="Submit"/>
                             </form>
