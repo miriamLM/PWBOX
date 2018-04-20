@@ -24,11 +24,11 @@ $app->get('/user','SlimApp\controller\HelloController:indexaAction');*/
 );*/
 
 
-$app->get('/','SlimApp\controller\HelloController:landingAction')->add('SlimApp\controller\Middleware\DashboardLoggedMiddleware');
+$app->get('/','SlimApp\controller\HelloController:landingAction');
 
-$app->get('/reg','SlimApp\controller\HelloController:registerAction')->add('SlimApp\controller\Middleware\DashboardLoggedMiddleware');
+$app->get('/reg','SlimApp\controller\HelloController:registerAction');
 
-$app->get('/log','SlimApp\controller\HelloController:loginAction')->add('SlimApp\controller\Middleware\DashboardLoggedMiddleware');
+$app->get('/log','SlimApp\controller\HelloController:loginAction');
 
 $app->get('/prof','SlimApp\controller\HelloController:profileAction')->add('SlimApp\controller\Middleware\UserLoggedMiddleware');
 
