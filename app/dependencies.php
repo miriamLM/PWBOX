@@ -174,5 +174,27 @@ $container['delete_folder_user_use_case'] = function($container){
     return $useCase;
 };
 
+/*
+ * Server share folder
+ */
+
+$container['check_email_share_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\CheckEmailShareUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+/*
+ * Servei add shared user
+ *
+ */
+$container['add_share_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\AddShareUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
 
 ?>

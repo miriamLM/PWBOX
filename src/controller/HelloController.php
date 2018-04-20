@@ -269,7 +269,6 @@ class HelloController
      */
 
 
-
     /**
      * FILE
      */
@@ -567,7 +566,42 @@ class HelloController
     }
 
 
+    /**
+     *SHARED
+     */
 
+    public function shareFolder(Request $request, Response $response){
+
+        if(isset($_POST['submit'])){
+            $folder = $request->getParsedBody();
+            $mail= $folder['mail'];
+            $id_owner = $_SESSION['id'];
+            $id_folder = $folder['folder_id'];
+            $type = $folder['checkbox'];
+            $servei = $this->container->get('check_email_share_user_use_case');
+            $id_usershared = $servei($mail);
+
+            /**
+             * Si el email no existe -> el id sera 0 el que me devuelve
+             * Saltara error
+             */
+            if($id_usershared == 0){
+                echo "<script>alert(\"ERROR\");location.href='/lp'</script>";
+            }else{
+                if($type == 'on'){
+                    $type = 'admin';
+                }else{
+                    $type = 'reader';
+                }
+
+                $servei = $this->container->get('add_share_user_use_case');
+                $servei($id_owner,$id_usershared,$id_folder,$type);
+                
+            }
+
+        }
+
+    }
 
 
     public function validacions($rawData, $opcio)

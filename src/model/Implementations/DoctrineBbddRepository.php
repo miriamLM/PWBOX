@@ -200,4 +200,37 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->execute();
 
     }
+
+
+    /**
+     * SHARE, CHECK EMAIL
+     * @param $email
+     */
+    public function checkemailshare($email){
+
+        $query = "SELECT * FROM user WHERE email = ? ";
+        $info = $this->connection->fetchAll($query,array($email));
+        return $info[0]['id'];
+    }
+
+    /**
+     * Add Shared user
+     * @param $id_owner
+     * @param $id_usershared
+     * @param $id_folder
+     * @param $type
+     */
+
+    public function addshareuser($id_owner,$id_usershared,$id_folder,$type){
+        $sql = "INSERT INTO share(id_owner, id_usershared,id_folder, type) VALUES(:idowner, :idusershared,:idfolder ,:type)";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue("idowner",$id_owner);
+        $stmt->bindValue("idusershared", $id_usershared);
+        $stmt->bindValue("idfolder",$id_folder);
+        $stmt->bindValue("type", $type, 'string');
+        $stmt->execute();
+    }
+
+
+
 }

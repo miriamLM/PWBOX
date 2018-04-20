@@ -90,4 +90,16 @@ interface bbddRepository
      */
     public function deletefolder($folder_id);
 
+    /**
+     * Check email shared
+     */
+
+    public function checkemailshare($email);
+
+    /**
+     * Add shared user
+     */
+
+    public function addshareuser($id_owner,$id_usershared,$id_folder,$type);
+
 }

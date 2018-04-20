@@ -44,7 +44,6 @@ $app->post('/login','SlimApp\controller\HelloController:loginMe');
 
 $app->post('/prof','SlimApp\controller\HelloController:profileUpdate');
 
-//$app->post('/lp','SlimApp\controller\HelloController:postLandingProfile');
 
 
 $app->post('/deleteAccount','SlimApp\controller\HelloController:deleteAccount');
@@ -70,7 +69,7 @@ $app->post('/lp/{id}','SlimApp\controller\HelloController:printFileFolder');
 
 
 
-
+$app->post('/shareFolder','SlimApp\controller\HelloController:shareFolder');
 
 
 

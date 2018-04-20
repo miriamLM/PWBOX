@@ -8,6 +8,10 @@
     </header>
 
 
+
+
+
+
     <div class="add-upload">
         <button type="submit" class="btn" data-toggle="modal" data-target="#ModalUploadForm" name="uploadFile" value="uploadFile">Upload File</button>
         <div class="modal fade" id="ModalUploadForm">
@@ -28,7 +32,8 @@
         </div>
 
 
-        <button type="submit" class="btn" data-toggle="modal" data-target="#modalAddFolder" name="addFolder" value="addFolder" >Add Folder</button>
+
+    <button type="submit" class="btn" data-toggle="modal" data-target="#modalAddFolder" name="addFolder" value="addFolder" >Add Folder</button>
         <div class="modal" id="modalAddFolder">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -60,10 +65,10 @@
         <div class="items">
             <input type="text"  name="nombre" readonly="readonly" value= "{{ array.nom }}"/>
             <form action="/deleteFolder" method="post">
-            <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
+                <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
                 <button type="submit" class="btn" name="deleteFolder" value="deleteFolder">Delete</button>
             </form>
-            <button type="submit" class="btn" data-toggle="modal" data-target="#ModalRenameFolderForm" name="renameFolder" value="renameFile">Rename</button>
+            <button type="submit" class="btn" data-toggle="modal" data-target="#ModalRenameFolderForm" name="renameFolder" value="renameFolder">Rename</button>
             <div class="modal fade" id="ModalRenameFolderForm">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -79,6 +84,29 @@
                                 <input type="hidden"  value="{{ array.nom }}" name="folder_name"/>
                                 <input type="text" name="titleFolder" placeholder="New Folder Name"/>
                                 <input type="submit" name="submit" value="Submit"/>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn" data-toggle="modal" data-target="#ModalSharedFolderForm" name="shareFolder" value="renameFolder">Share</button>
+            <div class="modal fade" id="ModalSharedFolderForm">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Share Folder</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/shareFolder" method="post">
+                                <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
+                                <input type="hidden"  value="{{ array.nom }}" name="folder_name"/>
+                                <input type="email" name="mail" placeholder="Mail"/>
+                                <input type="submit" name="submit" value="Submit"/>
+                                <label class="container">Admin</label>
+                                <input type="checkbox" name="checkbox"/>
                             </form>
                         </div>
                     </div>
