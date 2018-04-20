@@ -267,43 +267,6 @@ class HelloController
                 }
             }
 
-            /**
-             * Upload file
-             */
-            /*if(isset($_POST['upload'])){
-                echo "entra addfile";
-                $file = $_FILES['addFile'];
-                //var_dump($file);
-                $id = $_SESSION['id'];
-                $id_folder = 0;
-                $servei = $this->container->get('add_file_user_use_case');
-
-
-
-                $info = $servei($file,$id,$id_folder);
-
-
-                // Pq mho guardava com a string i ho vui amb int
-                $num_items = (int) $info[0];
-               // var_dump($num_items);
-                $img = "/assets/img/file.png";
-
-
-
-                $array = [];
-                for($i=0;$i<$num_items;$i++){
-                    $item = new Item($info[1][$i]['name'],$img,$id,$info[1][$i]['id'],0);
-                    array_push($array,$item);
-                }
-
-
-
-                return $this->container
-                    ->get('view')
-                    ->render($response, 'dashboard.twig', ['item' => $array]);
-
-            }*/
-
 
             /**
              * Upload folder
@@ -347,9 +310,12 @@ class HelloController
                 array_push($array, $item);
             }
 
-            return $this->container
+             $this->container
                 ->get('view')
                 ->render($response, 'dashboard.twig', ['item' => $array]);
+
+            return $response->withStatus(302)->withHeader('Location', '/lp');
+
         }
     }
 
@@ -375,9 +341,12 @@ class HelloController
                 array_push($array,$item);
             }
 
-            return $this->container
+            $this->container
                 ->get('view')
                 ->render($response, 'dashboard.twig', ['item' => $array]);
+
+            return $response->withStatus(302)->withHeader('Location', '/lp');
+
         }
 
     }
@@ -388,41 +357,69 @@ class HelloController
          * Upload file
          */
         if(isset($_POST['uploadSubmit'])){
-            echo "entra addfile";
             $file = $_FILES['addFile'];
-            //var_dump($file);
-            $id = $_SESSION['id'];
-            $id_folder = 0;
-            $servei = $this->container->get('add_file_user_use_case');
 
 
+            $filesize = $file['size'];
             /**
-             * Et retorna el número de fitxers
-             * i tota la informació dels fitxers
+             * El size del fitxer no pot superar el 2MB
              */
-            $info = $servei($file,$id,$id_folder);
+            if($filesize > 2000000){
+                return $response->getBody()->write('Error, File Size Superior of 2MB');
 
-
-            // Pq mho guardava com a string i ho vui amb int
-            $num_items = (int) $info[0];
-            // var_dump($num_items);
-            $img = "/assets/img/file.png";
-
-
-
-            $array = [];
-            for($i=0;$i<$num_items;$i++){
-                $item = new Item($info[1][$i]['name'],$img,$id,$info[1][$i]['id'],0);
-                array_push($array,$item);
             }
 
 
+            $allowed =  array('gif','png' ,'jpg','pdf','md','txt');
+            $filename = $_FILES['addFile']['name'];
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
 
-            return $this->container
-                ->get('view')
-                ->render($response, 'dashboard.twig', ['item' => $array]);
+
+
+            if(!in_array($ext,$allowed) ) {
+                /**
+                 * Aqui deberia Salir un Error WARNING
+                 * i despues creo que se deberia ridireccionar al dashboard otra vez
+                 */
+               return $response->getBody()->write('Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)');
+
+            }else {
+
+                $id = $_SESSION['id'];
+                $id_folder = 0;
+                $servei = $this->container->get('add_file_user_use_case');
+
+
+                /**
+                 * Et retorna el número de fitxers
+                 * i tota la informació dels fitxers
+                 */
+                $info = $servei($file, $id, $id_folder);
+
+
+                // Pq mho guardava com a string i ho vui amb int
+                $num_items = (int)$info[0];
+                // var_dump($num_items);
+                $img = "/assets/img/file.png";
+
+
+                $array = [];
+                for ($i = 0; $i < $num_items; $i++) {
+                    $item = new Item($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], 0);
+                    array_push($array, $item);
+                }
+
+
+                $this->container
+                    ->get('view')
+                    ->render($response, 'dashboard.twig', ['item' => $array]);
+
+                return $response->withStatus(302)->withHeader('Location', '/lp');
+
+            }
 
         }
+
     }
 
 
