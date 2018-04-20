@@ -101,6 +101,13 @@ class HelloController
 
     public function loginAction(Request $request, Response $response)
     {
+        if (!isset($_SESSION['counter'])) {
+            $_SESSION['counter'] = 1;
+
+        } else {
+            $_SESSION['counter']++;
+
+        }
         $errors = ["", ""];
         try {
             return $this->container
@@ -200,9 +207,22 @@ class HelloController
                 ->get('view')
                 ->render($response, 'login.twig', ['errors' => $errors]);
         }
+<<<<<<< HEAD
 
+=======
+        /*
+         * Per fer l'update del profile, el usuari ha d'estar loguejat
+         *
+         */
+        /* if (isset($_SESSION[$user["id"]])) {
+             echo "LOGGED";
+             //$this->profileAction($request,$response,$data);
+         }else{
+             echo "NOT LOGGED";
+             //not logged
+         }*/
+>>>>>>> 3ae9496fb033169fbc92bf8c86197bbc640d6e9d
     }
-
     public function profileUpdate(Request $request, Response $response) {
 
         echo "hola";
@@ -226,6 +246,24 @@ class HelloController
     public function postLandingProfile(Request $request, Response $response)
     {
         try {
+<<<<<<< HEAD
+=======
+            /**
+             * Delete Account
+             */
+            if(isset($_POST['delete'])){
+                echo "ENTRA";
+                $id = $_SESSION['id'];
+                $servei= $this->container->get('delete_user_use_case');
+                $stmt = $servei($id);
+                if($stmt->execute()){
+                    echo "<script>alert('Record deleted.')</script>";
+                    $_SESSION['id']= null;
+                    return $this->container->get('view')->render($response, 'landing.twig');
+                }
+            }
+
+>>>>>>> 3ae9496fb033169fbc92bf8c86197bbc640d6e9d
 
             /**
              * Upload folder
@@ -516,7 +554,6 @@ class HelloController
                 break;
         }
     }
-
     function test_input($data)
     {
         $data = trim($data);
