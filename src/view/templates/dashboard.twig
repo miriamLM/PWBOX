@@ -55,6 +55,13 @@
         </div>
     </div>
 
+    <form action="/sharedFolders" method="post">
+        <button type="submit" class="btn" name="sharedFolder">
+            <img src="assets/img/shared-folder.png" width="82" height="86">
+        </button>
+        <input type="text" name="shareName" value="Share" readonly="readonly" />
+    </form>
+
     {% for array in folder %}
         <form action="/lp/{{ array.id }}" method="post">
             <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
@@ -75,7 +82,7 @@
                         <div class="modal-header">
                             <h4 class="modal-title">Rename Folder</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                                <span aria-hidden="true">x</span>
                             </button>
                         </div>
                         <div class="modal-body">
@@ -89,7 +96,9 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn" data-toggle="modal" data-target="#ModalSharedFolderForm" name="shareFolder" value="renameFolder">Share</button>
+
+
+            <button type="submit" class="btn" data-toggle="modal" data-target="#ModalSharedFolderForm" name="shareFolder" value="shareFolder">Share</button>
             <div class="modal fade" id="ModalSharedFolderForm">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -104,16 +113,15 @@
                                 <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
                                 <input type="hidden"  value="{{ array.nom }}" name="folder_name"/>
                                 <input type="email" name="mail" placeholder="Mail"/>
-                                <input type="submit" name="submit" value="Submit"/>
                                 <label class="container">Admin</label>
                                 <input type="checkbox" name="checkbox"/>
+                                <input type="submit" name="sharesubmit" value="Submit"/>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
 
     {% endfor %}
 

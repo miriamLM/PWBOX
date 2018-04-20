@@ -102,4 +102,9 @@ interface bbddRepository
 
     public function addshareuser($id_owner,$id_usershared,$id_folder,$type);
 
+    /**
+     * Get folders of id_usershared
+     */
+
+    public function foldershareduser($id_usershared);
 }

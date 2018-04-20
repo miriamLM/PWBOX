@@ -71,6 +71,7 @@ $app->post('/lp/{id}','SlimApp\controller\HelloController:printFileFolder');
 
 $app->post('/shareFolder','SlimApp\controller\HelloController:shareFolder');
 
+$app->post('/sharedFolders','SlimApp\controller\HelloController:sharedFolders');
 
 
 //->add('SlimApp\controller\Middleware\TestMiddleware') // afegir mes middlewares

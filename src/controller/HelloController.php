@@ -151,6 +151,7 @@ class HelloController
             $item = new Item($info[$i]['name'],$img,$id,$info[$i]['id'],0);
             array_push($array,$item);
         }
+
         /*
          * folders
          */
@@ -508,7 +509,6 @@ class HelloController
          */
 
         if (isset($_POST['submit'])) {
-            var_dump($request->getParsedBody());
             $folder = $request->getParsedBody();
             $folder_name = $folder['folder_name'];
             $folder_new_name = $folder['titleFolder'];
@@ -572,7 +572,7 @@ class HelloController
 
     public function shareFolder(Request $request, Response $response){
 
-        if(isset($_POST['submit'])){
+        if(isset($_POST['sharesubmit'])){
             $folder = $request->getParsedBody();
             $mail= $folder['mail'];
             $id_owner = $_SESSION['id'];
@@ -596,11 +596,32 @@ class HelloController
 
                 $servei = $this->container->get('add_share_user_use_case');
                 $servei($id_owner,$id_usershared,$id_folder,$type);
-                
+
+                return $response->withStatus(302)->withHeader('Location', '/lp');
+
             }
 
         }
 
+    }
+
+
+    public function sharedFolders(Request $request, Response $response){
+        if(isset($_POST{'sharedFolder'})){
+            $id_usershared = $_SESSION['id'];
+            $servei = $this->container->get('folders_shared_user_use_case');
+            $folders = $servei($id_usershared);
+
+            $num_folders = sizeof($folders);
+            $array = [];
+            var_dump($folders);
+            for($i=0; $i<$num_folders;$i++){
+                $shared = $folders[$i]['id_folder'];
+                array_push($array, $shared);
+                var_dump($shared);
+            }
+
+        }
     }
 
 

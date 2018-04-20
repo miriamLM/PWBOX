@@ -15,10 +15,6 @@ class CheckEmailShareUserUseCase
 {
     private $repository;
 
-    /**
-     * RenameFolderUserUseCase constructor.
-     * @param $repository
-     */
     public function __construct(bbddRepository $repository)
     {
         $this->repository = $repository;

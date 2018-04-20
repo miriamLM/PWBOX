@@ -196,5 +196,16 @@ $container['add_share_user_use_case'] = function($container){
     return $useCase;
 };
 
+/*
+ * Servei get folders of usershared
+ *
+ */
+$container['folders_shared_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\FoldersSharedUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
 
 ?>

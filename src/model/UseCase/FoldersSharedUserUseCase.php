@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: carmeperseguerbarragan
  * Date: 14/5/18
- * Time: 18:53
+ * Time: 19:37
  */
 
 namespace SlimApp\model\UseCase;
@@ -11,7 +11,7 @@ namespace SlimApp\model\UseCase;
 
 use SlimApp\model\Interfaces\bbddRepository;
 
-class AddShareUserUseCase
+class FoldersSharedUserUseCase
 {
     private $repository;
 
@@ -22,11 +22,12 @@ class AddShareUserUseCase
     }
 
 
-    public function __invoke($id_owner,$id_usershared,$id_folder,$type) {
+    public function __invoke($id_usershared) {
 
 
-        $this->repository->addshareuser($id_owner,$id_usershared,$id_folder,$type);
+        $folders = $this->repository->foldershareduser($id_usershared);
 
+        return $folders;
 
     }
 

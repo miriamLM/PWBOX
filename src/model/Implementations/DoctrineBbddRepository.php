@@ -231,6 +231,16 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->execute();
     }
 
+    /**
+     * Folders shared id_usershared
+     * @param $id_usershared
+     * @return array
+     */
+    public function foldershareduser($id_usershared){
+        $query = "SELECT * FROM share WHERE id_usershared = ? ";
+        $info = $this->connection->fetchAll($query,array($id_usershared));
+        return $info;
+    }
 
 
 }
