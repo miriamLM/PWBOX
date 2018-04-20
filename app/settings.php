@@ -2,17 +2,17 @@
 
 return [
 
-  'settings' => [
-      'displayErrorDetails' => true,
-      'database' => [
-          'dbname' => 'bbdd',
-          'user' => 'root',
-          'password' => 'mysql',
-          'host' => 'localhost',
-          'driver' => 'pdo_mysql',
+    'settings' => [
+        'displayErrorDetails' => true,
+        'database' => [
+            'dbname' => 'bbdd',
+            'user' => 'homestead',
+            'password' => 'secret',
+            'host' => '192.168.10.10',
+            'driver' => 'pdo_mysql',
 
-      ]
-  ]
+        ]
+    ]
 ];
 
- ?>
+?>
