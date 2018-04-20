@@ -35,7 +35,6 @@
 
         </div>
     </div>
-    </div>
 
 
     <button type="submit" class="btn" name="folder" value="folder">Add Folder</button>
@@ -63,12 +62,15 @@
                             <input type="text" name="titleFile" placeholder="New File Name"/>
                             <input type="submit" name="submit" value="Submit"/>
                         </form>
-                      </div>
                     </div>
-
                 </div>
             </div>
         </div>
+        <form action="/downloadFile" method="post">
+            <input type="hidden"  value="{{ array.id }}" name="file_id"/>
+            <input type="hidden"  value="{{ array.nom }}" name="file_name"/>
+            <button type="submit" class="btn" name="downloadFile" value="downloadFile">Download</button>
+        </form>
 
     {% endfor %}
 

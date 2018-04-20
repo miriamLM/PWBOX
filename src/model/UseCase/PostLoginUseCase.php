@@ -25,21 +25,11 @@ class PostLoginUseCase
     }
 
     public function __invoke(array $rawData) {
-        $now = new \DateTime('now');
         $psswH = md5($rawData['psw']);
 
-       /* $user = new User(
-            null,
-            null,
-            $rawData['email'],
-            null,
-            $psswH,
-            $now,
-            $now
-        );*/
 
-        //$result = $this->repository->exists($user);
-        $result = $this->repository->exists($rawData["email"],$psswH);
+
+        $result = $this->repository->exists($rawData["emailuser"],$psswH);
 
         return $result;
     }

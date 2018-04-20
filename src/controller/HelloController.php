@@ -192,17 +192,12 @@ class HelloController
                  * landingProfile -> Landing, quan el usuari s'hagi pogut loguejar
                  *  **/
 
-               // $this->profileAction($request,$response,$id);
 
                 $_SESSION['id'] = $id;
 
 
-                /*return $this->container
-                    ->get('view')
-                    ->render($response, 'dashboard.twig');*/
 
                 return $response->withStatus(302)->withHeader('Location', '/lp');
-                //return $this->landingProfile($request,$response);
 
             } else {
                 echo "<script>alert('NO EXISTE USUARIO.')</script>";
@@ -284,7 +279,9 @@ class HelloController
     }
 
 
-
+    /**
+     * ROLE ADMIN
+     */
     public function renameFileProfile(Request $request, Response $response)
     {
         /**
@@ -358,8 +355,6 @@ class HelloController
          */
         if(isset($_POST['uploadSubmit'])){
             $file = $_FILES['addFile'];
-
-
             $filesize = $file['size'];
             /**
              * El size del fitxer no pot superar el 2MB
@@ -422,6 +417,25 @@ class HelloController
 
     }
 
+    /**
+     * ROLE READER
+     */
+
+    public function downloadFileProfile(Request $request, Response $response){
+         if(isset($_POST['downloadFile'])){
+             $file = $request->getParsedBody();
+             $file_name = $file['file_name'];
+             $file_path  = "/Downloads/" .$file_name;
+                 flush();
+                 readfile($file_path);
+                 exit;
+
+         }
+    }
+
+
+
+
 
     public function validacions($rawData, $opcio)
     {
@@ -453,14 +467,12 @@ class HelloController
 
                 }
 
-                /*EXISTES?*/
                 if (empty($rawData["email"])) {
                     $emailErr = "Email cannot be empty";
                 } else {
                     if (!filter_var($rawData["email"], FILTER_VALIDATE_EMAIL)) {
                         $emailErr = "Invalid email format";
                     }
-
                 }
 
                 if (empty($rawData["birthdate"])) {
@@ -508,11 +520,13 @@ class HelloController
             /*LOGIN*/
             case 1:
 
-                if (empty($rawData["email"])) {
+                if (empty($rawData["emailuser"])) {
                     $emailErr = "Email cannot be empty";
                 } else {
-                    if (!filter_var($rawData["email"], FILTER_VALIDATE_EMAIL)) {
-                        $emailErr = "Invalid email format";
+                    $pattern = "/[`'\"~!@# $*()<>,:;{}\|]/";
+                    if ((!filter_var($rawData["emailuser"], FILTER_VALIDATE_EMAIL))
+                        && ((strlen($rawData["emailuser"]) > 20) || (preg_match($pattern, $rawData["emailuser"]))) ) {
+                        $emailErr = "Error Email/Username";
                     }
 
                 }

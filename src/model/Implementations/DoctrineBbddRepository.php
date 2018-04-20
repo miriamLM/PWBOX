@@ -34,11 +34,10 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->execute();
     }
 
-    public function exists($email,$psw)
+    public function exists($emailuser,$psw)
     {
-        $sql = "SELECT id FROM user WHERE email= ? AND password = ?";
-        //$stmt = $this->connection->fetchAll($sql, array($user->getEmail(), $user->getPassword()));
-        $stmt = $this->connection->fetchAll($sql, array($email, $psw));
+        $sql = "SELECT id FROM user WHERE (email= ? OR username= ?)  AND password = ?";
+        $stmt = $this->connection->fetchAll($sql, array($emailuser,$emailuser,$psw));
         /**
          * M'agafa tot l'array , el qual conte tota la informacio d'aquell usuari amb aquell
             email i password
