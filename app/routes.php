@@ -30,7 +30,7 @@ $app->get('/reg','SlimApp\controller\HelloController:registerAction')->add('Slim
 
 $app->get('/log','SlimApp\controller\HelloController:loginAction')->add('SlimApp\controller\Middleware\DashboardLoggedMiddleware');
 
-$app->get('/prof','SlimApp\controller\HelloController:profileAction')->add('SlimApp\controller\Middleware\UserLoggedMiddleware');
+$app->get('/prof','SlimApp\controller\HelloController:profileAction')->add('SlimApp\controller\Middleware\UpdateProfileMiddleware');
 
 $app->get('/lp','SlimApp\controller\HelloController:getLandingProfile')->add('SlimApp\controller\Middleware\UserLoggedMiddleware');
 
@@ -42,7 +42,7 @@ $app->post('/registration','SlimApp\controller\HelloController:registerMe');
 
 $app->post('/login','SlimApp\controller\HelloController:loginMe');
 
-$app->post('/profileUpdate','SlimApp\controller\HelloController:profileUpdate');
+$app->post('/prof','SlimApp\controller\HelloController:profileUpdate');
 
 $app->post('/lp','SlimApp\controller\HelloController:postLandingProfile');
 

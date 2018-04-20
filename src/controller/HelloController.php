@@ -208,23 +208,13 @@ class HelloController
     }
 
     public function profileUpdate(Request $request, Response $response) {
-
-        echo "hola";
-
         $data = $request->getParsedBody();
         $servei = $this->container->get('update_user_use_case');
         $errors = $this->validacions($data, 0);
-        echo "..";
-        echo "hola2";
-        if ($errors[0] == "" && $errors[1] == "" && $errors[2] == "" && $errors[3] == "" && $errors[4] == "") {            $servei($data);
+        if ($errors[0] == "" && $errors[1] == "" && $errors[2] == "" && $errors[3] == "" && $errors[4] == "") {
             $servei($data);
-            $user = [$data['username'],$data['email'],$data['birthdate'],$data['psw'],$data['psw']];
-            var_dump($user);
-            return $this->container
-                ->get('view')
-                ->render($response, 'profileUpdate.twig', ['user'=> $user],['errors' => $errors]);
+            return $response->withStatus(302)->withHeader('Location', '/prof');
         }
-
     }
 
     public function postLandingProfile(Request $request, Response $response)
@@ -559,6 +549,7 @@ class HelloController
                 break;
         }
     }
+
     function test_input($data)
     {
         $data = trim($data);
