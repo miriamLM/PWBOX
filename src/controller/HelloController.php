@@ -175,7 +175,7 @@ class HelloController
 
         return $this->container
             ->get('view')
-            ->render($response, 'dashboard.twig', ['item' => $array , 'folder' => $array2, 'idParent']);
+            ->render($response, 'dashboard.twig', ['item' => $array , 'folder' => $array2]);
 
     }
 
@@ -303,7 +303,6 @@ class HelloController
 
             $servei($file_name,$file_new_name);
 
-
             $response->withStatus(302)->withHeader('Location', '/insideFolder');
 
             return  $response->withStatus(302)->withHeader('Location', '/lp');
@@ -422,8 +421,7 @@ class HelloController
 
     public function addFolderProfile(Request $request, Response $response)
     {
-        if(isset($_POST['addSubmit']))
-        {
+        if(isset($_POST['addSubmit'])) {
 
 
             $id = $_SESSION['id'];
@@ -515,6 +513,7 @@ class HelloController
             ->render($response, 'dashboard.twig', ['folder' => $array2,'item' => $array ,"idParent" => $id_folder , "idFolder" => $id_folder]);
 
 
+
     }
 
     public function renameFolderProfile(Request $request, Response $response)
@@ -525,7 +524,7 @@ class HelloController
 
         if (isset($_POST['submit'])) {
             $folder = $request->getParsedBody();
-            var_dump($folder);
+
             $folder_name = $folder['folder_name'];
             $folder_new_name = $folder['titleFolder'];
 
@@ -533,7 +532,6 @@ class HelloController
 
             $servei($folder_name,$folder_new_name);
 
-            $response->withStatus(302)->withHeader('Location', '/insideFolder');
 
             return  $response->withStatus(302)->withHeader('Location', '/lp');
 
@@ -554,8 +552,6 @@ class HelloController
             $servei($folder_id);
 
 
-
-            $response->withStatus(302)->withHeader('Location', '/insideFolder');
 
             return  $response->withStatus(302)->withHeader('Location', '/lp');
 
@@ -616,7 +612,6 @@ class HelloController
         }
     }
 
-
     public function sharedFolders(Request $request, Response $response){
         if(isset($_POST{'sharedFolder'})){
             $id_usershared = $_SESSION['id'];
@@ -625,18 +620,23 @@ class HelloController
 
             $num_folders = sizeof($folders);
             $array = [];
-            var_dump($folders);
+
             for($i=0; $i<$num_folders;$i++){
                 $shared = $folders[$i]['id_folder'];
                 $servei = $this->container->get('check_folders_shared_user_use_case');
                 $folder_shared = $servei($shared);
                 array_push($array, $folder_shared);
-                var_dump($folder_shared);
             }
+
+            return $this->container
+                ->get('view')
+                ->render($response, 'dashboard.twig', ['folder' => $array]);
+
+
+
 
 
         }
-        //return  $response->withStatus(302)->withHeader('Location', '/lp');
     }
 
 

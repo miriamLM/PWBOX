@@ -29,7 +29,7 @@ class DoctrineBbddRepository implements bbddRepository
      */
     public function save(User $user)
     {
-        $sql = "INSERT INTO user(username, email,birthdate, password, created_at, updated_at, image) VALUES(:username, :email,:birthdate ,:password, :created_at, :updated_at, :image)";
+        $sql = "INSERT INTO user(username, email,birthdate, password, created_at, updated_at) VALUES(:username, :email,:birthdate ,:password, :created_at, :updated_at)";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue("username", $user->getUsername(), 'string');
         $stmt->bindValue("email", $user->getEmail(), 'string');
@@ -37,7 +37,7 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->bindValue("password", $user->getPassword(), 'string');
         $stmt->bindValue("created_at", $user->getCreatedAt()->format(self::DATE_FORMAT));
         $stmt->bindValue("updated_at", $user->getCreatedAt()->format(self::DATE_FORMAT));
-        $stmt->bindValue("image", $user->getImage(), 'string');
+        //$stmt->bindValue("image", $user->getImage(), 'string');
         $stmt->execute();
     }
 
