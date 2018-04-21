@@ -474,7 +474,7 @@ class HelloController
         //hacemos un servicio para saber el id_user de la carpeta
         $servei_id_user = $this->container->get('check_user_folder_use_case');
         $info_user = $servei_id_user($fold['folder_id']);
-        $id_user = $info_user[0];
+        $id_user = $info_user[0]['id_user'];
         $_SESSION['id_share']= $id_user;
         var_dump($_SESSION['id_share']);
 
@@ -487,7 +487,9 @@ class HelloController
         }*/
 
 
+
         $id_folder = $fold['folder_id'];
+      
 
 
         $servei = $this->container->get('check_file_user_use_case');
