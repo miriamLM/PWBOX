@@ -116,11 +116,13 @@ class DoctrineBbddRepository implements bbddRepository
         }
     }
 
-    public function checkfiles($folder_id)
+    public function checkfiles($folder_id,$id)
     {
         $query = "SELECT * FROM item WHERE id_folder =? and id_user=?";
 
-        $info = $this->connection->fetchAll($query,array($folder_id,$_SESSION['id']));
+        $info = $this->connection->fetchAll($query,array($folder_id,(int)$id));
+        var_dump($id);
+
         return $info;
     }
 
@@ -187,10 +189,10 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->execute();
     }
 
-    public function checkfolders($folder_id)
+    public function checkfolders($folder_id,$id)
     {
         $query = "SELECT * FROM folder WHERE id_parent = ?  and id_user =?";
-        $info = $this->connection->fetchAll($query,array($folder_id, $_SESSION['id']));
+        $info = $this->connection->fetchAll($query,array($folder_id, (int)$id));
         return $info;
     }
 
@@ -251,7 +253,16 @@ class DoctrineBbddRepository implements bbddRepository
     public function checkFoldersShared($id_shared){
         $query = "SELECT * FROM folder WHERE id = ? ";
         $info = $this->connection->fetchAll($query,array($id_shared));
-        return $info[0];
+        return $info;
+
     }
+
+
+    public function checkUserFolder($folder_id){
+        $query = "SELECT id_user FROM folder WHERE id = ? ";
+        $info = $this->connection->fetchAll($query,array($folder_id));
+        return $info;
+    }
+
 
 }

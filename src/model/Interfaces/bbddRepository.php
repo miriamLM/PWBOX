@@ -56,7 +56,7 @@ interface bbddRepository
      * Check files
      */
 
-    public function checkfiles($folder_id);
+    public function checkfiles($folder_id,$id);
 
     /**
      * Delete files
@@ -83,7 +83,7 @@ interface bbddRepository
     /**
      * Check folders
      */
-    public function checkfolders($folder_id);
+    public function checkfolders($folder_id,$id);
 
     /**
      * Delete folder
@@ -114,5 +114,9 @@ interface bbddRepository
 
     public function checkFoldersShared($id_shared);
 
+    /**
+     * get id_user of a folder
+     */
 
+    public function checkUserFolder($folder_id);
 }

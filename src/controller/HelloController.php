@@ -11,7 +11,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Dflydev\FigCookies\FigRequestCookies;
 use SlimApp\model\Folder;
-use SlimApp\model\FolderShared;
 use SlimApp\model\Item;
 
 
@@ -141,7 +140,7 @@ class HelloController
         /**
          *Tota la informació dels fitxers
          */
-        $info = $servei($id_folder);
+        $info = $servei($id_folder,$id);
 
         $img = "/assets/img/file.png";
 
@@ -161,7 +160,7 @@ class HelloController
         /**
          *Tota la informació dels fitxers
          */
-        $info2 = $servei2($id_folder);
+        $info2 = $servei2($id_folder,$id);
 
         $img2 = "/assets/img/folder.png";
 
@@ -180,11 +179,11 @@ class HelloController
 
     }
 
+
     public function logout(Request $request, Response $response){
         $_SESSION['id'] = null;
         return $response->withStatus(302)->withHeader('Location','/');
     }
-
 
 
 
@@ -470,8 +469,24 @@ class HelloController
         $fold = $request->getParsedBody();
 
         var_dump($fold);
-
         $id = $_SESSION['id'];
+        var_dump($id);
+        //hacemos un servicio para saber el id_user de la carpeta
+        $servei_id_user = $this->container->get('check_user_folder_use_case');
+        $info_user = $servei_id_user($fold['folder_id']);
+        $id_user =$info_user[0];
+        //var_dump();
+
+        /*if ($id_user != $_SESSION['id']){
+            echo "NO SON IGUALES";
+            $_SESSION['id_owner'] = $id_user;
+            $id = $_SESSION['id_owner'];
+            var_dump($id_user);
+            var_dump($id);
+        }*/
+
+
+
         $id_folder = $fold['folder_id'];
 
 
@@ -480,7 +495,7 @@ class HelloController
         /**
          *Tota la informació dels fitxers
          */
-        $info = $servei($id_folder);
+        $info = $servei($id_folder,$id);
 
         $img = "/assets/img/file.png";
 
@@ -499,7 +514,7 @@ class HelloController
         /**
          *Tota la informació de la carpeta
          */
-        $info2 = $servei2($id_folder);
+        $info2 = $servei2($id_folder,$id);
 
         $img2 = "/assets/img/folder.png";
 
@@ -511,8 +526,11 @@ class HelloController
             $folder = new Folder($info2[$i]['name'],$img2,$id,$info2[$i]['id'],$id_folder);
             array_push($array2,$folder);
         }
-        var_dump($info2);
-        die();
+
+        $_SESSION['id_owner']= null;
+
+
+
 
         return $this->container
             ->get('view')
@@ -587,7 +605,7 @@ class HelloController
 
 
     /**
-     *SHARED
+     *SHARED -> cuando quieres compartir una carpeta con otro usuario
      */
 
     public function shareFolder(Request $request, Response $response){
@@ -618,72 +636,38 @@ class HelloController
         }
     }
 
+    /**
+     *Cuando entras en la carpeta share
+     */
+
     public function sharedFolders(Request $request, Response $response){
         if(isset($_POST{'sharedFolder'})){
+            $_SESSION['id_owner'] = null;
             $id_usershared = $_SESSION['id'];
             $servei = $this->container->get('folders_shared_user_use_case');
             $folders = $servei($id_usershared);
 
-            $num_folders = sizeof($folders);
-            $array = [];
-            $array2 = [];
-            $img2 = "/assets/img/folder.png";
-            $id= $_SESSION['id'];
-            $id_parent = 1; // si esta en share, necesito la id_parent?
-            $servei4 = $this->container->get('check_folders_shared_user_use_case');
 
+            $num_folders = sizeof($folders);
+
+
+            $array = [];
+            $img2 = "/assets/img/folder.png";
+            $id_parent = 1; // si esta en share, necesito la id_parent?
 
             for($i=0; $i<$num_folders;$i++){
                 $shared = $folders[$i]['id_folder'];
+                $servei4 = $this->container->get('check_folders_shared_user_use_case');
+
                 $folder_shared = $servei4($shared);
-                var_dump($folder_shared);
-<<<<<<< HEAD
-                echo "-------------";
-                $folder = new Folder($folder_shared[$i]['name'],$img2,$id,$folder_shared[$i]['id'],1);
+
+                $folder = new Folder($folder_shared[0]['name'],$img2,$id_usershared,$folder_shared[0]['id'],1);
                 array_push($array,$folder);
-
             }
 
-            var_dump($array);
-=======
-                echo "-------------\n";
-                $folder = new FolderShared($folder_shared[$i]['id'],$id,$img2,$folder_shared[$i]['name'],$folder_shared[$i]['id_parent']);
-                //var_dump($folder_shared[$i]['id']);
-                array_push($array2,$folder);
-                array_push($array,$folder_shared);
-
-            }
-
-
-
-            echo"-----\n\n";
-
-            var_dump($array2[1]);
-
-            echo "-------\n\n\n";
-
-            //var_dump($array);
-
->>>>>>> 6a9bc81b96aa37fc5c450dc67bacd33c06ee6103
-            die();
-            $this->container
-                ->get('view')
-                ->render($response, 'dashboard.twig', ['folder' => $array]);
-
-            //return $response->withStatus(302)->withHeader('Location', '/lp');
-
-<<<<<<< HEAD
             return $this->container
-=======
-
-
-            /*return $this->container
->>>>>>> 6a9bc81b96aa37fc5c450dc67bacd33c06ee6103
                 ->get('view')
                 ->render($response, 'dashboard.twig', ['folder' => $array]);
-            */
-
-
 
 
         }
