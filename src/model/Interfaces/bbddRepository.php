@@ -143,4 +143,10 @@ interface bbddRepository
      */
     public function deleteshare($id_folder);
 
+    /**
+     * save notificacion
+     */
+
+    public function savenotificacion($id_owner,$id_usershared,$id_folder,$notificacion);
+
 }

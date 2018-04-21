@@ -24,7 +24,7 @@ class CheckUserUseCase
 
     }
 
-    public function __invoke( $id) {
+    public function __invoke($id) {
 
         /**
          * Me recoge toda la info del usuario , del id que ha iniciado session

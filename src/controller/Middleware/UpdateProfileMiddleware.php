@@ -19,7 +19,9 @@ class UpdateProfileMiddleware
             //NO ESTA LOGGEADO
             //es una redireccion
 
-            return $response->withStatus(403)
+
+
+           return $response->withStatus(403)
                 ->withHeader("Status: 403 Forbidden", 'text/html')
                 ->write('HTTP/1.0 403 Forbidden');
 

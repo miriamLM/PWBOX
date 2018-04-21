@@ -303,6 +303,15 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->execute();
     }
 
+    public function savenotificacion($id_owner,$id_usershared,$id_folder,$notificacion){
+        $sql = "INSERT INTO notificacion(id_owner, id_usershared,id_folder, notificacion) VALUES(:idowner, :idusershared,:idfolder ,:notificacion)";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue("idowner",$id_owner);
+        $stmt->bindValue("idusershared", $id_usershared);
+        $stmt->bindValue("idfolder",$id_folder);
+        $stmt->bindValue("notificacion", $notificacion, 'string');
+        $stmt->execute();
+    }
 
 
 }

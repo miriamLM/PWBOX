@@ -44,6 +44,8 @@ $app->post('/login','SlimApp\controller\HelloController:loginMe');
 
 $app->post('/prof','SlimApp\controller\HelloController:profileUpdate');
 
+$app->get('/inicio','SlimApp\controller\HelloController:inicioDashboard');
+
 
 
 $app->post('/deleteAccount','SlimApp\controller\HelloController:deleteAccount');

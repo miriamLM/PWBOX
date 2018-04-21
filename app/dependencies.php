@@ -274,4 +274,17 @@ $container['delete_share_user_use_case'] = function($container){
 };
 
 
+/*
+ * Servei per guardar notificacion
+ */
+
+
+$container['save_notificacion'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\SaveNotificacionUserUsecase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+
 ?>

@@ -4,6 +4,7 @@
 
     <header>
         <h1 class="h1-dashboard"> CONTENIDO USUARIO </h1>
+        <a href="/inicio" class="redirectpaginici">PWBOX</a>
         <a  href="/prof" class="redirectprof">Profile</a>
     </header>
     <form action="/logout" class="form" method="POST">
@@ -18,7 +19,7 @@
         <form action="/shared/{{ array.id }}" method="post">
             <input type="hidden"  value="{{ array.type }}" name="role"/>
             <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
-            <button type="submit" class="btn" name="folder" value="{{ array.nom }}">
+            <button type="submit" class="btn" name="folder" value="{{ array.nom }}" ondblclick="myFunction()">
                 <img src="{{ array.img }}" width="82" height="86">
             </button>
         </form>

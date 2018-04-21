@@ -14,8 +14,9 @@ use SlimApp\model\Folder;
 use SlimApp\model\FolderShared;
 use SlimApp\model\Item;
 use SlimApp\model\ItemShared;
-
-
+use Swift_Mailer;
+use Swift_Message;
+use Swift_SmtpTransport;
 
 
 class HelloController
@@ -222,8 +223,28 @@ class HelloController
                 var_dump($destination);
             }
 
+            /*
+            // Create the Transport
+            $transport = (new Swift_SmtpTransport('192.168.10.10', 3306))
+                ->setUsername($data['username'])
+                ->setPassword($data['psw'])
+            ;
 
-           // $servei($data);
+            // Create the Mailer using your created Transport
+            $mailer = new Swift_Mailer($transport);
+
+            // Create a message
+            $message = (new Swift_Message('Wonderful Subject'))
+                ->setFrom([$data['email'] => $data['username']])
+                ->setTo(['receiver@mailinator.com', 'other@mailinator.com' => 'A name'])
+                ->setBody('Here is the message itself')
+            ;
+
+            // Send the message
+            $result = $mailer->send($message);*/
+
+
+            // $servei($data);
             $servei($data,$capacity);
             return $response->withStatus(302)->withHeader('Location','/log');
 
@@ -270,6 +291,15 @@ class HelloController
             $servei($data);
             //QUE DEVUELVA AL JS
            // return $response->withStatus(302)->withHeader('Location', '/prof');
+        }
+    }
+
+    public function inicioDashboard(Request $request, Response $response){
+        try {
+            return $response->withStatus(302)->withHeader('Location','/lp');
+
+        } catch (NotFoundExceptionInterface $e) {
+        } catch (ContainerExceptionInterface $e) {
         }
     }
 
@@ -689,6 +719,9 @@ class HelloController
 
             $servei($folder_name,$folder_new_name);
 
+            
+
+
 
             return  $response->withStatus(302)->withHeader('Location', '/lp');
 
@@ -847,6 +880,26 @@ class HelloController
 
                 $servei = $this->container->get('add_share_user_use_case');
                 $servei($id_owner,$id_usershared,$id_folder,$tipo);
+
+
+                /**
+                 * Tengo que enviarle una notificación al id_usershared
+                 * de que si la carpeta que le paso , la hago admin,
+                 * este id_usershared podra ser administrador de esta
+                 */
+
+                if($tipo == 'Admin'){
+
+                    $servei = $this->container->get('check_user_use_case');
+                    $user = $servei($id_owner);
+
+
+                    $notificacion = " El usuario ".$user[0]['username']." te ha hecho Administrador de ".$folder['folder_name']."";
+                    $servei_save_notificacion = $this->container->get('save_notificacion');
+                    $servei_save_notificacion($id_owner,$id_usershared,$id_folder,$notificacion);
+                }
+
+
                 return $response->withStatus(302)->withHeader('Location', '/lp');
             }
         }

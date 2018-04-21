@@ -26,3 +26,12 @@ function profile(){
 function validation() {
     //TODAS LAS PUTAS VALIDACIOENS
 }
+
+
+function myFunction() {
+    window.location.assign("http://www.slimapp.test/lp/{id}")
+
+
+
+}
+
