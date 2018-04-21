@@ -61,7 +61,7 @@ $app->post('/addFolder','SlimApp\controller\HelloController:addFolderProfile');
 
 
 
-$app->post('/renameFolder','SlimApp\controller\HelloController:renameFolderProfile');
+$app->post('/renameFolder{id}','SlimApp\controller\HelloController:renameFolderProfile');
 
 $app->post('/deleteFolder','SlimApp\controller\HelloController:deleteFolderProfile');
 
@@ -72,6 +72,10 @@ $app->post('/lp/{id}','SlimApp\controller\HelloController:printFileFolder');
 $app->post('/shareFolder','SlimApp\controller\HelloController:shareFolder');
 
 $app->post('/sharedFolders','SlimApp\controller\HelloController:sharedFolders');
+
+
+$app->post('/logout','SlimApp\controller\HelloController:logout');//->add('SlimApp\controller\Middleware\UserLoggedMiddleware');
+
 
 
 //->add('SlimApp\controller\Middleware\TestMiddleware') // afegir mes middlewares
