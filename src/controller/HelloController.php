@@ -620,20 +620,39 @@ class HelloController
 
             $num_folders = sizeof($folders);
             $array = [];
+            $img2 = "/assets/img/folder.png";
+            $id= $_SESSION['id'];
+            $id_parent = 1; // si esta en share, necesito la id_parent?
 
             for($i=0; $i<$num_folders;$i++){
                 $shared = $folders[$i]['id_folder'];
                 $servei = $this->container->get('check_folders_shared_user_use_case');
                 $folder_shared = $servei($shared);
-                array_push($array, $folder_shared);
+                var_dump($folder_shared);
+                echo "-------------";
+                $folder = new Folder($folder_shared[$i]['name'],$img2,$id,$folder_shared[$i]['id'],1);
+                var_dump($folder_shared[$i]['id']);
+                array_push($array,$folder);
+
             }
+
+
+
+            echo"-----";
+
+            //var_dump($folder_shared);
+
+            echo "-------";
+
+            var_dump($array);
+
+            die();
+
+
 
             return $this->container
                 ->get('view')
                 ->render($response, 'dashboard.twig', ['folder' => $array]);
-
-
-
 
 
         }
