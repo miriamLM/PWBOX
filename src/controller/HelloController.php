@@ -474,8 +474,9 @@ class HelloController
         //hacemos un servicio para saber el id_user de la carpeta
         $servei_id_user = $this->container->get('check_user_folder_use_case');
         $info_user = $servei_id_user($fold['folder_id']);
-        $id_user =$info_user[0];
-        //var_dump();
+        $id_user = $info_user[0];
+        $_SESSION['id_share']= $id_user;
+        var_dump($_SESSION['id_share']);
 
         /*if ($id_user != $_SESSION['id']){
             echo "NO SON IGUALES";
@@ -484,7 +485,6 @@ class HelloController
             var_dump($id_user);
             var_dump($id);
         }*/
-
 
 
         $id_folder = $fold['folder_id'];
@@ -496,6 +496,7 @@ class HelloController
          *Tota la informació dels fitxers
          */
         $info = $servei($id_folder,$id);
+
 
         $img = "/assets/img/file.png";
 
@@ -516,6 +517,7 @@ class HelloController
          */
         $info2 = $servei2($id_folder,$id);
 
+
         $img2 = "/assets/img/folder.png";
 
         $num_folders = sizeof($info2);
@@ -527,7 +529,7 @@ class HelloController
             array_push($array2,$folder);
         }
 
-        $_SESSION['id_owner']= null;
+        $_SESSION['id_share']= null;
 
 
 
@@ -642,7 +644,7 @@ class HelloController
 
     public function sharedFolders(Request $request, Response $response){
         if(isset($_POST{'sharedFolder'})){
-            $_SESSION['id_owner'] = null;
+            $_SESSION['id_share'] = null;
             $id_usershared = $_SESSION['id'];
             $servei = $this->container->get('folders_shared_user_use_case');
             $folders = $servei($id_usershared);

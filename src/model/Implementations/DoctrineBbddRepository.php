@@ -118,9 +118,10 @@ class DoctrineBbddRepository implements bbddRepository
 
     public function checkfiles($folder_id,$id)
     {
-        $query = "SELECT * FROM item WHERE id_folder =? and id_user=?";
+        $query = "SELECT * FROM item WHERE id_folder =? and (id_user=? OR id_user=?)";
 
-        $info = $this->connection->fetchAll($query,array($folder_id,(int)$id));
+        $info = $this->connection->fetchAll($query,array($folder_id,(int)$_SESSION['id'],(int)$_SESSION['id_share']));
+
         var_dump($id);
 
         return $info;
@@ -191,8 +192,8 @@ class DoctrineBbddRepository implements bbddRepository
 
     public function checkfolders($folder_id,$id)
     {
-        $query = "SELECT * FROM folder WHERE id_parent = ?  and id_user =?";
-        $info = $this->connection->fetchAll($query,array($folder_id, (int)$id));
+        $query = "SELECT * FROM folder WHERE id_parent = ? and (id_user=? OR id_user=?)";
+        $info = $this->connection->fetchAll($query,array($folder_id,(int)$_SESSION['id'],(int)$_SESSION['id_share']));
         return $info;
     }
 
