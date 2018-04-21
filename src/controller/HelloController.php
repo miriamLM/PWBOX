@@ -586,7 +586,11 @@ class HelloController
     }
 
 
-    public function FileFolder(Request $request, Response $response){
+    /**
+     * Cuando printas files,folders de las carpetas que estan en la
+     * carpeta compartida
+     */
+    public function printSharedFileFolder(Request $request, Response $response){
         $fold = $request->getParsedBody();
 
         $id = $_SESSION['id'];
@@ -635,12 +639,22 @@ class HelloController
         $num_folders = sizeof($info2);
 
 
+
         $array2 = [];
         for($i=0;$i<$num_folders;$i++){
             $folder = new FolderShared($info2[$i]['name'],$img2,$id,$info2[$i]['id'],$id_folder,$fold['role']);
             array_push($array2,$folder);
         }
 
+        /**
+         * Esto es pq si cuando entras en una carpeta admin i que no contiene nada dentro
+         * te tiene que mostrar el boton de uploadfile,addfolder
+         */
+        $vacio=0;
+
+        if(empty($array)&&empty($array2)){
+            $vacio = 1;
+        }
 
 
         $_SESSION['id_share']= null;
@@ -650,9 +664,10 @@ class HelloController
 
         return $this->container
             ->get('view')
-            ->render($response, 'dashboardShareFolder.twig', ['folder' => $array2,'item' => $array ,"idParent" => $id_folder , "idFolder" => $id_folder]);
+            ->render($response, 'dashboardShareFolder.twig', ['folder' => $array2,'item' => $array ,"idParent" => $id_folder , "idFolder" => $id_folder, 'vacio' => $vacio, 'role'=>$fold['role']]);
 
     }
+
 
     public function renameFolderProfile(Request $request, Response $response)
     {

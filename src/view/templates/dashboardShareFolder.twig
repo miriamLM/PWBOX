@@ -10,21 +10,52 @@
         <button type="submit" class="btn"  name="logout" value="logout">logout</button>
     </form>
 
+    {% if vacio == 1 and role == 'Admin' %}
+        <button type="submit" class="btn" data-toggle="modal" data-target="#modalAddFolder" name="addFolder" value="addFolder" >Add Folder</button>
+        <div class="modal" id="modalAddFolder">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add Folder</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/addFolder" method="post" enctype="multipart/form-data">
+                            <input type="text" id="nameFolder" name="nameFolder" />
+                            <button type="submit" name="addSubmit" value="{{ idParent }}">Add</button>
+                        </form>
+                    </div>
+                </div>
 
+            </div>
+        </div>
+        <div class="add-upload">
+            <button type="submit" class="btn" data-toggle="modal" data-target="#ModalUploadForm" name="uploadFile" value="uploadFile">Upload File</button>
+            <div class="modal fade" id="ModalUploadForm">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Upload File</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/uploadFile" method="post" enctype="multipart/form-data">
+                                <input type="file" id="addFile" name="addFile" size="2Mb" />
+                                <button type="submit" name="uploadSubmit" value="{{ idFolder }}">Upload</button>
+                            </form>
+                        </div>
+                    </div>
 
-
-
-
-
-
-
-
-
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
 
 
     {% for array in folder %}
-        <form action="/lpp/{{ array.id }}" method="post">
+        <form action="/shared/{{ array.id }}" method="post">
             <input type="hidden"  value="{{ array.type }}" name="role"/>
             <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
             <button type="submit" class="btn" name="folder" value="{{ array.nom }}">

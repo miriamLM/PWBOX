@@ -13,8 +13,9 @@
 
 
 
+
     {% for array in folder %}
-        <form action="/lpp/{{ array.id }}" method="post">
+        <form action="/shared/{{ array.id }}" method="post">
             <input type="hidden"  value="{{ array.type }}" name="role"/>
             <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
             <button type="submit" class="btn" name="folder" value="{{ array.nom }}">
