@@ -719,7 +719,9 @@ class HelloController
 
             $servei($folder_name,$folder_new_name);
 
-            
+            // cojo el id_owner de la tabla share con el id_folder que quiero renombrar
+            // si el id_owner es diferente de la session id
+            // significa que tengo que enviar notificacion del id_usershared al id_owner
 
 
 
