@@ -588,7 +588,7 @@ class HelloController
 
     /**
      * Cuando printas files,folders de las carpetas que estan en la
-     * carpeta compartida
+     * carpeta compartida que te han enviado
      */
     public function printSharedFileFolder(Request $request, Response $response){
         $fold = $request->getParsedBody();
