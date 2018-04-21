@@ -1,40 +1,34 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: len
- * Date: 15/05/2018
- * Time: 13:14
+ * User: carmeperseguerbarragan
+ * Date: 10/5/18
+ * Time: 14:18
  */
 
 namespace SlimApp\model;
 
 
-class FolderShared
+class ItemShared
 {
-
     private $id;
     private $id_user;
     private $img;
     private $nom;
-    private $id_parent;
+    private $id_folder;
     private $type;
 
-    /**
-     * FolderShared constructor.
-     * @param $id
-     * @param $id_user
-     * @param $img
-     * @param $nom
-     * @param $id_parent
-     */
-    public function __construct($nom,$img,$id_user,$id,$id_parent,$type){
 
-        $this->id = $id;
-        $this->id_user = $id_user;
+
+    public function __construct($nom,$img,$id_user,$id,$id_folder,$type)
+    {
         $this->img = $img;
         $this->nom = $nom;
-        $this->id_parent = $id_parent;
+        $this->id_user= $id_user;
+        $this->id= $id;
+        $this->id_folder= $id_folder;
         $this->type = $type;
+
     }
 
     /**
@@ -104,17 +98,17 @@ class FolderShared
     /**
      * @return mixed
      */
-    public function getIdParent()
+    public function getIdFolder()
     {
-        return $this->id_parent;
+        return $this->id_folder;
     }
 
     /**
-     * @param mixed $id_parent
+     * @param mixed $id_folder
      */
-    public function setIdParent($id_parent): void
+    public function setIdFolder($id_folder): void
     {
-        $this->id_parent = $id_parent;
+        $this->id_folder = $id_folder;
     }
 
     /**

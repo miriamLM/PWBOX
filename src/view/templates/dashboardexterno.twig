@@ -1,0 +1,146 @@
+{% extends "base.twig" %}
+
+{%  block content  %}
+
+    <header>
+        <h1 class="h1-dashboard"> CONTENIDO USUARIO </h1>
+        <a  href="/prof" class="redirectprof">Profile</a>
+    </header>
+    <form action="/logout" class="form" method="POST">
+        <button type="submit" class="btn"  name="logout" value="logout">logout</button>
+    </form>
+
+
+
+
+    {% for array in folder %}
+        <form action="/lpp/{{ array.id }}" method="post">
+            <input type="hidden"  value="{{ array.type }}" name="role"/>
+            <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
+            <button type="submit" class="btn" name="folder" value="{{ array.nom }}">
+                <img src="{{ array.img }}" width="82" height="86">
+            </button>
+        </form>
+        <div class="items">
+                <input type="text"  name="nombre" readonly="readonly" value= "{{ array.nom }}"/>
+            {% if array.type == 'Admin' %}
+                <form action="/deleteFolder" method="post">
+                    <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
+                    <button type="submit" class="btn" name="deleteFolder" value="deleteFolder">Delete</button>
+                </form>
+
+                <button type="submit" class="btn" data-toggle="modal"  data-target="#{{ array.id }}" name="renameFolder" value="Rename">Rename</button>
+                <div  class="modal fade" id="{{ array.id }}">
+                    <div class="modal-dialog" >
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Rename Folder</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">x</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/renameFolder" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" value="{{ array.id }}" name="folder_id"/>
+                                    <input type="hidden" value="{{ array.nom }}" name="folder_name"/>
+                                    <input type="text" name="titleFolder" placeholder="New Folder Name"/>
+                                    <input type="submit" name="submit" value="Submit"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn" data-toggle="modal" data-target="#{{ array.nom }}" name="shareFolder" value="shareFolder">Share</button>
+                <div class="modal fade" id="{{ array.nom }}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Share Folder</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/shareFolder" method="post">
+                                    <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
+                                    <input type="hidden"  value="{{ array.nom }}" name="folder_name"/>
+                                    <input type="email" name="mail" placeholder="Mail"/>
+                                    <label>
+                                        <select multiple name="roles">
+                                            <option value="Admin">Admin</option>
+                                            <option value="Reader">Reader</option>
+                                        </select>
+                                    </label>
+                                    <input type="submit" name="sharesubmit" value="Submit"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if array.type == 'Reader' %}
+                <form action="/downloadFolder" method="post">
+                    <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
+                    <input type="hidden"  value="{{ array.nom }}" name="folder_name"/>
+                    <button type="submit" class="btn" name="downloadFolder" value="downloadFolder">Download</button>
+                </form>
+            {% endif %}
+        </div>
+
+    {% endfor %}
+
+
+
+    {% for array in item %}
+        <div class="items">
+            <form>
+                <input type="hidden"  value="{{ array.id }}" name="file_id"/>
+                <button type="submit" class="btn" name="file" value="{{ array.nom }}">
+                    <img src="{{ array.img }}" width="82" height="86">
+                </button>
+            </form>
+
+            <input type="text" name="nombre" readonly="readonly" value="{{ array.nom }}"/>
+            {% if array.type == 'Admin' %}
+                <form action="/deleteFile" method="post">
+                    <input type="hidden"  value="{{ array.id }}" name="file_id"/>
+                    <button type="submit" class="btn" name="deleteFile" value="deleteFile">Delete</button>
+                </form>
+                <button type="submit" class="btn" data-toggle="modal" data-target="#{{ array.id }}" name="renameFile" value="renameFile">Rename</button>
+                <div class="modal fade" id="{{ array.id }}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Rename File</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/renameFile" method="post">
+                                    <input type="hidden"  value="{{ array.id }}" name="file_id"/>
+                                    <input type="hidden"  value="{{ array.nom }}" name="file_name"/>
+                                    <input type="text" name="titleFile" placeholder="New File Name"/>
+                                    <input type="submit" name="submit" value="Submit"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if array.type == 'Reader' %}
+            <form action="/downloadFile" method="post">
+                <input type="hidden"  value="{{ array.id }}" name="file_id"/>
+                <input type="hidden"  value="{{ array.nom }}" name="file_name"/>
+                <button type="submit" class="btn" name="downloadFile" value="downloadFile">Download</button>
+            </form>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+
+
+
+
+
+
+
+{% endblock %}
+

@@ -65,8 +65,14 @@ $app->post('/renameFolder','SlimApp\controller\HelloController:renameFolderProfi
 
 $app->post('/deleteFolder','SlimApp\controller\HelloController:deleteFolderProfile');
 
+$app->post('/downloadFolder','SlimApp\controller\HelloController:downloadFolderProfile');
+
+
+
+
 $app->post('/lp/{id}','SlimApp\controller\HelloController:printFileFolder');
 
+$app->post('/lpp/{id}','SlimApp\controller\HelloController:FileFolder');
 
 
 $app->post('/shareFolder','SlimApp\controller\HelloController:shareFolder');

@@ -11,7 +11,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Dflydev\FigCookies\FigRequestCookies;
 use SlimApp\model\Folder;
+use SlimApp\model\FolderShared;
 use SlimApp\model\Item;
+use SlimApp\model\ItemShared;
+
+
 
 
 class HelloController
@@ -517,7 +521,6 @@ class HelloController
 
 
         $fold = $request->getParsedBody();
-
         $id = $_SESSION['id'];
         //hacemos un servicio para saber el id_user de la carpeta
         $servei_id_user = $this->container->get('check_user_folder_use_case');
@@ -537,7 +540,6 @@ class HelloController
          *Tota la informació dels fitxers
          */
         $info = $servei($id_folder,$id);
-
 
         $img = "/assets/img/file.png";
 
@@ -580,6 +582,75 @@ class HelloController
             ->render($response, 'dashboard.twig', ['folder' => $array2,'item' => $array ,"idParent" => $id_folder , "idFolder" => $id_folder]);
 
 
+
+    }
+
+
+    public function FileFolder(Request $request, Response $response){
+        $fold = $request->getParsedBody();
+
+        $id = $_SESSION['id'];
+        //hacemos un servicio para saber el id_user de la carpeta
+        $servei_id_user = $this->container->get('check_user_folder_use_case');
+        $info_user = $servei_id_user($fold['folder_id']);
+        $id_user = $info_user[0]['id_user'];
+        $_SESSION['id_share']= $id_user;
+
+
+
+        $id_folder = $fold['folder_id'];
+
+
+
+        $servei = $this->container->get('check_file_user_use_case');
+
+        /**
+         *Tota la informació dels fitxers
+         */
+        $info= $servei($id_folder,$id);
+
+
+        $img = "/assets/img/file.png";
+
+        $num_items = sizeof($info);
+
+        $array = [];
+        for($i=0;$i<$num_items;$i++){
+            $item = new ItemShared($info[$i]['name'],$img,$id,$info[$i]['id'],$id_folder,$fold['role']);
+            array_push($array,$item);
+        }
+
+        /*
+         * folders
+         */
+        $servei2 = $this->container->get('check_folder_user_use_case');
+
+        /**
+         *Tota la informació de la carpeta
+         */
+        $info2 = $servei2($id_folder,$id);
+
+        $img2 = "/assets/img/folder.png";
+
+        $num_folders = sizeof($info2);
+
+
+        $array2 = [];
+        for($i=0;$i<$num_folders;$i++){
+            $folder = new FolderShared($info2[$i]['name'],$img2,$id,$info2[$i]['id'],$id_folder,$fold['role']);
+            array_push($array2,$folder);
+        }
+
+
+
+        $_SESSION['id_share']= null;
+
+
+
+
+        return $this->container
+            ->get('view')
+            ->render($response, 'dashboardShareFolder.twig', ['folder' => $array2,'item' => $array ,"idParent" => $id_folder , "idFolder" => $id_folder]);
 
     }
 
@@ -657,7 +728,7 @@ class HelloController
             $mail= $folder['mail'];
             $id_owner = $_SESSION['id'];
             $id_folder = $folder['folder_id'];
-            $type = $folder['checkbox'];
+            $tipo = $_POST['roles'];
             $servei = $this->container->get('check_email_share_user_use_case');
             $id_usershared = $servei($mail);
             /**
@@ -667,13 +738,13 @@ class HelloController
             if($id_usershared == 0){
                 echo "<script>alert(\"ERROR\");location.href='/lp'</script>";
             }else{
-                if($type == 'on'){
-                    $type = 'admin';
-                }else{
-                    $type = 'reader';
+
+                if($tipo == null){
+                    $tipo="Reader";
                 }
+
                 $servei = $this->container->get('add_share_user_use_case');
-                $servei($id_owner,$id_usershared,$id_folder,$type);
+                $servei($id_owner,$id_usershared,$id_folder,$tipo);
                 return $response->withStatus(302)->withHeader('Location', '/lp');
             }
         }
@@ -690,9 +761,7 @@ class HelloController
             $servei = $this->container->get('folders_shared_user_use_case');
             $folders = $servei($id_usershared);
 
-
             $num_folders = sizeof($folders);
-
 
             $array = [];
             $img2 = "/assets/img/folder.png";
@@ -700,17 +769,25 @@ class HelloController
 
             for($i=0; $i<$num_folders;$i++){
                 $shared = $folders[$i]['id_folder'];
+                /**
+                 * Depende del tipo mostrarà folders de admin o reader
+                 */
+                $type = $folders[$i]['type'];
+
+
                 $servei4 = $this->container->get('check_folders_shared_user_use_case');
 
                 $folder_shared = $servei4($shared);
+                $folder = new FolderShared($folder_shared[0]['name'],$img2,$id_usershared,$folder_shared[0]['id'],1,$type);
 
-                $folder = new Folder($folder_shared[0]['name'],$img2,$id_usershared,$folder_shared[0]['id'],1);
+               // $folder = new Folder($folder_shared[0]['name'],$img2,$id_usershared,$folder_shared[0]['id'],1);
                 array_push($array,$folder);
+
             }
 
             return $this->container
                 ->get('view')
-                ->render($response, 'dashboard.twig', ['folder' => $array]);
+                ->render($response, 'dashboardexterno.twig', ['folder' => $array]);
 
 
         }

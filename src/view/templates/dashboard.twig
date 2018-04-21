@@ -118,8 +118,12 @@
                                 <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
                                 <input type="hidden"  value="{{ array.nom }}" name="folder_name"/>
                                 <input type="email" name="mail" placeholder="Mail"/>
-                                <label class="container">Admin</label>
-                                <input type="checkbox" name="checkbox"/>
+                                <label>
+                                    <select multiple name="roles">
+                                        <option value="Admin">Admin</option>
+                                        <option value="Reader">Reader</option>
+                                    </select>
+                                </label>
                                 <input type="submit" name="sharesubmit" value="Submit"/>
                             </form>
                         </div>
@@ -129,6 +133,7 @@
         </div>
 
     {% endfor %}
+
 
 
 
