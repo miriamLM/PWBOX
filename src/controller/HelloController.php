@@ -506,7 +506,8 @@ class HelloController
             $folder = new Folder($info2[$i]['name'],$img2,$id,$info2[$i]['id'],$id_folder);
             array_push($array2,$folder);
         }
-
+        var_dump($info2);
+        die();
 
         return $this->container
             ->get('view')
@@ -623,31 +624,21 @@ class HelloController
             $img2 = "/assets/img/folder.png";
             $id= $_SESSION['id'];
             $id_parent = 1; // si esta en share, necesito la id_parent?
+            $servei4 = $this->container->get('check_folders_shared_user_use_case');
+
 
             for($i=0; $i<$num_folders;$i++){
                 $shared = $folders[$i]['id_folder'];
-                $servei = $this->container->get('check_folders_shared_user_use_case');
-                $folder_shared = $servei($shared);
+                $folder_shared = $servei4($shared);
                 var_dump($folder_shared);
                 echo "-------------";
                 $folder = new Folder($folder_shared[$i]['name'],$img2,$id,$folder_shared[$i]['id'],1);
-                var_dump($folder_shared[$i]['id']);
                 array_push($array,$folder);
 
             }
 
-
-
-            echo"-----";
-
-            //var_dump($folder_shared);
-
-            echo "-------";
-
             var_dump($array);
-
             die();
-
 
 
             return $this->container

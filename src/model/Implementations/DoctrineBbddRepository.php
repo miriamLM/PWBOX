@@ -251,7 +251,7 @@ class DoctrineBbddRepository implements bbddRepository
     public function checkFoldersShared($id_shared){
         $query = "SELECT * FROM folder WHERE id = ? ";
         $info = $this->connection->fetchAll($query,array($id_shared));
-        return $info;
+        return $info[0];
     }
 
 }
