@@ -23,11 +23,11 @@ class AddFileUserUseCase
 
     }
 
-    public function __invoke(array $file, $id,$id_folder) {
+    public function __invoke(array $file, $id,$id_folder,$filesize) {
 
 
 
-        [$num_items,$info] = $this->repository->addfile($file,$id,$id_folder);
+        [$num_items,$info] = $this->repository->addfile($file,$id,$id_folder,$filesize);
 
         return [$num_items,$info];
 

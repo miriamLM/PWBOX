@@ -228,7 +228,39 @@ $container['check_user_folder_use_case'] = function($container){
     return $useCase;
 };
 
+/*
+ * Servei get capacity of user
+ */
+
+$container['capacity_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\CapacityUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
 
 
+
+/*
+ * Servei actualitzar (sumar i restar) capacity of user
+ */
+
+$container['actualitzar_capacity_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\ActualitzarCapacityUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+/*
+ * Servei get file_size of the delete file
+ */
+
+$container['file_size_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\FileSizeUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
 
 ?>

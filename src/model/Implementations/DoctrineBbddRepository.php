@@ -27,9 +27,9 @@ class DoctrineBbddRepository implements bbddRepository
      * @param User $user
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function save(User $user)
+    public function save(User $user,$capacity)
     {
-        $sql = "INSERT INTO user(username, email,birthdate, password, created_at, updated_at) VALUES(:username, :email,:birthdate ,:password, :created_at, :updated_at)";
+        $sql = "INSERT INTO user(username, email,birthdate, password, created_at, updated_at,capacity) VALUES(:username, :email,:birthdate ,:password, :created_at, :updated_at, :capacity)";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue("username", $user->getUsername(), 'string');
         $stmt->bindValue("email", $user->getEmail(), 'string');
@@ -37,6 +37,8 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->bindValue("password", $user->getPassword(), 'string');
         $stmt->bindValue("created_at", $user->getCreatedAt()->format(self::DATE_FORMAT));
         $stmt->bindValue("updated_at", $user->getCreatedAt()->format(self::DATE_FORMAT));
+        $stmt->bindValue("capacity", $capacity);
+
         //$stmt->bindValue("image", $user->getImage(), 'string');
         $stmt->execute();
     }
@@ -94,13 +96,14 @@ class DoctrineBbddRepository implements bbddRepository
      * @return array
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function addfile($file, $id,$id_folder)
+    public function addfile($file, $id,$id_folder,$filesize)
     {
-        $sql = "INSERT INTO item(id_user,name,id_folder) VALUES(:id_user, :name,:id_folder)";
+        $sql = "INSERT INTO item(id_user,name,id_folder,size) VALUES(:id_user, :name,:id_folder,:size)";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue("id_user", $id);
         $stmt->bindValue("name", $file['name'],'string');
         $stmt->bindValue("id_folder",$id_folder);
+        $stmt->bindValue("size",$filesize);
         if($stmt->execute()){
             $sql = "SELECT COUNT(*) FROM item";
             $stmt = $this->connection->query($sql);
@@ -132,6 +135,7 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(1, $file_id);
         $stmt->execute();
+
     }
 
     public function renamefile($name,$new_name)
@@ -148,6 +152,15 @@ class DoctrineBbddRepository implements bbddRepository
         return $info;*/
 
     }
+
+    public function filesize($file_id){
+        $query = "SELECT size FROM item WHERE id =?";
+
+        $info = $this->connection->fetchAll($query,array($file_id));
+
+        return $info[0]['size'];
+    }
+
 
 
     /**
@@ -264,6 +277,21 @@ class DoctrineBbddRepository implements bbddRepository
         $info = $this->connection->fetchAll($query,array($folder_id));
         return $info;
     }
+
+    public function capacityuser(){
+        $query = "SELECT capacity FROM user WHERE id = ?";
+        $capacity= $this->connection->fetchAll($query,array($_SESSION['id']));
+        return $capacity[0]['capacity'];
+    }
+
+    public function restarcapacityuser($file_size){
+        $sql = "UPDATE user AS u SET u.capacity = :capacity WHERE u.id = :id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue("id", $_SESSION['id']);
+        $stmt->bindValue("capacity", $file_size);
+        $stmt->execute();
+    }
+
 
 
 }

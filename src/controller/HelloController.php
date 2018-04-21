@@ -192,6 +192,11 @@ class HelloController
 
         $data = $request->getParsedBody();
         $servei = $this->container->get('post_user_use_case');
+
+        /**
+         * Capacidad 1GB para cada usuario registrado -> 1^9 bytes
+         */
+        $capacity = 1000000000;
         $errors = $this->validacions($data, 0);
         if ($errors[0] == "" && $errors[1] == "" && $errors[2] == "" && $errors[3] == "" && $errors[4] == "" && $errors[5] == "") {
             /*
@@ -211,8 +216,8 @@ class HelloController
                 var_dump($test);
             }
 
-
-            $servei($data);
+           // $servei($data);
+            $servei($data,$capacity);
             return $response->withStatus(302)->withHeader('Location','/log');
 
         }else {
@@ -307,7 +312,6 @@ class HelloController
 
             $servei($file_name,$file_new_name);
 
-            $response->withStatus(302)->withHeader('Location', '/insideFolder');
 
             return  $response->withStatus(302)->withHeader('Location', '/lp');
 
@@ -322,11 +326,32 @@ class HelloController
         if(isset($_POST['deleteFile'])){
             $file = $request->getParsedBody();
             $file_id = $file['file_id'];
+
+            /**
+             * Servei per agafar el size del fitxer
+             *per despres fer un altre servei que
+             * sumi aquest size a la capacitat que
+             * te el usuari per emmagatzemar info
+             */
+
+            $servei_get_file_size = $this->container->get('file_size_user_use_case');
+            $filesize=$servei_get_file_size($file_id);
+
+            $servei_capacity = $this->container->get('capacity_user_use_case');
+            $capacity = $servei_capacity();
+
+            $sum_capacity = $capacity + $filesize;
+            $servei_actualitzar_capacitity = $this->container->get('actualitzar_capacity_user_use_case');
+            $servei_actualitzar_capacitity($sum_capacity);
+
+
+            /**
+             * Servei delete file
+             */
             $servei = $this->container->get('delete_file_user_use_case');
             $servei($file_id);
 
 
-            $response->withStatus(302)->withHeader('Location', '/insideFolder');
 
             return  $response->withStatus(302)->withHeader('Location', '/lp');
 
@@ -373,44 +398,69 @@ class HelloController
                         ->getBody()->write($message);*/
                 }else {
 
-
-
-                    $id = $_SESSION['id'];
-
-                    $item = $request->getParsedBody();
-                    $id_folder = $item['uploadSubmit'];
-
-                    if($id_folder == ''){
-                        $id_folder=0;
-                    }
-
-                    $servei = $this->container->get('add_file_user_use_case');
-
                     /**
-                     * Et retorna el número de fitxers
-                     * i tota la informació dels fitxers
+                     * Servei para mirar la capacidad que tiene el usuario
                      */
-                    $info = $servei($file, $id, $id_folder);
+
+                    $servei_capacity = $this->container->get('capacity_user_use_case');
+                    $capacity = $servei_capacity();
+
+                    if($capacity>$filesize) {
+                        $restarcapacity= $capacity - $filesize;
+
+                        //POTS AFEGIR FITXER
+                        //HI HA QUE RESTAR LA CAPACITAT DEL USER
+                        /**
+                         * Servei per restar capacitat del arxiu a la capacitat del usuari
+                         */
+
+                        $servei_actualitzar_capacitity = $this->container->get('actualitzar_capacity_user_use_case');
+                        $servei_actualitzar_capacitity($restarcapacity);
 
 
-                    // Pq mho guardava com a string i ho vui amb int
-                    $num_items = (int)$info[0];
-                    // var_dump($num_items);
-                    $img = "/assets/img/file.png";
+
+                        $id = $_SESSION['id'];
+
+                        $item = $request->getParsedBody();
+                        $id_folder = $item['uploadSubmit'];
+
+                        if ($id_folder == '') {
+                            $id_folder = 0;
+                        }
+
+                        $servei = $this->container->get('add_file_user_use_case');
+
+                        /**
+                         * Et retorna el número de fitxers
+                         * i tota la informació dels fitxers
+                         */
+                        $info = $servei($file, $id, $id_folder,$filesize);
 
 
-                    $array = [];
-                    for ($i = 0; $i < $num_items; $i++) {
-                        $item = new Item($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], $id_folder);
-                        array_push($array, $item);
+                        // Pq mho guardava com a string i ho vui amb int
+                        $num_items = (int)$info[0];
+                        // var_dump($num_items);
+                        $img = "/assets/img/file.png";
+
+
+                        $array = [];
+                        for ($i = 0; $i < $num_items; $i++) {
+                            $item = new Item($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], $id_folder);
+                            array_push($array, $item);
+                        }
+
+
+                        $this->container
+                            ->get('view')
+                            ->render($response, 'dashboard.twig', ['item' => $array]);
+
+                        return $response->withStatus(302)->withHeader('Location', '/lp');
+
+                    }else{
+                        echo "<script>alert(\"Error, Not Enough Capactity to Upload File\");location.href='/lp'</script>";
+
                     }
 
-
-                    $this->container
-                        ->get('view')
-                        ->render($response, 'dashboard.twig', ['item' => $array]);
-
-                    return $response->withStatus(302)->withHeader('Location', '/lp');
                 }
             }
 
@@ -468,28 +518,17 @@ class HelloController
 
         $fold = $request->getParsedBody();
 
-        var_dump($fold);
         $id = $_SESSION['id'];
-        var_dump($id);
         //hacemos un servicio para saber el id_user de la carpeta
         $servei_id_user = $this->container->get('check_user_folder_use_case');
         $info_user = $servei_id_user($fold['folder_id']);
         $id_user = $info_user[0]['id_user'];
         $_SESSION['id_share']= $id_user;
-        var_dump($_SESSION['id_share']);
-
-        /*if ($id_user != $_SESSION['id']){
-            echo "NO SON IGUALES";
-            $_SESSION['id_owner'] = $id_user;
-            $id = $_SESSION['id_owner'];
-            var_dump($id_user);
-            var_dump($id);
-        }*/
 
 
 
         $id_folder = $fold['folder_id'];
-      
+
 
 
         $servei = $this->container->get('check_file_user_use_case');

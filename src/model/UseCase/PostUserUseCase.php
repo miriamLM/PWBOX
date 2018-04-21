@@ -18,7 +18,7 @@ class PostUserUseCase
 
     }
 
-    public function __invoke(array $rawData) {
+    public function __invoke(array $rawData,int $capacity) {
         $now = new \DateTime('now');
         $psswH = md5($rawData['psw']);
 
@@ -36,7 +36,7 @@ class PostUserUseCase
         );
 
 
-        $this->repository->save($user);
+        $this->repository->save($user,$capacity);
 
 
     }

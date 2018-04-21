@@ -18,7 +18,7 @@ interface bbddRepository
      * Funcio que ens guarde un nou usuari a la bbdd
      **/
 
-    public function save(User $user);
+    public function save(User $user,$capacity);
 
     /**
      * Funcio que comprova si existeis el usuari, alhora de fer login
@@ -50,7 +50,7 @@ interface bbddRepository
      * Add new file
      */
 
-    public function addfile($file,$id,$id_folder);
+    public function addfile($file,$id,$id_folder,$filesize);
 
     /**
      * Check files
@@ -119,4 +119,23 @@ interface bbddRepository
      */
 
     public function checkUserFolder($folder_id);
+
+    /**
+     * get capacity user
+     */
+
+    public function capacityuser();
+
+    /**
+     * restar capacity user
+     */
+
+    public function restarcapacityuser($file_size);
+
+    /**
+     * get file size of the delete file
+     */
+
+    public function filesize($file_id);
+
 }
