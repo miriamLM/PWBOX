@@ -30,50 +30,6 @@ class HelloController
         $this->container = $container;
     }
 
-    public function indexaAction(Request $request, Response $response)
-    {
-        $messages = $this->container->get('flash')->getMessages();
-        $userRegisteredMessages = isset($messages['user_register']) ? $messages['user_register'] : [];
-
-        return $this->container->get('view')
-            ->render($response, 'register.twig', ['messages' => $userRegisteredMessages]);
-    }
-
-    public function registeraAction(Request $request, Response $response, array $args)
-    {
-        /*if (!isset($_SESSION['counter'])) {
-            $_SESSION['counter'] = 1;
-
-        } else {
-            $_SESSION['counter']++;
-
-        }*/
-
-        $cookie = FigRequestCookies::get($request, 'advice', 0);
-
-        if (empty($cookie)) {
-            $response = FigResponseCookies::set($response, SetCookie::create('advice')
-                ->withValue(1)
-                ->withDomain('slimapp.test')
-                ->withPath('/')
-            );
-        }
-
-
-        $name = $request->getAttribute('name');
-        return $this->container
-            ->get('view')
-            ->render($response, 'hello.twig',
-                ['name' => $name, 'counter' => $_SESSION['counter'], 'advice' => $cookie->getValue()]);
-    }
-
-    public function indexAction(Request $request, Response $response, array $args)
-    {
-        $name = $args['name'];
-        return $this->container
-            ->get('view')
-            ->render($response, 'hello.twig', ['name' => $name]);
-    }
 
 
 
@@ -90,12 +46,12 @@ class HelloController
 
     public function registerAction(Request $request, Response $response)
     {
-
+        $ok = 1;
         $errors = ["", "", "", "", ""];
         try {
             return $this->container
                 ->get('view')
-                ->render($response, 'registration.twig', ['errors' => $errors]);
+                ->render($response, 'registration.twig', ['errors' => $errors,'ok' => $ok]);
         } catch (NotFoundExceptionInterface $e) {
         } catch (ContainerExceptionInterface $e) {
         }
@@ -121,10 +77,8 @@ class HelloController
     {
         $errors = ["", "", "", "", ""];
         $id = $_SESSION['id'];
-        var_dump($id);
         $servei = $this->container->get('check_user_use_case');
         $user = $servei($id);
-        var_dump($user[0]);
         try {
             return $this->container
                 ->get('view')
@@ -145,7 +99,6 @@ class HelloController
         $servei_user = $this->container->get('check_user_use_case');
         $info_user = $servei_user($id);
         $image = $info_user[0]['image'];
-        //var_dump($image);
 
 
 
@@ -219,12 +172,23 @@ class HelloController
          */
         $capacity = 1000000000;
         $errors = $this->validacions($data, 0);
-        if ($errors[0] == "" && $errors[1] == "" && $errors[2] == "" && $errors[3] == "" && $errors[4] == "" && $errors[5] == "") {
+
+        /*
+           * Mirar si el email es unico
+           */
+
+        $servei_email = $this->container->get('email_unique');
+        $email = $servei_email($data['email']);
+        if($email == $data['email'] ) {
+            // Iguales, el email ha de ser unico
+            $ok = 0;
+        }
+        if ($errors[0] == "" && $errors[1] == "" && $errors[2] == "" && $errors[3] == "" && $errors[4] == "" && $errors[5] == "" && $ok == 1) {
+
             /*
              * Guarda informació d'usuari a la BBDD
              */
-            echo "NO ERROR\n";
-            var_dump($_FILES["myfile"]);
+
             if($_FILES['myfile']['name'] == ""){
                 $data["myfile"] = "user.png";
             }else{
@@ -247,8 +211,8 @@ class HelloController
 
 
             $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-                ->setUsername ('kkaarme11@gmail.com')
-                ->setPassword ('carmexuxigemma');
+                ->setUsername ('grup11pwbox@gmail.com')
+                ->setPassword ('grup11pwboxpw2');
 
             $mailer = (new Swift_Mailer($transport));
 
@@ -256,15 +220,11 @@ class HelloController
                 ->setFrom('send@example.com')
                 ->setTo($data['email'])
                 ->setBody(
-                    '<html>
-            <head>
-            <title>Activate your account</title>
-            </head>
-            <body>
-            <h1>Validate your account {{ id }}</h1>
-            <a href="http://slimapp.test/changeValidation/'.$id.'">Click here to validate your account!</a>
-            </body>
-            </html>'
+                    '
+                     "http://slimapp.test/changeValidation/'.$id.'"  
+                     
+                      Click here to validate your account!'
+
                 )
             ;
             $mailer->send($message);
@@ -280,7 +240,7 @@ class HelloController
 
             return $this->container
                 ->get('view')
-                ->render($response, 'registration.twig', ['errors' => $errors]);
+                ->render($response, 'registration.twig', ['errors' => $errors,'ok' => $ok]);
         }
 
     }
@@ -293,7 +253,6 @@ class HelloController
         if ($errors[0] == "" && $errors[1] == "") {
             $stmt = $servei($data);
             if (!empty($stmt[0]['id'])) {
-                //echo("EXISTE");
                 /**
                  * landingProfile -> Landing, quan el usuari s'hagi pogut loguejar
                  *  **/
@@ -310,7 +269,6 @@ class HelloController
 
                 if($stmt[0]['verification'] == 0){
                     //Advertencia
-                    //echo "<script>alert(\"Activa Cuenta.\");location.href='/log' </script> ";
                     $advertencia=0;
                     $ok=1;
                     $email = $stmt[0]['email'];
@@ -357,8 +315,8 @@ class HelloController
         $id = $servei($email);
 
         $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-            ->setUsername ('kkaarme11@gmail.com')
-            ->setPassword ('carmexuxigemma');
+            ->setUsername ('grup11pwbox@gmail.com')
+            ->setPassword ('grup11pwboxpw2');
 
         $mailer = (new Swift_Mailer($transport));
 
@@ -366,15 +324,10 @@ class HelloController
             ->setFrom('send@example.com')
             ->setTo($email)
             ->setBody(
-                '<html>
-            <head>
-            <title>Activate your account</title>
-            </head>
-            <body>
-            <h1>Validate your account {{ id }}</h1>
-            <a href="http://slimapp.test/changeValidation/'.$id.'">Click here to validate your account!</a>
-            </body>
-            </html>'
+                '"http://slimapp.test/changeValidation/'.$id.'"
+                
+                
+                 Click here to validate your account!'
             )
         ;
         $mailer->send($message);
@@ -457,7 +410,6 @@ class HelloController
             $info = $servei_check($id);
 
             $route = "assets/img/".$info[0]['image'];
-            var_dump($route);
             $servei= $this->container->get('delete_user_use_case');
             $stmt = $servei($id);
             if($stmt->execute()){
@@ -487,7 +439,6 @@ class HelloController
          */
 
         if (isset($_POST['submit'])) {
-            //var_dump($request->getParsedBody());
             $file = $request->getParsedBody();
             $file_name = $file['file_name'];
             $file_new_name = $file['titleFile'];
@@ -541,8 +492,8 @@ class HelloController
 
 
                     $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-                        ->setUsername ('kkaarme11@gmail.com')
-                        ->setPassword ('carmexuxigemma');
+                        ->setUsername ('grup11pwbox@gmail.com')
+                        ->setPassword ('grup11pwboxpw2');
 
                     $mailer = (new Swift_Mailer($transport));
 
@@ -651,8 +602,8 @@ class HelloController
 
 
                     $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-                        ->setUsername ('kkaarme11@gmail.com')
-                        ->setPassword ('carmexuxigemma');
+                        ->setUsername ('grup11pwbox@gmail.com')
+                        ->setPassword ('grup11pwboxpw2');
 
                     $mailer = (new Swift_Mailer($transport));
 
@@ -705,7 +656,6 @@ class HelloController
             for($i=0;$i<$num_files;$i++){
                 if($num==0){
                     $file = $_FILES['addFile'];
-                    var_dump($_FILES['addFile']);
 
 
 
@@ -717,7 +667,6 @@ class HelloController
                 /**
                  * El size del fitxer no pot superar el 2MB
                  */
-                echo"HASTA AQUI SI";
 
                 if($filesize > 2000000){
 
@@ -810,7 +759,6 @@ class HelloController
          */
             // Pq mho guardava com a string i ho vui amb int
             $num_items = (int)$info[0];
-            // var_dump($num_items);
             $img = "/assets/img/file.png";
 
 
@@ -976,7 +924,6 @@ class HelloController
         }
          // Pq mho guardava com a string i ho vui amb int
                         $num_items = (int)$info[0];
-                        // var_dump($num_items);
                         $img = "/assets/img/file.png";
 
 
@@ -998,8 +945,8 @@ class HelloController
 
 
                             $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-                                ->setUsername ('kkaarme11@gmail.com')
-                                ->setPassword ('carmexuxigemma');
+                                ->setUsername ('grup11pwbox@gmail.com')
+                                ->setPassword ('grup11pwboxpw2');
 
                             $mailer = (new Swift_Mailer($transport));
 
@@ -1040,7 +987,6 @@ class HelloController
             $servei_user = $this->container->get('check_user_use_case');
             $info_user = $servei_user($id);
             $image = $info_user[0]['image'];
-            //var_dump($image);
 
             $id = $_SESSION['id'];
 
@@ -1087,7 +1033,6 @@ class HelloController
             $servei_user = $this->container->get('check_user_use_case');
             $info_user = $servei_user($id);
             $image = $info_user[0]['image'];
-            //var_dump($image);
 
 
             $foldern = $request->getParsedBody();
@@ -1106,9 +1051,6 @@ class HelloController
 
             $servei_share = $this->container->get('folders_shared_user_use_case');
             $info_share = $servei_share($id);
-            var_dump($info_share);
-            echo "------------";
-            var_dump($info_share[0]['id_owner']);
 
             $id_owner = $info_share[0]['id_owner'];
 
@@ -1122,7 +1064,6 @@ class HelloController
             */
             $servei = $this->container->get('add_inside_share_folder_user_use_case');
             $info = $servei($id_owner,$folder_name,$id_parent);
-            var_dump($info);
 
             $num_folders = (int)$info[0];
 
@@ -1154,8 +1095,8 @@ class HelloController
 
 
                 $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-                    ->setUsername ('kkaarme11@gmail.com')
-                    ->setPassword ('carmexuxigemma');
+                    ->setUsername ('grup11pwbox@gmail.com')
+                    ->setPassword ('grup11pwboxpw2');
 
                 $mailer = (new Swift_Mailer($transport));
 
@@ -1193,7 +1134,6 @@ class HelloController
         $servei_user = $this->container->get('check_user_use_case');
         $info_user = $servei_user($id);
         $image = $info_user[0]['image'];
-        //var_dump($image);
 
         $fold = $request->getParsedBody();
         $id = $_SESSION['id'];
@@ -1289,9 +1229,6 @@ class HelloController
 
         $servei_share = $this->container->get('folders_shared_user_use_case');
         $info_share = $servei_share($id);
-        var_dump($info_share);
-        echo "------------";
-        var_dump($info_share[0]['id_owner']);
 
         $id_owner = $info_share[0]['id_owner'];
 
@@ -1411,8 +1348,8 @@ class HelloController
 
 
                 $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-                    ->setUsername ('kkaarme11@gmail.com')
-                    ->setPassword ('carmexuxigemma');
+                    ->setUsername ('grup11pwbox@gmail.com')
+                    ->setPassword ('grup11pwboxpw2');
 
                 $mailer = (new Swift_Mailer($transport));
 
@@ -1504,8 +1441,8 @@ class HelloController
 
 
                 $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-                    ->setUsername ('kkaarme11@gmail.com')
-                    ->setPassword ('carmexuxigemma');
+                    ->setUsername ('grup11pwbox@gmail.com')
+                    ->setPassword ('grup11pwboxpw2');
 
                 $mailer = (new Swift_Mailer($transport));
 
@@ -1529,7 +1466,6 @@ class HelloController
             $servei4= $this->container->get('delete_share_user_use_case');
             $servei4($folder_id);
 
-            //var_dump($folder);
 
             //$servei = $this->container->get('delete_folder_user_use_case');
             //$servei($folder_id);
@@ -1590,7 +1526,6 @@ class HelloController
             $servei2 = $this->container->get('check_folder_user_use_case');
             $folders = $servei2($folder_id,$id);
             if(count($files)>0 || count($folders)>0){
-                echo"YAAAAAS";
                 $this->deleteAllFolder($files, $folders);
             }
             $servei3 = $this->container->get('delete_folder_user_use_case');
@@ -1841,7 +1776,6 @@ class HelloController
                 if (empty($rawData["birthdate"])) {
                     $birthErr = "Birth Date cannot be empty";
                 } else {
-                    var_dump($rawData["birthdate"]);
                     if (!preg_match("/[0-9]{4}-[0-9]{2}-[0-9]{2}/",  $rawData["birthdate"])){
                         $birthErr = "Birthdate wrong format";
                     }
@@ -1935,13 +1869,6 @@ class HelloController
 
 
 
-
-  /*public function __invoke(Request $request, Response $response, array $args){
-    $name = $args['name'];
-    return $this->container
-          ->get('view')
-          ->render($response, 'hello.twig', ['name' => $name]);
-  }*/
 
 
 

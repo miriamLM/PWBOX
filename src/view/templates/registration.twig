@@ -1,4 +1,4 @@
-{% extends "base.twig" %}
+{% extends "base.html.twig" %}
 
 {%  block content  %}
 
@@ -74,6 +74,9 @@
 
             </div>
 
+            {% if ok == 0 %}
+                <label>Email Ya Existe </label>
+            {% endif %}
         </form>
     </section>
 {% endblock %}

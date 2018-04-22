@@ -45,6 +45,14 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->execute();
     }
 
+
+    public function emailunique($email){
+        $sql = "SELECT * FROM user WHERE email= ?";
+        $stmt = $this->connection->fetchAll($sql, array($email));
+        return $stmt[0]['email'];
+    }
+
+
     public function verification($id)
     {
         $sql = "UPDATE user  AS u SET u.verification = :verification WHERE u.id = :id";

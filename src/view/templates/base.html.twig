@@ -1,38 +1,21 @@
 <!DOCTYPE html>
-<html  lang="en">
-<head>
-    <meta charset = "utf-8" />
-    <title> PWBOX </title>
-    <!-- <style>
-        input:invalid,input:required:invalid, input:focus:invalid {
-            border-color:#ff0000;
-        }
-        input:focus {
-            outline:none;
-        }
-    </style>
-    -->
-</head>
-<body>
-    <header>
-        <h1> Menu </h1>
-            <nav>
-                <ul>
-                    <li><a  href="registration.twig">Register</a></li>
-                    <li><a  href="login.twig">Login</a></li>
-                    <li><a  href="#section3">3</a></li>
-                </ul>
-            </nav>
-    </header>
-</body>
+<html>
+  <head>
+        <title>{% block title %}PWBOX{% endblock %}</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-<footer> Creado por Carme Perseguer y Miriam López para Projectos Web 2 - &copy;laSalle 2018</footer>
+      <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script type="text/javascript" src="{{ base_url() }}/assets/js/inici.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<script src="{{ base_url() }}/assets/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="{{ base_url() }}/assets/js/inici.js" type="text/javascript"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <link rel="stylesheet" href="{{ base_url() }}/assets/css/styles.css">
 
+  </head>
+  <body>
+        {% block content %}{% endblock %}
 
+        <footer> Creado por Carme Perseguer y Miriam López para Projectos Web 2 - &copy;laSalle 2018</footer>
+  </body>
 </html>
+

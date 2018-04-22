@@ -45,6 +45,18 @@ $container['post_user_use_case'] = function($container){
     );
     return $useCase;
 };
+
+/*
+ * Servei per mirar si el email es unic
+ */
+
+$container['email_unique'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\EmailUniqueUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
 /*
  * Servei pel login
  */

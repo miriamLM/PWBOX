@@ -1,7 +1,7 @@
 window.onload = function(){
 
 };
-var i=0;
+
 
 function ajaxx(){
     var data = new FormData();
@@ -17,13 +17,6 @@ function ajaxx(){
 }
 
 
-
-
-
-
-function validation() {
-    //TODAS LAS PUTAS VALIDACIOENS
-}
 
 
 function myFunction() {

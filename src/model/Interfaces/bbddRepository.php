@@ -21,6 +21,12 @@ interface bbddRepository
     public function save(User $user,$capacity);
 
     /**
+     * Funcio que comprova si el email es unic
+     */
+
+    public function emailunique($email);
+
+    /**
      * Funcio que comprova si existeis el usuari, alhora de fer login
      **/
 
