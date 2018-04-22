@@ -384,8 +384,11 @@ class HelloController
     }
 
 
-    public function profileUpdate(Request $request, Response $response) {
-        $data = $request->getParsedBody();
+    public function profileUpdate(Request $request, Response $response, $data) {
+        //$data = $request->getParsedBody();
+        //la data del ajax
+        var_dump($data);
+
         $servei = $this->container->get('update_user_use_case');
         $errors = $this->validacions($data, 0);
         if ($errors[0] == "" && $errors[1] == "" && $errors[2] == "" && $errors[3] == "" && $errors[4] == "" && $errors[5] == "") {
