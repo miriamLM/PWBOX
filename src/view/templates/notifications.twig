@@ -1,0 +1,37 @@
+{% extends "base.twig" %}
+
+{%  block content  %}
+
+    <header>
+        <h1 class="h1-dashboard"> CONTENIDO USUARIO </h1>
+        <a href="/inicio" class="redirectpaginici">PWBOX</a>
+        <a  href="/prof" class="redirectprof">Profile</a>
+    </header>
+    <form action="/logout" class="form" method="POST">
+        <button type="submit" class="btn"  name="logout" value="logout">logout</button>
+    </form>
+
+
+    {% for array in notificationsOwner %}
+        {% if array.id_owner != id %}
+            <br>
+            <label> {{ array.notificacion }} </label>
+            </br>
+        {% endif %}
+    {% endfor %}
+
+
+     {% for array in notificationsUserShared %}
+        {% if array.id_usershared == id %}
+        <br>
+        <label> {{ array.notificacion }} </label>
+        </br>
+        {% endif %}
+
+    {% endfor %}
+
+
+
+
+
+{% endblock %}

@@ -272,6 +272,62 @@ $container['delete_share_user_use_case'] = function($container){
     );
     return $useCase;
 };
+/*
+ * Servei per veure els fitxer que han compartit
+ */
+
+$container['check_share_file_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\CheckShareFilesUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+/*
+ * Servei per veure les folders que han compartit
+ */
+
+$container['check_share_folder_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\CheckShareFolderUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+/*
+ * Servei perque el que comprteix la folder pugui veure els canviis que fa l'altre
+ */
+
+$container['add_inside_share_folder_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\AddInsideShareFolderUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+/*
+ * Servei perque el que comprteix la folder pugui veure els canvis que fa l'altre
+ */
+
+$container['add_inside_share_file_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\AddInsideShareFileUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+/*
+ * Servei per tenir info de share depennet de la carpeta
+ */
+
+$container['check_share_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\CheckShareUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+
 
 
 /*
@@ -281,6 +337,45 @@ $container['delete_share_user_use_case'] = function($container){
 
 $container['save_notificacion'] = function($container){
     $useCase = new \SlimApp\model\UseCase\SaveNotificacionUserUsecase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+/*
+ * Servei per buscar el folder del file que renombrem
+ */
+
+$container['folder_file_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\FolderFileUserUsecase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+
+
+$container['post_verification'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\PostVerification(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+
+
+$container['exists_user_validation_email'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\ExistsUserValidationEmail(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+
+
+
+$container['get_notifications_user'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\GetNotificationsUser(
         $container->get('bbdd_repository')
     );
     return $useCase;

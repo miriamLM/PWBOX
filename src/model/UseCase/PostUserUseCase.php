@@ -18,10 +18,9 @@ class PostUserUseCase
 
     }
 
-    public function __invoke(array $rawData,int $capacity) {
+    public function __invoke(array $rawData,int $capacity,int $verification) {
         $now = new \DateTime('now');
         $psswH = md5($rawData['psw']);
-
 
 
         $user = new User(
@@ -32,7 +31,8 @@ class PostUserUseCase
             $psswH,
             $now,
             $now,
-            $rawData['myfile']
+            $rawData['myfile'],
+            $verification
         );
 
 

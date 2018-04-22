@@ -1,6 +1,5 @@
 <?php
 namespace SlimApp\controller;
-
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
 //use PHPUnit\Runner\Exception;
@@ -198,6 +197,8 @@ class HelloController
         $data = $request->getParsedBody();
         $servei = $this->container->get('post_user_use_case');
 
+        $servei2 = $this->container->get('exists_user_validation_email');
+
         /**
          * Capacidad 1GB para cada usuario registrado -> 1^9 bytes
          */
@@ -222,31 +223,44 @@ class HelloController
                 var_dump($test);
                 var_dump($destination);
             }
+            $servei($data,$capacity,0);
 
-            /*
-            // Create the Transport
-            $transport = (new Swift_SmtpTransport('192.168.10.10', 3306))
-                ->setUsername($data['username'])
-                ->setPassword($data['psw'])
+
+            $id = $servei2($data);
+
+
+            //NECESSITO SABER EL ID DE L'USUARI QUE ACABO DE GUARDAR A LA BBDD PER AIXI AFEGIRLO AL LINK EMAIL
+
+
+            $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
+                ->setUsername ('kkaarme11@gmail.com')
+                ->setPassword ('carmexuxigemma');
+
+            $mailer = (new Swift_Mailer($transport));
+
+            $message = (new Swift_Message('HOLA'))
+                ->setFrom('send@example.com')
+                ->setTo($data['email'])
+                ->setBody(
+                    '<html>
+            <head>
+            <title>Activate your account</title>
+            </head>
+            <body>
+            <h1>Validate your account {{ id }}</h1>
+            <a href="http://slimapp.test/changeValidation/'.$id.'">Click here to validate your account!</a>
+            </body>
+            </html>'
+                )
             ;
+            $mailer->send($message);
 
-            // Create the Mailer using your created Transport
-            $mailer = new Swift_Mailer($transport);
-
-            // Create a message
-            $message = (new Swift_Message('Wonderful Subject'))
-                ->setFrom([$data['email'] => $data['username']])
-                ->setTo(['receiver@mailinator.com', 'other@mailinator.com' => 'A name'])
-                ->setBody('Here is the message itself')
-            ;
-
-            // Send the message
-            $result = $mailer->send($message);*/
+            //return $this->render();
 
 
             // $servei($data);
-            $servei($data,$capacity);
-            return $response->withStatus(302)->withHeader('Location','/log');
+
+            return $response->withStatus(302)->withHeader('Location','/');
 
         }else {
 
@@ -350,6 +364,29 @@ class HelloController
 
             $servei($file_name,$file_new_name);
 
+            /**
+             * Servei per buscar el folder de la file
+             */
+
+            $servei_folder = $this->container->get('folder_file_user_use_case');
+            $folder_id = $servei_folder($file['file_id']);
+
+            /**
+             * Si este file esta dentro de una carpeta
+             */
+            if($folder_id != null){
+                $servei_info = $this->container->get('check_share_user_use_case');
+                $info = $servei_info($folder_id);
+                $id_owner = $info[0]['id_owner'];
+
+                $servei = $this->container->get('check_user_use_case');
+                $user = $servei($_SESSION['id']);
+                $notificacion = " El usuario ".$user[0]['username']." te ha renombrado el file ".$file_name."";
+                $servei_save_notificacion = $this->container->get('save_notificacion');
+                $servei_save_notificacion($id_owner,$_SESSION['id'],$folder_id,$notificacion);
+
+
+            }
 
             return  $response->withStatus(302)->withHeader('Location', '/lp');
 
@@ -363,6 +400,7 @@ class HelloController
          */
         if(isset($_POST['deleteFile'])){
             $file = $request->getParsedBody();
+
             $file_id = $file['file_id'];
 
             /**
@@ -388,6 +426,30 @@ class HelloController
              */
             $servei = $this->container->get('delete_file_user_use_case');
             $servei($file_id);
+
+
+            /**
+             * Servei per buscar el folder de la file
+             */
+
+            $servei_folder = $this->container->get('folder_file_user_use_case');
+            $folder_id = $servei_folder($file_id);
+
+            /**
+             * Si este file esta dentro de una carpeta
+             */
+            if($folder_id != null){
+                $servei_info = $this->container->get('check_share_user_use_case');
+                $info = $servei_info($folder_id);
+                $id_owner = $info[0]['id_owner'];
+
+                $servei = $this->container->get('check_user_use_case');
+                $user = $servei($_SESSION['id']);
+                $notificacion = " El usuario ".$user[0]['username']." te ha eliminado el file ".$file['file_name']."";
+                $servei_save_notificacion = $this->container->get('save_notificacion');
+                $servei_save_notificacion($id_owner,$_SESSION['id'],$folder_id,$notificacion);
+
+            }
 
 
 
@@ -506,6 +568,129 @@ class HelloController
 
     }
 
+    public function uploadFileInsideShare(Request $request, Response $response){
+        /**
+         * Upload file
+         */
+        if(isset($_POST['uploadSubmit'])){
+            $file = $_FILES['addFile'];
+            $filesize = $file['size'];
+            /**
+             * El size del fitxer no pot superar el 2MB
+             */
+            if($filesize > 2000000){
+                //$message='Error, File Size Superior of 2MB';
+                echo "<script>alert(\"Error, File Size Superior of 2MB\");location.href='/lp'</script>";
+
+                /*return $response->withStatus(302)->withHeader('Location', '/lp')
+                                ->getBody()->write($message);*/
+
+            }else{
+
+                $allowed =  array('gif','png' ,'jpg','pdf','md','txt');
+                $filename = $_FILES['addFile']['name'];
+                $ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+
+                if(!in_array($ext,$allowed) ) {
+                    /**
+                     * Aqui deberia Salir un Error WARNING
+                     * i despues creo que se deberia ridireccionar al dashboard otra vez
+                     */
+
+                    echo "<script>alert(\"Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)\");location.href='/lp'</script>";
+
+                    /*$message='Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)';
+                    return $response->withStatus(302)->withHeader('Location', '/lp')
+                        ->getBody()->write($message);*/
+                }else {
+
+                    /**
+                     * Servei para mirar la capacidad que tiene el usuario
+                     */
+
+                    $servei_capacity = $this->container->get('capacity_user_use_case');
+                    $capacity = $servei_capacity();
+
+                    if($capacity>$filesize) {
+                        $restarcapacity= $capacity - $filesize;
+
+                        //POTS AFEGIR FITXER
+                        //HI HA QUE RESTAR LA CAPACITAT DEL USER
+                        /**
+                         * Servei per restar capacitat del arxiu a la capacitat del usuari
+                         */
+
+                        $servei_actualitzar_capacitity = $this->container->get('actualitzar_capacity_user_use_case');
+                        $servei_actualitzar_capacitity($restarcapacity);
+
+
+
+                        $id = $_SESSION['id'];
+
+                        $item = $request->getParsedBody();
+                        $id_folder = $item['uploadSubmit'];
+
+
+
+
+                        if ($id_folder == '') {
+                            $id_folder = 0;
+                        }
+
+                        $servei_share = $this->container->get('check_share_user_use_case');
+                        $info_share = $servei_share($id_folder);
+
+                        $id_owner=$info_share[0]['id_owner'];
+
+
+                        $servei = $this->container->get('add_inside_share_file_user_use_case');
+
+                        /**
+                         * Et retorna el número de fitxers
+                         * i tota la informació dels fitxers
+                         */
+                        $info = $servei($file, $id_owner, $id_folder,$filesize);
+
+
+                        // Pq mho guardava com a string i ho vui amb int
+                        $num_items = (int)$info[0];
+                        // var_dump($num_items);
+                        $img = "/assets/img/file.png";
+
+
+                        $array = [];
+                        for ($i = 0; $i < $num_items; $i++) {
+                            $item = new Item($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], $id_folder);
+                            array_push($array, $item);
+                        }
+
+
+                        $servei = $this->container->get('check_user_use_case');
+                        $user = $servei($_SESSION['id']);
+                        $notificacion = " El usuario ".$user[0]['username']." te ha upload el file ".$filename."";
+                        $servei_save_notificacion = $this->container->get('save_notificacion');
+                        $servei_save_notificacion($id_owner,$_SESSION['id'],$id_folder,$notificacion);
+
+
+
+                        $this->container
+                            ->get('view')
+                            ->render($response, 'dashboard.twig', ['item' => $array]);
+
+                        return $response->withStatus(302)->withHeader('Location', '/lp');
+
+                    }else{
+                        echo "<script>alert(\"Error, Not Enough Capactity to Upload File\");location.href='/lp'</script>";
+
+                    }
+
+                }
+            }
+
+        }
+
+    }
 
     /**
      *FOLDER
@@ -547,6 +732,84 @@ class HelloController
                 ->render($response, 'dashboard.twig', ['folder' => $array]);
 
                 return $response->withStatus(302)->withHeader('Location', '/lp');
+
+        }
+    }
+
+    public function addFolderInsideShare(Request $request, Response $response){
+        if(isset($_POST['addSubmit'])) {
+
+            $id = $_SESSION['id'];
+
+            $foldern = $request->getParsedBody();
+            $folder_name = $foldern['nameFolder'];
+            $id_parent = $foldern['addSubmit'];
+
+
+
+
+
+            //hacemos un servicio para saber el id_user de la carpeta
+            $servei_id_user = $this->container->get('check_user_folder_use_case');
+            $info_user = $servei_id_user($foldern['folder_id']);
+            $id_user = $info_user[0]['id_user'];
+
+           // $id_folder = $foldern['folder_id'];
+
+            $servei_share = $this->container->get('folders_shared_user_use_case');
+            $info_share = $servei_share($id);
+            var_dump($info_share);
+            echo "------------";
+            var_dump($info_share[0]['id_owner']);
+
+            $id_owner = $info_share[0]['id_owner'];
+
+
+            if($id_parent == ''){
+                $id_parent=0;
+            }
+
+            /*$servei = $this->container->get('add_folder_user_use_case');
+            $info = $servei((int)$id,$folder_name,$id_parent);
+            */
+            $servei = $this->container->get('add_inside_share_folder_user_use_case');
+            $info = $servei($id_owner,$folder_name,$id_parent);
+            var_dump($info);
+
+            $num_folders = (int)$info[0];
+
+            $img = "/assets/img/folder.png";
+
+
+            $array = [];
+            for ($i = 0; $i < $num_folders -1; $i++) {
+
+                $folder = new Folder($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], $id_parent);
+                array_push($array, $folder);
+
+            }
+
+
+
+            $servei_info = $this->container->get('check_share_user_use_case');
+            $infor = $servei_info($id_parent);
+            $id_owner = $infor[0]['id_owner'];
+
+
+
+            $servei = $this->container->get('check_user_use_case');
+            $user = $servei($_SESSION['id']);
+            $notificacion = " El usuario ".$user[0]['username']." te ha upload la carpeta ".$folder_name."";
+            $servei_save_notificacion = $this->container->get('save_notificacion');
+            $servei_save_notificacion($id_owner,$_SESSION['id'],$id_parent,$notificacion);
+
+
+
+            $this->container
+                ->get('view')
+                ->render($response, 'dashboard.twig', ['folder' => $array]);
+
+            return $response->withStatus(302)->withHeader('Location', '/lp');
 
         }
     }
@@ -638,14 +901,22 @@ class HelloController
 
         $id_folder = $fold['folder_id'];
 
+        $servei_share = $this->container->get('folders_shared_user_use_case');
+        $info_share = $servei_share($id);
+        var_dump($info_share);
+        echo "------------";
+        var_dump($info_share[0]['id_owner']);
 
+        $id_owner = $info_share[0]['id_owner'];
 
-        $servei = $this->container->get('check_file_user_use_case');
+       // $servei = $this->container->get('check_file_user_use_case');
+        $servei = $this->container->get('check_share_file_user_use_case');
 
         /**
          *Tota la informació dels fitxers
          */
-        $info= $servei($id_folder,$id);
+        //$info= $servei($id_folder,$id);
+        $info= $servei($id_folder,$id_owner);
 
 
         $img = "/assets/img/file.png";
@@ -661,12 +932,14 @@ class HelloController
         /*
          * folders
          */
-        $servei2 = $this->container->get('check_folder_user_use_case');
+        //$servei2 = $this->container->get('check_folder_user_use_case');
+        $servei2 = $this->container->get('check_share_folder_user_use_case');
 
         /**
          *Tota la informació de la carpeta
          */
-        $info2 = $servei2($id_folder,$id);
+       // $info2 = $servei2($id_folder,$id);
+        $info2 = $servei2($id_folder,$id_owner);
 
         $img2 = "/assets/img/folder.png";
 
@@ -711,7 +984,6 @@ class HelloController
 
         if (isset($_POST['submit'])) {
             $folder = $request->getParsedBody();
-
             $folder_name = $folder['folder_name'];
             $folder_new_name = $folder['titleFolder'];
 
@@ -720,9 +992,21 @@ class HelloController
             $servei($folder_name,$folder_new_name);
 
             // cojo el id_owner de la tabla share con el id_folder que quiero renombrar
-            // si el id_owner es diferente de la session id
+            //if($info[0]['id_owner'] != $_SESSION['id']){}
             // significa que tengo que enviar notificacion del id_usershared al id_owner
                 //abfjasbfsbfjkbs
+
+            $servei_info = $this->container->get('check_share_user_use_case');
+            $info = $servei_info($folder['folder_id']);
+            $id_owner = $info[0]['id_owner'];
+
+
+            $servei = $this->container->get('check_user_use_case');
+            $user = $servei($_SESSION['id']);
+            $notificacion = " El usuario ".$user[0]['username']." te ha renombrado la carpeta ".$folder['folder_name']."";
+            $servei_save_notificacion = $this->container->get('save_notificacion');
+            $servei_save_notificacion($id_owner,$_SESSION['id'],$folder['folder_id'],$notificacion);
+
 
 
             return  $response->withStatus(302)->withHeader('Location', '/lp');
@@ -738,6 +1022,7 @@ class HelloController
         if(isset($_POST['deleteFolder'])){
             $id=$_SESSION['id'];
             $folder = $request->getParsedBody();
+
             $folder_id = $folder['folder_id'];
             /*
              * mirem els fitxer que hi han, si es que hi han
@@ -753,8 +1038,45 @@ class HelloController
                 echo"YAAAAAS";
                 $this->deleteAllFolder($files, $folders);
             }
+
+
+            /**
+             * Servei que em busca el id_parent de id_folder
+             * pq sera el que tenim en la taula share ,
+             * del qual podrem treure el seu id_owner
+             */
+
+
+            $servei_id_parent = $this->container->get('check_user_folder_use_case');
+            $info_user = $servei_id_parent($folder_id);
+
+            $id_parent = $info_user[0]['id_parent'];
+
+
+
+
+
+            $servei_info = $this->container->get('check_share_user_use_case');
+            $info = $servei_info($id_parent);
+
+            $id_owner = $info[0]['id_owner'];
+
+
+
             $servei3 = $this->container->get('delete_folder_user_use_case');
             $servei3($folder_id);
+
+
+
+
+            $servei5 = $this->container->get('check_user_use_case');
+            $user = $servei5($_SESSION['id']);
+            $notificacion = " El usuario ".$user[0]['username']." te ha eliminado la carpeta ".$folder['folder_name']."";
+            $servei_save_notificacion = $this->container->get('save_notificacion');
+            $servei_save_notificacion($id_owner,$_SESSION['id'],$folder_id,$notificacion);
+
+
+
             /*
              * mira si hi esta compartit i ho elimina
              */
@@ -765,6 +1087,7 @@ class HelloController
 
             //$servei = $this->container->get('delete_folder_user_use_case');
             //$servei($folder_id);
+
 
 
 
@@ -892,13 +1215,18 @@ class HelloController
 
                 if($tipo == 'Admin'){
 
+
+                    $servei_info = $this->container->get('check_share_user_use_case');
+                    $info = $servei_info($folder['folder_id']);
+                    $id_ownerP = $info[0]['id_owner'];
+
                     $servei = $this->container->get('check_user_use_case');
-                    $user = $servei($id_owner);
+                    $user = $servei($id_ownerP);
 
 
                     $notificacion = " El usuario ".$user[0]['username']." te ha hecho Administrador de ".$folder['folder_name']."";
                     $servei_save_notificacion = $this->container->get('save_notificacion');
-                    $servei_save_notificacion($id_owner,$id_usershared,$id_folder,$notificacion);
+                    $servei_save_notificacion($id_ownerP,$id_usershared,$id_folder,$notificacion);
                 }
 
 
@@ -949,6 +1277,60 @@ class HelloController
 
         }
     }
+
+
+    /**
+     *Printar Notificacions
+     */
+
+    public function notificationsUser(Request $request, Response $response){
+        /**
+         * Servei que me busca las notificaciones:
+         * id_owner tiene que ser igual al session_id
+         */
+
+
+        $servei = $this->container->get('get_notifications_user');
+        $notifications = $servei();
+
+
+        $num_notifications = sizeof($notifications);
+
+        $array_owner_notifications=[];
+        $array_user_shared_notifications=[];
+
+
+        for($i=0;$i<$num_notifications;$i++){
+            /**
+             * Para el usuario que esta compartiendo
+             */
+            if($notifications[$i]['id_owner'] == $_SESSION['id']){
+                array_push($array_owner_notifications,$notifications[$i]);
+            }
+            //$notifications[$i]['id_owner']
+            /**
+             * Para el usuario compartido
+             */
+
+            if($notifications[$i]['id_usershared'] == $_SESSION['id']){
+                 array_push($array_user_shared_notifications,$notifications[$i]);
+            }
+        }
+
+
+
+
+
+
+
+        return $this->container
+            ->get('view')
+            ->render($response, 'notifications.twig', ['notificationsOwner' => $array_owner_notifications,'notificationsUserShared' => $array_user_shared_notifications,'id'=>$_SESSION['id']]);
+
+
+    }
+
+
 
 
     public function validacions($rawData, $opcio)
@@ -1065,6 +1447,17 @@ class HelloController
         $data = htmlspecialchars($data);
         return $data;
     }
+
+    public function changeValidation (Request $request, Response $response,$id){
+       //ACCEDIR A LA BBDD I CANVIAR COLUMNA DE VALIDACIO DEL ID QUE S'HA GUARDAT
+        $_SESSION['id'] = $id['id'];
+        $servei = $this->container->get('post_verification');
+        $servei($id);
+        return $response->withStatus(302)->withHeader('Location', '/lp');
+
+
+        //QUAN S'HA FET EL CANVI DE VALIDACIO VAS AL LOGIN
+    }
 }
 
 
@@ -1076,7 +1469,6 @@ class HelloController
           ->get('view')
           ->render($response, 'hello.twig', ['name' => $name]);
   }*/
-
 
 
 

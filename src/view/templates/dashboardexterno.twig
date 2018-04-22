@@ -27,6 +27,7 @@
                 <input type="text"  name="nombre" readonly="readonly" value= "{{ array.nom }}"/>
             {% if array.type == 'Admin' %}
                 <form action="/deleteFolder" method="post">
+                    <input type="hidden" value="{{ array.nom }}" name="folder_name"/>
                     <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
                     <button type="submit" class="btn" name="deleteFolder" value="deleteFolder">Delete</button>
                 </form>
@@ -106,6 +107,7 @@
             {% if array.type == 'Admin' %}
                 <form action="/deleteFile" method="post">
                     <input type="hidden"  value="{{ array.id }}" name="file_id"/>
+                    <input type="hidden"  value="{{ array.nom }}" name="file_name"/>
                     <button type="submit" class="btn" name="deleteFile" value="deleteFile">Delete</button>
                 </form>
                 <button type="submit" class="btn" data-toggle="modal" data-target="#{{ array.id }}" name="renameFile" value="renameFile">Rename</button>

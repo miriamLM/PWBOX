@@ -2,16 +2,16 @@
 /**
  * Created by PhpStorm.
  * User: carmeperseguerbarragan
- * Date: 17/4/18
- * Time: 11:52
+ * Date: 17/5/18
+ * Time: 17:23
  */
 
 namespace SlimApp\model\UseCase;
 
-use SlimApp\model\Interfaces\bbddRepository;
-use SlimApp\model\User;
 
-class PostLoginUseCase
+use SlimApp\model\Interfaces\bbddRepository;
+
+class ExistsUserValidationEmail
 {
     private $repository;
 
@@ -26,7 +26,7 @@ class PostLoginUseCase
         $psswH = md5($rawData['psw']);
 
 
-        $result = $this->repository->exists($rawData["emailuser"],$psswH);
+        $result = $this->repository->existsUserValidation($rawData["email"],$psswH);
 
         return $result;
     }

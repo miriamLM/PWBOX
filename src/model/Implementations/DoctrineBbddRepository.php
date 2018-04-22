@@ -29,7 +29,7 @@ class DoctrineBbddRepository implements bbddRepository
      */
     public function save(User $user,$capacity)
     {
-        $sql = "INSERT INTO user(username, email,birthdate, password, created_at, updated_at,image,capacity) VALUES(:username, :email,:birthdate ,:password, :created_at, :updated_at,:image,:capacity)";
+        $sql = "INSERT INTO user(username, email,birthdate, password, created_at, updated_at,image,capacity,verification) VALUES(:username, :email,:birthdate ,:password, :created_at, :updated_at,:image,:capacity,:verification)";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue("username", $user->getUsername(), 'string');
         $stmt->bindValue("email", $user->getEmail(), 'string');
@@ -39,18 +39,42 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->bindValue("updated_at", $user->getCreatedAt()->format(self::DATE_FORMAT));
         $stmt->bindValue("image", $user->getImage(), 'string');
         $stmt->bindValue("capacity", $capacity);
+        $stmt->bindValue("verification",$user->getVerification());
 
         //$stmt->bindValue("image", $user->getImage(), 'string');
         $stmt->execute();
     }
 
+    public function verification($id)
+    {
+        $sql = "UPDATE user  AS u SET u.verification = :verification WHERE u.id = :id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue("verification", 1);
+        $stmt->bindValue("id", $id);
+        $stmt->execute();
+
+    }
+
+    public function existsUserValidation($email,$psw)
+    {
+        $sql = "SELECT * FROM user WHERE email= ?  AND password = ?";
+        $stmt = $this->connection->fetchAll($sql, array($email,$psw));
+        /**
+         * M'agafa tot l'array , el qual conte tota la informacio d'aquell usuari amb aquell
+        email i password
+         *
+         **/
+        return $stmt[0]['id'];
+
+    }
+
     public function exists($emailuser,$psw)
     {
-        $sql = "SELECT id FROM user WHERE (email= ? OR username= ?)  AND password = ?";
+        $sql = "SELECT * FROM user WHERE (email= ? OR username= ?)  AND password = ?";
         $stmt = $this->connection->fetchAll($sql, array($emailuser,$emailuser,$psw));
         /**
          * M'agafa tot l'array , el qual conte tota la informacio d'aquell usuari amb aquell
-            email i password
+        email i password
          *
          **/
         return $stmt[0]['id'];
@@ -122,11 +146,27 @@ class DoctrineBbddRepository implements bbddRepository
 
     public function checkfiles($folder_id,$id)
     {
-        $query = "SELECT * FROM item WHERE id_folder =? and (id_user=? OR id_user=?)";
+       /* $query = "SELECT * FROM item WHERE id_folder =? and (id_user=? OR id_user=?)";
 
         $info = $this->connection->fetchAll($query,array($folder_id,(int)$_SESSION['id'],(int)$_SESSION['id_share']));
 
         var_dump($id);
+
+        return $info;
+       */
+        $query = "SELECT * FROM item WHERE id_folder =? and id_user=?";
+
+        $info = $this->connection->fetchAll($query,array($folder_id,(int)$_SESSION['id']));
+
+        var_dump($id);
+
+        return $info;
+    }
+
+    public function checksharefiles($folder_id,$id_owner){
+        $query = "SELECT * FROM item WHERE id_folder =? and id_user=?";
+
+        $info = $this->connection->fetchAll($query,array($folder_id,$id_owner));
 
         return $info;
     }
@@ -206,8 +246,19 @@ class DoctrineBbddRepository implements bbddRepository
 
     public function checkfolders($folder_id,$id)
     {
-        $query = "SELECT * FROM folder WHERE id_parent = ? and (id_user=? OR id_user=?)";
+        /*$query = "SELECT * FROM folder WHERE id_parent = ? and (id_user=? OR id_user=?)";
         $info = $this->connection->fetchAll($query,array($folder_id,(int)$_SESSION['id'],(int)$_SESSION['id_share']));
+        return $info;
+        */
+        $query = "SELECT * FROM folder WHERE id_parent = ? and id_user=?";
+        $info = $this->connection->fetchAll($query,array($folder_id,(int)$_SESSION['id']));
+        return $info;
+
+    }
+
+    public function checksharefolders ($folder_id,$id_owner){
+        $query = "SELECT * FROM folder WHERE id_parent = ? and id_user=?";
+        $info = $this->connection->fetchAll($query,array($folder_id,$id_owner));
         return $info;
     }
 
@@ -274,7 +325,7 @@ class DoctrineBbddRepository implements bbddRepository
 
 
     public function checkUserFolder($folder_id){
-        $query = "SELECT id_user FROM folder WHERE id = ? ";
+        $query = "SELECT * FROM folder WHERE id = ? ";
         $info = $this->connection->fetchAll($query,array($folder_id));
         return $info;
     }
@@ -303,6 +354,57 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->execute();
     }
 
+/**
+ * Para que el que ha compartido la carpeta pueda ver el contenido que añade la otra persona
+ */
+    public function newFolderInsideShare($id_owner,$folder_name,$id_parent){
+        var_dump($id_parent);
+        $sql = "INSERT INTO folder (id_user,name, id_parent) VALUES (:id_user,:nameFolder, :id_parent)";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue("id_user", $id_owner);
+        $stmt->bindValue("nameFolder", $folder_name);
+        $stmt->bindValue("id_parent", $id_parent);
+        if($stmt->execute()){
+            $sql = "SELECT COUNT(*) FROM folder";
+            $stmt = $this->connection->query($sql);
+            $num_folders= $stmt->fetchColumn();
+            var_dump($num_folders);
+
+            $query = "SELECT * FROM folder WHERE id_parent =?";
+            $info = $this->connection->fetchAll($query,array($id_parent));
+            return [$num_folders,$info];
+
+        }
+    }
+
+    public function addfileInsideShare($file,$id,$id_folder,$filesize){
+        $sql = "INSERT INTO item(id_user,name,id_folder,size) VALUES(:id_user, :name,:id_folder,:size)";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue("id_user", $id);
+        $stmt->bindValue("name", $file['name'],'string');
+        $stmt->bindValue("id_folder",$id_folder);
+        $stmt->bindValue("size",$filesize);
+        if($stmt->execute()){
+            $sql = "SELECT COUNT(*) FROM item";
+            $stmt = $this->connection->query($sql);
+            $num_items= $stmt->fetchColumn();
+            var_dump($num_items);
+
+            $query = "SELECT * FROM item";
+            $info = $this->connection->fetchAll($query);
+            var_dump($info);
+
+            return [$num_items,$info];
+
+        }
+    }
+
+    public function checkshare($id_folder){
+        $query = "SELECT * FROM share WHERE id_folder = ? and id_usershared = ?";
+        $info= $this->connection->fetchAll($query,array($id_folder,$_SESSION['id']));
+        return $info;
+    }
+
     public function savenotificacion($id_owner,$id_usershared,$id_folder,$notificacion){
         $sql = "INSERT INTO notificacion(id_owner, id_usershared,id_folder, notificacion) VALUES(:idowner, :idusershared,:idfolder ,:notificacion)";
         $stmt = $this->connection->prepare($sql);
@@ -312,6 +414,22 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->bindValue("notificacion", $notificacion, 'string');
         $stmt->execute();
     }
+
+    public function folderfile($file_id){
+        $query = "SELECT * FROM item WHERE id = ?";
+        $info= $this->connection->fetchAll($query,array($file_id));
+        return $info[0]['id_folder'];
+    }
+
+
+    public function getnotificationsuser(){
+        $query = "SELECT * FROM notificacion";
+        $info= $this->connection->fetchAll($query);
+        return $info;
+    }
+
+
+
 
 
 }

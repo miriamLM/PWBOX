@@ -23,7 +23,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="/addFolder" method="post" enctype="multipart/form-data">
+                        <form action="/addFolderInsideShare" method="post" enctype="multipart/form-data">
                             <input type="text" id="nameFolder" name="nameFolder" />
                             <button type="submit" name="addSubmit" value="{{ idParent }}">Add</button>
                         </form>
@@ -41,7 +41,7 @@
                             <h4 class="modal-title">Upload File</h4>
                         </div>
                         <div class="modal-body">
-                            <form action="/uploadFile" method="post" enctype="multipart/form-data">
+                            <form action="/uploadFileInsideShare" method="post" enctype="multipart/form-data">
                                 <input type="file" id="addFile" name="addFile" size="2Mb" />
                                 <button type="submit" name="uploadSubmit" value="{{ idFolder }}">Upload</button>
                             </form>
@@ -67,6 +67,7 @@
             <input type="text"  name="nombre" readonly="readonly" value= "{{ array.nom }}"/>
             {% if array.type == 'Admin' %}
                 <form action="/deleteFolder" method="post">
+                    <input type="hidden" value="{{ array.nom }}" name="folder_name"/>
                     <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
                     <button type="submit" class="btn" name="deleteFolder" value="deleteFolder">Delete</button>
                 </form>
@@ -131,8 +132,9 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="/addFolder" method="post" enctype="multipart/form-data">
+                                <form action="/addFolderInsideShare" method="post" enctype="multipart/form-data">
                                     <input type="text" id="nameFolder" name="nameFolder" />
+                                    <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
                                     <button type="submit" name="addSubmit" value="{{ idParent }}">Add</button>
                                 </form>
                             </div>
@@ -167,6 +169,7 @@
             {% if array.type == 'Admin' %}
                 <form action="/deleteFile" method="post">
                     <input type="hidden"  value="{{ array.id }}" name="file_id"/>
+                    <input type="hidden"  value="{{ array.nom }}" name="file_name"/>
                     <button type="submit" class="btn" name="deleteFile" value="deleteFile">Delete</button>
                 </form>
                 <button type="submit" class="btn" data-toggle="modal" data-target="#{{ array.id }}" name="renameFile" value="renameFile">Rename</button>
@@ -198,7 +201,7 @@
                                     <h4 class="modal-title">Upload File</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="/uploadFile" method="post" enctype="multipart/form-data">
+                                    <form action="/uploadFileInsideShare" method="post" enctype="multipart/form-data">
                                         <input type="file" id="addFile" name="addFile" size="2Mb" />
                                         <button type="submit" name="uploadSubmit" value="{{ idFolder }}">Upload</button>
                                     </form>

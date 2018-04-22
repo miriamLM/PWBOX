@@ -6,6 +6,9 @@
         <h1 class="h1-dashboard"> CONTENIDO USUARIO </h1>
         <a href="/inicio" class="redirectpaginici">PWBOX</a>
         <a  href="/prof" class="redirectprof">Profile</a>
+        <a  href="/notifications" class="redirectnotifications">Notificacions</a>
+
+
     </header>
     <form action="/logout" class="form" method="POST">
         <button type="submit" class="btn"  name="logout" value="logout">logout</button>
@@ -79,6 +82,7 @@
         <div class="items">
             <input type="text"  name="nombre" readonly="readonly" value= "{{ array.nom }}"/>
             <form action="/deleteFolder" method="post">
+                <input type="hidden" value="{{ array.nom }}" name="folder_name"/>
                 <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
                 <button type="submit" class="btn" name="deleteFolder" value="deleteFolder">Delete</button>
             </form>
@@ -150,6 +154,7 @@
             <input type="text"  name="nombre" readonly="readonly" value= "{{ array.nom }}"/>
             <form action="/deleteFile" method="post">
                 <input type="hidden"  value="{{ array.id }}" name="file_id"/>
+                <input type="hidden"  value="{{ array.nom }}" name="file_name"/>
                 <button type="submit" class="btn" name="deleteFile" value="deleteFile">Delete</button>
             </form>
             <button type="submit" class="btn" data-toggle="modal" data-target="#{{ array.id }}" name="renameFile" value="renameFile">Rename</button>

@@ -26,6 +26,9 @@ interface bbddRepository
 
     public function exists($emailuser,$psw);
 
+    public function existsUserValidation($email,$psw);
+
+
     /**
      *Coger informacion del usuario, cuando este este logueado, para poder llegar
      * a utilizarlo en el update
@@ -139,9 +142,36 @@ interface bbddRepository
     public function filesize($file_id);
 
     /**
-     * deletede share si se elimina una carpeta compartida
+     * delete de share si se elimina una carpeta compartida
      */
     public function deleteshare($id_folder);
+
+
+    /**
+     * ver los files compartidos en share
+     */
+    public function checksharefiles($folder_id,$id_owner);
+
+    /**
+     * ver las carpetas compartidas en share
+     */
+    public function checksharefolders ($folder_id,$id_owner);
+
+    /**
+     * ver las carpetas que te han añadido el usershared
+     */
+    public function newFolderInsideShare($id_owner,$folder_name,$id_parent);
+
+    /**
+     * ver los files que te han añadido el usershared
+     */
+    public function addfileInsideShare($file,$id,$id_folder,$filesize);
+
+    /**
+     * devuelve el contenido de la tabla share donde el id_folder es igual al que pasamos
+     */
+    public function checkshare($id_folder);
+
 
     /**
      * save notificacion
@@ -149,4 +179,13 @@ interface bbddRepository
 
     public function savenotificacion($id_owner,$id_usershared,$id_folder,$notificacion);
 
+    /**
+     * get folder of file
+     */
+
+    public function folderfile($file_id);
+
+    public function verification($id);
+
+    public function getnotificationsuser();
 }

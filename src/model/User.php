@@ -13,6 +13,7 @@ class User
     private $createdAt;
     private $updatedAt;
     private $image;
+    private $verification;
 
     /**
      * User constructor.
@@ -25,7 +26,7 @@ class User
      * @param $updatedAt
      * @param $image
      */
-    public function __construct($id, $username, $email,$birthdate ,$password,$createdAt, $updatedAt,$image)
+    public function __construct($id, $username, $email,$birthdate ,$password,$createdAt, $updatedAt,$image,$verification)
     {
         $this->id = $id;
         $this->username = $username;
@@ -35,6 +36,7 @@ class User
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->image = $image;
+        $this->verification = $verification;
 
     }
 
@@ -109,6 +111,22 @@ class User
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVerification()
+    {
+        return $this->verification;
+    }
+
+    /**
+     * @param mixed $verification
+     */
+    public function setVerification($verification)
+    {
+        $this->verification = $verification;
     }
 
 

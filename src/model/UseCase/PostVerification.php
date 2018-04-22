@@ -8,10 +8,12 @@
 
 namespace SlimApp\model\UseCase;
 
+
 use SlimApp\model\Interfaces\bbddRepository;
+use SlimApp\model\Interfaces\UserRepository;
 use SlimApp\model\User;
 
-class PostLoginUseCase
+class PostVerification
 {
     private $repository;
 
@@ -22,13 +24,12 @@ class PostLoginUseCase
 
     }
 
-    public function __invoke(array $rawData) {
-        $psswH = md5($rawData['psw']);
+    public function __invoke($id) {
 
 
-        $result = $this->repository->exists($rawData["emailuser"],$psswH);
+        $this->repository->verification($id['id']);
 
-        return $result;
+
     }
 
 }

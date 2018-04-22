@@ -56,9 +56,13 @@ $app->post('/renameFile','SlimApp\controller\HelloController:renameFileProfile')
 
 $app->post('/uploadFile','SlimApp\controller\HelloController:uploadFileProfile');
 
+$app->post('/uploadFileInsideShare','SlimApp\controller\HelloController:uploadFileInsideShare');
+
 $app->post('/downloadFile','SlimApp\controller\HelloController:downloadFileProfile');
 
 $app->post('/addFolder','SlimApp\controller\HelloController:addFolderProfile');
+
+$app->post('/addFolderInsideShare','SlimApp\controller\HelloController:addFolderInsideShare');
 
 
 
@@ -83,6 +87,12 @@ $app->post('/sharedFolders','SlimApp\controller\HelloController:sharedFolders');
 
 
 $app->post('/logout','SlimApp\controller\HelloController:logout');
+
+$app->get('/changeValidation/{id}','SlimApp\controller\HelloController:changeValidation');
+
+
+$app->get('/notifications','SlimApp\controller\HelloController:notificationsUser');
+
 
 
 
