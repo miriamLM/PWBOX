@@ -173,6 +173,12 @@ interface bbddRepository
     public function checkshare($id_folder);
 
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> ace971476eeba1afaa30548c4067ac380b28680b
     /**
      * save notificacion
      */

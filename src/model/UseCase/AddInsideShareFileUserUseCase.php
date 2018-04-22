@@ -11,15 +11,25 @@ namespace SlimApp\model\UseCase;
 
 class AddInsideShareFileUserUseCase
 {
+<<<<<<< HEAD
     private $repository;
+=======
+    private $reporitory;
+>>>>>>> ace971476eeba1afaa30548c4067ac380b28680b
 
     /**
      * AddInsideShareFileUserUseCase constructor.
      * @param $reporitory
      */
+<<<<<<< HEAD
     public function __construct($repository)
     {
         $this->repository = $repository;
+=======
+    public function __construct($reporitory)
+    {
+        $this->reporitory = $reporitory;
+>>>>>>> ace971476eeba1afaa30548c4067ac380b28680b
     }
 
     /**
