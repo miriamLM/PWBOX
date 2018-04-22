@@ -384,10 +384,12 @@ class HelloController
     }
 
 
-    public function profileUpdate(Request $request, Response $response, $data) {
-        //$data = $request->getParsedBody();
-        //la data del ajax
-        var_dump($data);
+    public function profileUpdate(Request $request, Response $response) {
+
+
+
+        $data = ['username' => $_POST["username"],'email' => $_POST["email"],'birthdate' => $_POST["birthdate"] ,'psw'=> $_POST["psw"] , 'confirmpsw' => $_POST["confirmpsw"]];
+
 
         $servei = $this->container->get('update_user_use_case');
         $errors = $this->validacions($data, 0);
@@ -417,12 +419,15 @@ class HelloController
                     $test = move_uploaded_file($_FILES['myfile']['tmp_name'],$destination);
                 }
 
-
-
             }else{
                 $data["myfile"] = "user.png";
             }
             $servei($data);
+
+            return $response->withStatus(302)->withHeader('Location', '/prof');
+
+
+
         }
     }
 
@@ -530,6 +535,27 @@ class HelloController
                     $notificacion = " El usuario ".$user[0]['username']." te ha renombrado el file ".$file_name."";
                     $servei_save_notificacion = $this->container->get('save_notificacion');
                     $servei_save_notificacion($id_owner,$_SESSION['id'],$folder_id,$notificacion,$tipo);
+
+
+                    $userOwner = $servei($id_owner);
+
+
+                    $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
+                        ->setUsername ('kkaarme11@gmail.com')
+                        ->setPassword ('carmexuxigemma');
+
+                    $mailer = (new Swift_Mailer($transport));
+
+                    $message = (new Swift_Message('HOLA'))
+                        ->setFrom('send@example.com')
+                        ->setTo($userOwner[0]['email'])
+                        ->setBody($notificacion)
+
+                    ;
+                    $mailer->send($message);
+
+
+
                 }
 
 
@@ -619,6 +645,26 @@ class HelloController
                     $notificacion = " El usuario ".$user[0]['username']." te ha eliminado el file ".$file['file_name']."";
                     $servei_save_notificacion = $this->container->get('save_notificacion');
                     $servei_save_notificacion($id_owner,$_SESSION['id'],$folder_id,$notificacion,$tipo);
+
+
+                    $userOwner = $servei($id_owner);
+
+
+                    $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
+                        ->setUsername ('kkaarme11@gmail.com')
+                        ->setPassword ('carmexuxigemma');
+
+                    $mailer = (new Swift_Mailer($transport));
+
+                    $message = (new Swift_Message('HOLA'))
+                        ->setFrom('send@example.com')
+                        ->setTo($userOwner[0]['email'])
+                        ->setBody($notificacion)
+
+                    ;
+                    $mailer->send($message);
+
+
 
                 }
 
@@ -746,9 +792,6 @@ class HelloController
                             $name_img= $_FILES["addFile"]["name"];
                             $destination ="assets/item/".$id.".".$file["name"];
                             $test = move_uploaded_file($file['tmp_name'],$destination);
-
-
-
 
 
                         }else{
@@ -950,6 +993,24 @@ class HelloController
                             $notificacion = " El usuario ".$user[0]['username']." te ha upload el file ".$filename."";
                             $servei_save_notificacion = $this->container->get('save_notificacion');
                             $servei_save_notificacion($id_owner,$_SESSION['id'],$id_folder,$notificacion,$tipo);
+
+                            $userOwner = $servei($id_owner);
+
+
+                            $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
+                                ->setUsername ('kkaarme11@gmail.com')
+                                ->setPassword ('carmexuxigemma');
+
+                            $mailer = (new Swift_Mailer($transport));
+
+                            $message = (new Swift_Message('HOLA'))
+                                ->setFrom('send@example.com')
+                                ->setTo($userOwner[0]['email'])
+                                ->setBody($notificacion)
+
+                            ;
+                            $mailer->send($message);
+
                         }
 
 
@@ -1088,6 +1149,25 @@ class HelloController
                 $notificacion = " El usuario ".$user[0]['username']." te ha upload la carpeta ".$folder_name."";
                 $servei_save_notificacion = $this->container->get('save_notificacion');
                 $servei_save_notificacion($id_owner,$_SESSION['id'],$id_parent,$notificacion,$tipo);
+
+                $userOwner = $servei($id_owner);
+
+
+                $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
+                    ->setUsername ('kkaarme11@gmail.com')
+                    ->setPassword ('carmexuxigemma');
+
+                $mailer = (new Swift_Mailer($transport));
+
+                $message = (new Swift_Message('HOLA'))
+                    ->setFrom('send@example.com')
+                    ->setTo($userOwner[0]['email'])
+                    ->setBody($notificacion)
+
+                ;
+                $mailer->send($message);
+
+
             }
 
 
@@ -1326,6 +1406,25 @@ class HelloController
                 $notificacion = " El usuario ".$user[0]['username']." te ha renombrado la carpeta ".$folder['folder_name']."";
                 $servei_save_notificacion = $this->container->get('save_notificacion');
                 $servei_save_notificacion($id_owner,$_SESSION['id'],$folder['folder_id'],$notificacion,$tipo);
+
+                $userOwner = $servei($id_owner);
+
+
+                $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
+                    ->setUsername ('kkaarme11@gmail.com')
+                    ->setPassword ('carmexuxigemma');
+
+                $mailer = (new Swift_Mailer($transport));
+
+                $message = (new Swift_Message('HOLA'))
+                    ->setFrom('send@example.com')
+                    ->setTo($userOwner[0]['email'])
+                    ->setBody($notificacion)
+
+                ;
+                $mailer->send($message);
+
+
             }
 
 
@@ -1400,6 +1499,23 @@ class HelloController
                 $notificacion = " El usuario ".$user[0]['username']." te ha eliminado la carpeta ".$folder['folder_name']."";
                 $servei_save_notificacion = $this->container->get('save_notificacion');
                 $servei_save_notificacion($id_owner,$_SESSION['id'],$folder_id,$notificacion,$tipo);
+
+                $userOwner = $servei($id_owner);
+
+
+                $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
+                    ->setUsername ('kkaarme11@gmail.com')
+                    ->setPassword ('carmexuxigemma');
+
+                $mailer = (new Swift_Mailer($transport));
+
+                $message = (new Swift_Message('HOLA'))
+                    ->setFrom('send@example.com')
+                    ->setTo($userOwner[0]['email'])
+                    ->setBody($notificacion)
+
+                ;
+                $mailer->send($message);
 
             }
 
@@ -1755,8 +1871,6 @@ class HelloController
                 /*image*/
 
                 if($_FILES["myfile"]["error"]>0){
-                    echo"error";
-                    var_dump($_FILES["myfile"]["error"]);
                     if($_FILES["myfile"]["error"]==2){
                         $imageErr = "size error";
                     }

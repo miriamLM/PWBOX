@@ -4,19 +4,16 @@ window.onload = function(){
 var i=0;
 
 function ajaxx(){
-        $.ajax({
-            type: 'POST',
-            url: '/prof',
-            data: {
-                "username": document.getElementById("username").value,
-                "email": document.getElementById("email").value,
-                "birthdate": document.getElementById("birthdate").value,
-                "psw": document.getElementById("psw").value,
-                "confirmpsw": document.getElementById("confirmpsw").value,
-                "myfile" :document.getElementById("myfile").value
-            }
-        });
+    var data = new FormData();
+    data.append("username",document.getElementById("username").value);
+    data.append("email",document.getElementById("email").value);
+    data.append("birthdate",document.getElementById("birthdate").value);
+    data.append("psw",document.getElementById("psw").value);
+    data.append("confirmpsw",document.getElementById("confirmpsw").value);
 
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open('POST','/prof',true);
+    xmlhttp.send(data);
 }
 
 
