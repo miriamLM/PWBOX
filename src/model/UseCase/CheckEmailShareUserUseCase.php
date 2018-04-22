@@ -28,9 +28,9 @@ class CheckEmailShareUserUseCase
          * para despues guardar-lo en la tabla shared (id_usershared)
          */
 
-        $id_usershared = $this->repository->checkemailshare($mail);
+        $info = $this->repository->checkemailshare($mail);
 
-        return $id_usershared;
+        return $info;
 
     }
 }

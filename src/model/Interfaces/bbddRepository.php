@@ -195,4 +195,7 @@ interface bbddRepository
     public function getnotificationsuser();
 
     public function checkThisFolder($folder_id);
+
+    public function getidwithemail($email);
+
 }

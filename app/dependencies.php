@@ -404,4 +404,13 @@ $container['check_this_folder_user_use_case'] = function($container){
 
 
 
+$container['get_id_with_email'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\GetIdWithEmail(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+
+
 ?>

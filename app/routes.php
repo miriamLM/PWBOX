@@ -36,6 +36,7 @@ $app->get('/lp','SlimApp\controller\HelloController:getLandingProfile')->add('Sl
 
 
 
+$app->post('/activacioEmail','SlimApp\controller\HelloController:activacioEmailAgain');
 
 
 $app->post('/registration','SlimApp\controller\HelloController:registerMe');

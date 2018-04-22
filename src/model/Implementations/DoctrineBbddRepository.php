@@ -59,11 +59,7 @@ class DoctrineBbddRepository implements bbddRepository
     {
         $sql = "SELECT * FROM user WHERE email= ?  AND password = ?";
         $stmt = $this->connection->fetchAll($sql, array($email,$psw));
-        /**
-         * M'agafa tot l'array , el qual conte tota la informacio d'aquell usuari amb aquell
-        email i password
-         *
-         **/
+
         return $stmt[0]['id'];
 
     }
@@ -77,12 +73,20 @@ class DoctrineBbddRepository implements bbddRepository
         email i password
          *
          **/
-        if(empty($stmt)){
-            echo "<script>alert(\"NO EXISTE USUARIO.\");location.href='/log'</script>";
+        //return $stmt[0]['id'];
+        return $stmt;
+    }
 
-        }
+
+    public function getidwithemail($email){
+        $sql = "SELECT * FROM user WHERE email= ?";
+        $stmt = $this->connection->fetchAll($sql, array($email));
+        /**
+         * M'agafa tot l'array , el qual conte tota la informacio d'aquell usuari amb aquell
+        email i password
+         *
+         **/
         return $stmt[0]['id'];
-
     }
 
     public function check($id)
@@ -284,7 +288,7 @@ class DoctrineBbddRepository implements bbddRepository
 
         $query = "SELECT * FROM user WHERE email = ? ";
         $info = $this->connection->fetchAll($query,array($email));
-        return $info[0]['id'];
+        return $info;
     }
 
     /**
@@ -454,4 +458,11 @@ class DoctrineBbddRepository implements bbddRepository
         $info = $this->connection->fetchAll($query,array($folder_id));
         return $info;
     }
+
+
+
+
+
+
+
 }

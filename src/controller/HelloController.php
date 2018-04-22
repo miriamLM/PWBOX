@@ -104,11 +104,13 @@ class HelloController
 
     public function loginAction(Request $request, Response $response)
     {
+        $ok = 1;
+        $advertencia=1;
         $errors = ["", ""];
         try {
             return $this->container
                 ->get('view')
-                ->render($response, 'login.twig', ['errors' => $errors]);
+                ->render($response, 'login.twig', ['errors' => $errors,'ok' => $ok,'advertencia'=> $advertencia]);
         } catch (NotFoundExceptionInterface $e) {
         } catch (ContainerExceptionInterface $e) {
         }
@@ -134,6 +136,8 @@ class HelloController
 
     public function getLandingProfile(Request $request, Response $response)
     {
+
+
         $id = $_SESSION['id'];
         /*
          * Check user para la imagen
@@ -287,16 +291,49 @@ class HelloController
         $servei = $this->container->get('post_login_use_case');
         $errors = $this->validacions($data, 1);
         if ($errors[0] == "" && $errors[1] == "") {
-            $id = $servei($data);
-            if (!empty($id)) {
-                echo("EXISTE");
+            $stmt = $servei($data);
+            if (!empty($stmt[0]['id'])) {
+                //echo("EXISTE");
                 /**
                  * landingProfile -> Landing, quan el usuari s'hagi pogut loguejar
                  *  **/
-                $_SESSION['id'] = $id;
-                return $response->withStatus(302)->withHeader('Location', '/lp');
+
+
+
+                /**
+                 * Si el usuario registrado le he enviado
+                 * un correo de verifiacion de la cuenta
+                 * y no ha verificado y intenta loguearse
+                 * warning
+                 */
+
+
+                if($stmt[0]['verification'] == 0){
+                    //Advertencia
+                    //echo "<script>alert(\"Activa Cuenta.\");location.href='/log' </script> ";
+                    $advertencia=0;
+                    $ok=1;
+                    $email = $stmt[0]['email'];
+
+                    return $this->container
+                        ->get('view')
+                        ->render($response,'login.twig',['errors' => $errors,'ok' => $ok,'advertencia'=> $advertencia,'email'=>$email]);
+
+                }else {
+                    $_SESSION['id'] = $stmt[0]['id'];
+
+                    //return $response->withStatus(302)->withHeader('Location', '/lp');
+                }
+
+
             } else {
-                  //  echo "<script>alert(\"NO EXISTE USUARIO.\");location.href='/log'</script>";
+                /**
+                 * No existe el usuario
+                 */
+                $ok = 0;
+                return $this->container
+                    ->get('view')
+                    ->render($response, 'login.twig', ['errors' => $errors,'ok'=> $ok ]);
 
             }
         } else {
@@ -306,6 +343,46 @@ class HelloController
         }
 
     }
+
+    public function activacioEmailAgain(Request $request, Response $response){
+
+         $data = $request->getParsedBody();
+         $email = $data['emailuser'];
+
+        /**
+         * Servei per agafar el id del usuari
+         * a partir del email
+         */
+        $servei = $this->container->get('get_id_with_email');
+        $id = $servei($email);
+
+        $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
+            ->setUsername ('kkaarme11@gmail.com')
+            ->setPassword ('carmexuxigemma');
+
+        $mailer = (new Swift_Mailer($transport));
+
+        $message = (new Swift_Message('HOLA'))
+            ->setFrom('send@example.com')
+            ->setTo($email)
+            ->setBody(
+                '<html>
+            <head>
+            <title>Activate your account</title>
+            </head>
+            <body>
+            <h1>Validate your account {{ id }}</h1>
+            <a href="http://slimapp.test/changeValidation/'.$id.'">Click here to validate your account!</a>
+            </body>
+            </html>'
+            )
+        ;
+        $mailer->send($message);
+
+        return $response->withStatus(302)->withHeader('Location','/');
+
+    }
+
 
     public function profileUpdate(Request $request, Response $response) {
         $data = $request->getParsedBody();
@@ -1392,17 +1469,21 @@ class HelloController
             $mail= $folder['mail'];
             $id_owner = $_SESSION['id'];
             $id_folder = $folder['folder_id'];
-            $tipo = $_POST['roles'];
             $servei = $this->container->get('check_email_share_user_use_case');
-            $id_usershared = $servei($mail);
+            $info = $servei($mail);
+
             /**
              * Si el email no existe -> el id sera 0 el que me devuelve
              * Saltara error
              */
-            if($id_usershared == 0){
-                echo "<script>alert(\"ERROR\");location.href='/lp'</script>";
-            }else{
+            if(empty($info)){
 
+                echo "<script>alert(\"ERROR: El usuario que estas intendo enviar la carpeta no esta registrado \");location.href='/lp'</script>";
+
+            }else{
+                $id_usershared= $info[0]['id'];
+
+                $tipo = $_POST['roles'];
                 if($tipo == null){
                     $tipo="Reader";
                 }

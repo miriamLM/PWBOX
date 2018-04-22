@@ -12,7 +12,7 @@
                 <label for="email"><b>Email/Username</b></label>
             </div>
             <div class="col-lg-6" id="col-email">
-                <input type="text" placeholder="Enter Email/Username" name="emailuser" >
+                <input type="text" placeholder="Enter Email/Username" name="emailuser" value="{{ email }}" >
             </div>
         </div>
         <p>{{ errors[0] }}</p>
@@ -27,9 +27,20 @@
         <p>{{ errors[1] }}</p>
 
         <input type="submit" name="submit" value="Login" class="submit">
-
-
+        {% if ok == 0 %}
+            <label>WARNING : NO EXISTE EL USUARIO</label>
+        {% endif %}
     </div>
-
 </form>
+    {% if advertencia == 0 %}
+        <form action="/activacioEmail" class="form" method="post">
+            <input type="hidden" placeholder="Enter Email/Username" name="emailuser" value="{{ email }}" >
+            <button type="submit" name="activarEmail" id="activarEmail">No has rebut el email?Fes click aqui</button>
+        </form>
+
+    {% endif %}
+
+
+
+
 {% endblock %}

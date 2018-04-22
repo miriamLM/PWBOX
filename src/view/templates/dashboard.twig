@@ -105,7 +105,7 @@
                                 <form action="/renameFolder" method="post" enctype="multipart/form-data">
                                         <input type="hidden" value="{{ array.id }}" name="folder_id"/>
                                         <input type="hidden" value="{{ array.nom }}" name="folder_name"/>
-                                        <input type="text" name="titleFolder" placeholder="New Folder Name"/>
+                                        <input type="text" name="titleFolder" placeholder="{{ array.nom }}"/>
                                         <input type="submit" name="submit" value="Submit"/>
                                 </form>
                             </div>
@@ -142,6 +142,7 @@
         </div>
 
     {% endfor %}
+
 
 
 
