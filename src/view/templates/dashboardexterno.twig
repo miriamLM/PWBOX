@@ -16,10 +16,10 @@
 
 
     {% for array in folder %}
-        <form action="/shared/{{ array.id }}" method="post">
+        <form action="/shared/{{ array.id }}" method="post" id="myFormShared">
             <input type="hidden"  value="{{ array.type }}" name="role"/>
             <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
-            <button type="submit" class="btn" name="folder" value="{{ array.nom }}" ondblclick="myFunction()">
+            <button type="button" class="btn" name="folder" value="{{ array.nom }}" ondblclick="myFunctionShared()">
                 <img src="{{ array.img }}" width="82" height="86">
             </button>
         </form>

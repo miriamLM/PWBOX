@@ -78,10 +78,12 @@ $app->post('/downloadFolder','SlimApp\controller\HelloController:downloadFolderP
 
 $app->post('/lp/{id}','SlimApp\controller\HelloController:printFileFolder');
 
+
 $app->post('/shared/{id}','SlimApp\controller\HelloController:printSharedFileFolder');
 
 
 $app->post('/shareFolder','SlimApp\controller\HelloController:shareFolder');
+
 
 $app->post('/sharedFolders','SlimApp\controller\HelloController:sharedFolders');
 

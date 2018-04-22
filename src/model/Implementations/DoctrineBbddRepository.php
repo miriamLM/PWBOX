@@ -77,6 +77,10 @@ class DoctrineBbddRepository implements bbddRepository
         email i password
          *
          **/
+        if(empty($stmt)){
+            echo "<script>alert(\"NO EXISTE USUARIO.\");location.href='/log'</script>";
+
+        }
         return $stmt[0]['id'];
 
     }

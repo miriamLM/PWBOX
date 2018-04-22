@@ -71,13 +71,12 @@
 
 
 
-
     {% for array in folder %}
-        <form action="/lp/{{ array.id }}" method="post">
-            <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
-            <button type="submit" class="btn" name="folder" value="{{ array.nom }}" ondblclick="myFunction()">
-                <img src="{{ array.img }}" width="82" height="86">
-            </button>
+        <form action="/lp/{{ array.id }}" method="post" id="myForm">
+                <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
+                <button type="button" class="btn" name="folder" value="{{ array.nom }}" ondblclick="myFunction();">
+                    <img src="{{ array.img }}" width="82" height="86">
+                </button>
         </form>
         <div class="items">
             <input type="text"  name="nombre" readonly="readonly" value= "{{ array.nom }}"/>

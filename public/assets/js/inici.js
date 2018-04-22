@@ -29,9 +29,20 @@ function validation() {
 
 
 function myFunction() {
-    window.location.assign("http://www.slimapp.test/lp/{id}")
+
+    document.getElementById("myForm").submit();
 
 
+}
 
+function myFunctionShared(){
+
+    document.getElementById("myFormShared").submit();
+}
+
+
+function myFunctionFo(){
+
+    document.getElementById("myFo").submit();
 }
 

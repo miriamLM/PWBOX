@@ -286,7 +286,7 @@ class HelloController
                 $_SESSION['id'] = $id;
                 return $response->withStatus(302)->withHeader('Location', '/lp');
             } else {
-                echo "<script>alert(\"NO EXISTE USUARIO.\");location.href='/log'</script>";
+                  //  echo "<script>alert(\"NO EXISTE USUARIO.\");location.href='/log'</script>";
 
             }
         } else {
@@ -335,7 +335,6 @@ class HelloController
             if($stmt->execute()){
                 echo "<script>alert(\"Record Deleted\");location.href='/'</script>";
                 $_SESSION['id']= null;
-                $response->getBody()->write("Warning");
                 return $response->withStatus(302)->withHeader('Location', '/');
             }
         }
@@ -632,16 +631,32 @@ class HelloController
                         $id_folder = $item['uploadSubmit'];
 
 
-
+                        /*
+                         * Si me printas un fichero fuera de una carpeta
+                         * estara en la carpeta principal
+                         */
 
                         if ($id_folder == '') {
                             $id_folder = 0;
                         }
 
+                        /**
+                         * En el share se guarda el id_parent ,de la folder
+                         * AQUIII MAL ESTA ALGO!!
+                         */
+
+
+
+
+
                         $servei_share = $this->container->get('check_share_user_use_case');
+
                         $info_share = $servei_share($id_folder);
 
+
+
                         $id_owner=$info_share[0]['id_owner'];
+
 
 
                         $servei = $this->container->get('add_inside_share_file_user_use_case');
@@ -665,14 +680,11 @@ class HelloController
                             array_push($array, $item);
                         }
 
-
-
                         $servei = $this->container->get('check_user_use_case');
                         $user = $servei($_SESSION['id']);
                         $notificacion = " El usuario ".$user[0]['username']." te ha upload el file ".$filename."";
                         $servei_save_notificacion = $this->container->get('save_notificacion');
                         $servei_save_notificacion($id_owner,$_SESSION['id'],$id_folder,$notificacion);
-
 
 
                         $this->container
@@ -957,11 +969,16 @@ class HelloController
          * Esto es pq si cuando entras en una carpeta admin i que no contiene nada dentro
          * te tiene que mostrar el boton de uploadfile,addfolder
          */
-        $vacio=0;
+        $vacio_folder=0;
+        $vacio_item = 0;
 
-        if(empty($array)&&empty($array2)){
-            $vacio = 1;
+        if(empty($array)){
+            $vacio_folder = 1;
         }
+         if(empty($array2)){
+            $vacio_item = 1;
+
+         }
 
 
         $_SESSION['id_share']= null;
@@ -971,7 +988,7 @@ class HelloController
 
         return $this->container
             ->get('view')
-            ->render($response, 'dashboardShareFolder.twig', ['folder' => $array2,'item' => $array ,"idParent" => $id_folder , "idFolder" => $id_folder, 'vacio' => $vacio, 'role'=>$fold['role']]);
+            ->render($response, 'dashboardShareFolder.twig', ['folder' => $array2,'item' => $array ,"idParent" => $id_folder , "idFolder" => $id_folder, 'vacio_folder' => $vacio_folder,'vacio_item' => $vacio_item,'role'=>$fold['role']]);
 
     }
 
@@ -1216,17 +1233,13 @@ class HelloController
                 if($tipo == 'Admin'){
 
 
-                    $servei_info = $this->container->get('check_share_user_use_case');
-                    $info = $servei_info($folder['folder_id']);
-                    $id_ownerP = $info[0]['id_owner'];
-
                     $servei = $this->container->get('check_user_use_case');
-                    $user = $servei($id_ownerP);
+                    $user = $servei($id_owner);
 
 
                     $notificacion = " El usuario ".$user[0]['username']." te ha hecho Administrador de ".$folder['folder_name']."";
                     $servei_save_notificacion = $this->container->get('save_notificacion');
-                    $servei_save_notificacion($id_ownerP,$id_usershared,$id_folder,$notificacion);
+                    $servei_save_notificacion($id_owner,$id_usershared,$id_folder,$notificacion);
                 }
 
 
