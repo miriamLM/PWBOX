@@ -643,10 +643,7 @@ class HelloController
 
                         $id_owner=$info_share[0]['id_owner'];
 
-<<<<<<< HEAD
 
-=======
->>>>>>> ace971476eeba1afaa30548c4067ac380b28680b
                         $servei = $this->container->get('add_inside_share_file_user_use_case');
 
                         /**
@@ -669,7 +666,7 @@ class HelloController
                         }
 
 
-<<<<<<< HEAD
+
                         $servei = $this->container->get('check_user_use_case');
                         $user = $servei($_SESSION['id']);
                         $notificacion = " El usuario ".$user[0]['username']." te ha upload el file ".$filename."";
@@ -678,8 +675,6 @@ class HelloController
 
 
 
-=======
->>>>>>> ace971476eeba1afaa30548c4067ac380b28680b
                         $this->container
                             ->get('view')
                             ->render($response, 'dashboard.twig', ['item' => $array]);
@@ -754,10 +749,6 @@ class HelloController
 
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> ace971476eeba1afaa30548c4067ac380b28680b
             //hacemos un servicio para saber el id_user de la carpeta
             $servei_id_user = $this->container->get('check_user_folder_use_case');
             $info_user = $servei_id_user($foldern['folder_id']);
@@ -783,11 +774,8 @@ class HelloController
             */
             $servei = $this->container->get('add_inside_share_folder_user_use_case');
             $info = $servei($id_owner,$folder_name,$id_parent);
-<<<<<<< HEAD
             var_dump($info);
 
-=======
->>>>>>> ace971476eeba1afaa30548c4067ac380b28680b
             $num_folders = (int)$info[0];
 
             $img = "/assets/img/folder.png";
@@ -801,7 +789,6 @@ class HelloController
 
             }
 
-<<<<<<< HEAD
 
 
             $servei_info = $this->container->get('check_share_user_use_case');
@@ -818,8 +805,6 @@ class HelloController
 
 
 
-=======
->>>>>>> ace971476eeba1afaa30548c4067ac380b28680b
             $this->container
                 ->get('view')
                 ->render($response, 'dashboard.twig', ['folder' => $array]);
