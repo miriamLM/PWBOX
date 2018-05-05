@@ -1,3 +1,115 @@
 body{
-  background-color: darkcyan;
+  background-color: ghostwhite;
+}
+.h1menu{
+  text-align: center;
+  font-size: 1000%;
+  padding-top: 100px;
+  color: darkslateblue;
+  /*padding-left: 400px;
+  font-size: 70px;
+  margin-top: 25px;
+  text-align: center;
+  color: whitesmoke;
+  */
+}
+.h1-reg-log{
+ /* text-align: left;
+  margin-left: -200px;
+  margin-right: -200px;
+  padding-top: 10px;
+  margin-top: -5px;
+  margin-top: -5px;
+  padding-bottom: 10px;
+  background-color: darkslateblue;
+  color: whitesmoke;
+  */
+  color: darkslateblue;
+  position: absolute;
+  margin-top: -2px;
+}
+hr{
+  margin-top: 50px;
+}
+h2{
+  color: darkslateblue;
+  text-align: center;
+}
+header{
+  padding: 20px;
+  height: 130px;
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-top: -25px;
+  background-color: darkslateblue;
+}
+#links{
+  margin-top: 50px;
+  margin-bottom: 0px;
+  text-align: right;
+  padding: 20px;
+}
+/*a{
+  padding-right: 60px;
+  font-size: 120%;
+  color: whitesmoke;
+  text-decoration: none;
+}
+*/
+a{
+  font-size: 200%;
+  margin-right: 40px;
+  margin-top: 40px;
+
+  color: whitesmoke;
+
+}
+a:link{
+  color: whitesmoke;
+  text-decoration: whitesmoke;
+}
+a:hover {
+  color: whitesmoke;
+  text-decoration: underline whitesmoke;
+}
+#top-right{
+  text-align: right;
+  margin-top: 20px;
+}
+
+#p1{
+  font-size: 300%;
+  text-align: left;
+  margin-left: 40px;
+  margin-top: 20px;
+  color: whitesmoke;
+}
+
+
+form{
+  text-align: center;
+  padding: 20px;
+}
+input{
+  margin-top: 0px;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  width: 250px;
+  border:none;
+  /*border-bottom: 1.5px solid gray;*/
+}
+.submit{
+  background-color: darkslateblue;
+  color: whitesmoke;
+}
+.submit:link{
+  background-color: whitesmoke;
+  color: darkslateblue;
+  border: solid 1px darkslateblue;
+}
+.submit:hover{
+  background-color: whitesmoke;
+  color: darkslateblue;
+  border: solid 1px darkslateblue;
+
 }
