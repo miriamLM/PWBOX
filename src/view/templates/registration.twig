@@ -1,41 +1,74 @@
 {% extends "base.twig" %}
 
 {%  block content  %}
-<form action="/registration" method="POST">
-    <div class="container">
-        <h1 class="h1-reg-log">Registration</h1>
-        <hr>
-        <label ><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="username" >
-        <p>{{ errors[0] }}</p>
+    <section class="sec-center">
+        <form action="/registration" method="POST">
+            <div class="container">
+                <h1 class="h1-reg-log">Registration</h1>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-2">
+                        <label ><b>Username</b></label>
+                    </div>
+                    <div class="col-lg-6" id="col-username">
+                        <input type="text" placeholder="Enter Username" name="username" >
+                    </div>
+                    <p>{{ errors[0] }}</p>
+                </div>
+                <div class="row">
+                    <div class="col-lg-2">
+                        <label><b>Email</b></label>
+                    </div>
+                    <div class="col-lg-6" id="col-email">
+                        <input type="text" placeholder="Enter Email" name="email" >
+                    </div>
+                    <p>{{ errors[1] }}</p>
+                </div>
+                <div class="row">
+                    <div class="col-lg-2">
+                        <label><b>BirthDate</b></label>
+                    </div>
+                    <div class="col-lg-6" id="col-birthdate">
+                        <input type="date" placeholder="Enter Birthdate" name="birthdate" >
+                    </div>
+                    <p>{{ errors[2] }}</p>
+                </div>
 
-        <label><b>Email</b></label>
-        <input type="text" placeholder="Enter Email" name="email" >
-        <p>{{ errors[1] }}</p>
+                <div class="row">
+                    <div class="col-lg-2">
+                        <label><b>Password</b></label>
+                    </div>
+                    <div class="col-lg-6" id="col-password">
+                        <input type="password" placeholder="Enter Password" name="psw" >
+                    </div>
+                    <p>{{ errors[3] }}</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-2">
+                        <label><b>Confirm Password</b></label>
+                    </div>
+                    <div class="col-lg-6" id="col-confirm">
+                        <input type="password" placeholder="Confirm Password" name="confirmpsw" >
+                    </div>
+                    <p>{{ errors[4] }}</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-2">
+                         <label><b>Profile Image</b></label>
+                    </div>
+                    <div class="col-lg-6" id="col-file">
+                         <input type="file" name="img" class="file-img">
+                    </div>
+                </div>
+
+                <!--<button id="submit" type="button" class="btn btn-primary" name="submit">Sign up</button> -->
+                <input type="submit" name="submit" value="Sign Up" class="submit">
 
 
-        <label><b>BirthDate</b></label>
-        <input type="date" placeholder="Enter Birthdate" name="birthdate" >
-        <p>{{ errors[2] }}</p>
+            </div>
 
-
-        <label><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" >
-        <p>{{ errors[3] }}</p>
-
-
-        <label><b>Confirm Password</b></label>
-        <input type="password" placeholder="Confirm Password" name="confirmpsw" >
-        <p>{{ errors[4] }}</p>
-
-
-        <label><b>Profile Image</b></label>
-        <input type="file" name="img">
-
-        <!--<button id="submit" type="button" class="btn btn-primary" name="submit">Sign up</button> -->
-        <input type="submit" name="submit" value="Sign Up" class="submit">
-
-    </div>
-
-</form>
+        </form>
+    </section>
 {% endblock %}

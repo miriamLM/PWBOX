@@ -27,9 +27,12 @@ body{
   color: darkslateblue;
   position: absolute;
   margin-top: -2px;
+    margin-left: -500px;
 }
 hr{
   margin-top: 50px;
+    margin-left: -500px;
+    padding-bottom: 20px;
 }
 h2{
   color: darkslateblue;
@@ -85,18 +88,25 @@ a:hover {
   color: whitesmoke;
 }
 
-
+.sec-center{
+    text-align: center;
+}
 form{
-  text-align: center;
+  text-align: left;
   padding: 20px;
+    margin-left: 500px;
 }
 input{
+
   margin-top: 0px;
   padding-left: 10px;
   margin-bottom: 10px;
   width: 250px;
   border:none;
   /*border-bottom: 1.5px solid gray;*/
+}
+.file-img{
+    cursor: pointer;
 }
 .submit{
   background-color: darkslateblue;
@@ -112,4 +122,34 @@ input{
   color: darkslateblue;
   border: solid 1px darkslateblue;
 
+}
+#col-username{
+    text-align: left;
+    margin-left: -50px;
+    padding-bottom: 15px;
+}
+#col-email{
+    text-align: left;
+    margin-left: -50px;
+    padding-bottom: 15px;
+}
+#col-birthdate{
+    text-align: left;
+    margin-left: -50px;
+    padding-bottom: 15px;
+}
+#col-password{
+    text-align: left;
+    margin-left: -50px;
+    padding-bottom: 15px;
+}
+#col-confirm{
+    text-align: left;
+    margin-left: -50px;
+    padding-bottom: 15px;
+}
+#col-file{
+    text-align: left;
+    margin-left: -60px;
+    padding-bottom: 15px;
 }
