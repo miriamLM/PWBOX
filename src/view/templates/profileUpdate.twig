@@ -4,32 +4,75 @@
 
     <form action="/profileUpdate" method="POST">
         <div class="container">
-            <h1>Update Profile</h1>
+            <h1 class="h1-reg-log">Update Profile</h1>
             <hr>
-            <label ><b>Username</b></label>
-            <input type="text"  name="username" readonly="readonly" value="{{ user[0] }}" >
-            <p>{{ errors[0] }}</p>
-            <label><b>Email</b></label>
-            <input type="text"  name="email"   value="{{ user[1] }}" >
-            <p>{{ errors[1] }}</p>
 
-            <label><b>BirthDate</b></label>
-            <input type="date" name="birthdate"   value="{{ user[2] }}">
-            <p>{{ errors[2] }}</p>
+            <div class="row">
+                <div class="col-lg-2">
+                    <label>Username</label>
+                </div>
+                <div class="col-lg-6" id="col-username">
+                     <input type="text"  name="username" readonly="readonly" value="{{ user[0] }}" >
+                </div>
+            </div>
+            <p class="error-r">{{ errors[0] }}</p>
 
-            <label><b>Password</b></label>
-            <input type="password"  name="psw"  value="{{ user[3] }}">
-            <p>{{ errors[3] }}</p>
+            <div class="row">
+                <div class="col-lg-2">
+                    <label>Email</label>
+                </div>
+                <div class="col-lg-6" id="col-email">
+                    <input type="text"  name="email"   value="{{ user[1] }}" >
+                </div>
+            </div>
+            <p class="error-r">{{ errors[1] }}</p>
 
-            <label><b>Confirm Password</b></label>
-            <input type="password"  name="confirmpsw"  value="{{ user[3] }}" >
-            <p>{{ errors[4] }}</p>
+            <div class="row">
+                <div class="col-lg-2">
+                    <label>BirthDate</label>
+                </div>
+                <div class="col-lg-6" id="col-birthdate">
+                     <input type="date" name="birthdate"   value="{{ user[2] }}">
+                </div>
+            </div>
+            <p class="error-r">{{ errors[2] }}</p>
 
-            <label><b>Profile Image</b></label>
-            <input type="file" name="img">
+            <div class="row">
+                <div class="col-lg-2">
+                    <label>Password</label>
+                </div>
+                <div class="col-lg-6" id="col-password">
+                     <input type="password"  name="psw"  value="{{ user[3] }}">
+                </div>
+            </div>
+            <p class="error-r">{{ errors[3] }}</p>
+
+            <div class="row">
+                <div class="col-lg-2">
+                    <label>Confirm Passwor</label>
+                </div>
+                <div class="col-lg-6" id="col-confirm">
+                     <input type="password"  name="confirmpsw"  value="{{ user[3] }}" >
+                </div>
+            </div>
+            <p class="error-r">{{ errors[4] }}</p>
 
 
-            <input type="submit" name="submit" value="Submit">
+
+            <div class="row">
+                <div class="col-lg-2">
+                    <label>Profile Image</label>
+                </div>
+                <div class="col-lg-6" id="col-file">
+                    <div class="upload-btn-wrapper">
+                        <button class="btn">Upload a file</button>
+                        <input type="file" name="myfile" />
+                    </div>
+                </div>
+            </div>
+
+
+            <input type="submit" name="submit" value="Submit" class="submit">
 
         </div>
 
