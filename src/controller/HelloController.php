@@ -37,13 +37,13 @@ class HelloController
 
     public function registeraAction(Request $request, Response $response, array $args)
     {
-        if (!isset($_SESSION['counter'])) {
+        /*if (!isset($_SESSION['counter'])) {
             $_SESSION['counter'] = 1;
 
         } else {
             $_SESSION['counter']++;
 
-        }
+        }*/
 
         $cookie = FigRequestCookies::get($request, 'advice', 0);
 
@@ -101,6 +101,13 @@ class HelloController
 
     public function loginAction(Request $request, Response $response)
     {
+        if (!isset($_SESSION['counter'])) {
+            $_SESSION['counter'] = 1;
+
+        } else {
+            $_SESSION['counter']++;
+
+        }
         $errors = ["", ""];
         try {
             return $this->container
@@ -180,7 +187,6 @@ class HelloController
 
     public function loginMe(Request $request, Response $response)
     {
-
         $data = $request->getParsedBody();
         $servei = $this->container->get('post_login_use_case');
         $errors = $this->validacions($data, 1);
@@ -191,14 +197,8 @@ class HelloController
                 /**
                  * landingProfile -> Landing, quan el usuari s'hagi pogut loguejar
                  *  **/
-
-
                 $_SESSION['id'] = $id;
-
-
-
                 return $response->withStatus(302)->withHeader('Location', '/lp');
-
             } else {
                 echo "<script>alert('NO EXISTE USUARIO.')</script>";
             }
@@ -207,13 +207,10 @@ class HelloController
                 ->get('view')
                 ->render($response, 'login.twig', ['errors' => $errors]);
         }
-
         /*
          * Per fer l'update del profile, el usuari ha d'estar loguejat
          *
          */
-
-
         /* if (isset($_SESSION[$user["id"]])) {
              echo "LOGGED";
              //$this->profileAction($request,$response,$data);
@@ -221,9 +218,7 @@ class HelloController
              echo "NOT LOGGED";
              //not logged
          }*/
-
     }
-
     public function profileUpdate(Request $request, Response $response) {
 
         echo "hola";
@@ -257,7 +252,7 @@ class HelloController
                 $stmt = $servei($id);
                 if($stmt->execute()){
                     echo "<script>alert('Record deleted.')</script>";
-
+                    $_SESSION['id']= null;
                     return $this->container->get('view')->render($response, 'landing.twig');
                 }
             }
@@ -439,34 +434,26 @@ class HelloController
 
     public function validacions($rawData, $opcio)
     {
-
-
         $usernameErr = "";
         $emailErr = "";
         $birthErr = "";
         $pswErr = "";
         $confirmpswErr = "";
-
         switch ($opcio) {
             /*REGISTRE*/
             case 0:
                 if (empty($rawData["username"])) {
                     $usernameErr = "Username cannot be empty";
-
                 } else {
-
                     if (strlen($rawData["username"]) > 20) {
                         $usernameErr = "Length must be less than 20 characters";
                     } else {
                         $pattern = "/[`'\"~!@# $*()<>,:;{}\|]/";
                         if (preg_match($pattern, $rawData["username"])) {
                             $usernameErr = "Only can contain alphanumeric characters";
-
                         }
                     }
-
                 }
-
                 if (empty($rawData["email"])) {
                     $emailErr = "Email cannot be empty";
                 } else {
@@ -474,7 +461,6 @@ class HelloController
                         $emailErr = "Invalid email format";
                     }
                 }
-
                 if (empty($rawData["birthdate"])) {
                     $birthErr = "Birth Date cannot be empty";
                 } else {
@@ -482,20 +468,15 @@ class HelloController
                     if (!preg_match("/[0-9]{4}-[0-9]{2}-[0-9]{2}/",  $rawData["birthdate"])){
                         $birthErr = "Birthdate wrong format";
                     }
-
-
                 }
-
                 if (empty($rawData["psw"])) {
                     $pswErr = "Password is required";
                 } else {
                     if (strlen($rawData["psw"]) < 6 || strlen($rawData["psw"]) > 12) {
                         $pswErr = "Length must be between 6 and 12 characters";
-
                     } else {
                         if (!preg_match('/[0-9]/', $rawData["psw"])) {
                             $pswErr = "At least one number";
-
                         } else {
                             if (!preg_match('/[A-Z]/', $rawData["psw"])) {
                                 $pswErr = "At least one upper case character";
@@ -503,7 +484,6 @@ class HelloController
                         }
                     }
                 }
-
                 if (empty($rawData["confirmpsw"])) {
                     $confirmpswErr = "Confirm Password is required";
                 } else {
@@ -511,15 +491,10 @@ class HelloController
                         $confirmpswErr = "Incorrect Password";
                     }
                 }
-
                 return [$usernameErr, $emailErr, $birthErr, $pswErr, $confirmpswErr];
-
-
                 break;
-
             /*LOGIN*/
             case 1:
-
                 if (empty($rawData["emailuser"])) {
                     $emailErr = "Email cannot be empty";
                 } else {
@@ -528,18 +503,15 @@ class HelloController
                         && ((strlen($rawData["emailuser"]) > 20) || (preg_match($pattern, $rawData["emailuser"]))) ) {
                         $emailErr = "Error Email/Username";
                     }
-
                 }
                 if (empty($rawData["psw"])) {
                     $pswErr = "Password is required";
                 } else {
                     if (strlen($rawData["psw"]) < 6 || strlen($rawData["psw"]) > 12) {
                         $pswErr = "Length must be between 6 and 12 characters";
-
                     } else {
                         if (!preg_match('/[0-9]/', $rawData["psw"])) {
                             $pswErr = "At least one number";
-
                         } else {
                             if (!preg_match('/[A-Z]/', $rawData["psw"])) {
                                 $pswErr = "At least one upper case character";
@@ -547,17 +519,10 @@ class HelloController
                         }
                     }
                 }
-
                 return [$emailErr, $pswErr];
-
-
                 break;
-
         }
-
-
     }
-
     function test_input($data)
     {
         $data = trim($data);

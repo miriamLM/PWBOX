@@ -70,5 +70,10 @@ interface bbddRepository
 
     public function renamefile($name,$new_name);
 
+    /**
+     * Add folder
+     */
+    public function newFolder($id,$folder_name,$id_parent);
+
 
 }
