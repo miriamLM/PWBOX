@@ -171,11 +171,14 @@ class HelloController
              * Guarda informació d'usuari a la BBDD
              */
             $servei($data);
-        }
+            return $response->withStatus(302)->withHeader('Location','/log');
 
-        return $this->container
-            ->get('view')
-            ->render($response, 'registration.twig', ['errors' => $errors]);
+        }else {
+
+            return $this->container
+                ->get('view')
+                ->render($response, 'registration.twig', ['errors' => $errors]);
+        }
 
     }
 
@@ -194,7 +197,8 @@ class HelloController
                 $_SESSION['id'] = $id;
                 return $response->withStatus(302)->withHeader('Location', '/lp');
             } else {
-                echo "<script>alert('NO EXISTE USUARIO.')</script>";
+                echo "<script>alert(\"NO EXISTE USUARIO.\");location.href='/log'</script>";
+
             }
         } else {
             return $this->container
@@ -253,15 +257,14 @@ class HelloController
         }
         if(isset($_POST['continue'])){
 
-            echo "ENTRA";
             $id = $_SESSION['id'];
             $servei= $this->container->get('delete_user_use_case');
             $stmt = $servei($id);
             if($stmt->execute()){
-                //echo "<script>alert('Record deleted.')</script>";
+                echo "<script>alert(\"Record Deleted\");location.href='/'</script>";
                 $_SESSION['id']= null;
-                $response->getBody()->write("Warning");
-                return $response->withStatus(302)->withHeader('Location', '/');
+                //$response->getBody()->write("Warning");
+                //return $response->withStatus(302)->withHeader('Location', '/');
             }
         }
     }
@@ -347,9 +350,11 @@ class HelloController
              * El size del fitxer no pot superar el 2MB
              */
             if($filesize > 2000000){
-                $message='Error, File Size Superior of 2MB';
-               return $response->withStatus(302)->withHeader('Location', '/lp')
-                                ->getBody()->write($message);
+                //$message='Error, File Size Superior of 2MB';
+                echo "<script>alert(\"Error, File Size Superior of 2MB\");location.href='/lp'</script>";
+
+                /*return $response->withStatus(302)->withHeader('Location', '/lp')
+                                ->getBody()->write($message);*/
 
             }else{
 
@@ -364,9 +369,11 @@ class HelloController
                      * i despues creo que se deberia ridireccionar al dashboard otra vez
                      */
 
-                    $message='Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)';
+                    echo "<script>alert(\"Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)\");location.href='/lp'</script>";
+
+                    /*$message='Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)';
                     return $response->withStatus(302)->withHeader('Location', '/lp')
-                        ->getBody()->write($message);
+                        ->getBody()->write($message);*/
                 }else {
 
                     $id = $_SESSION['id'];
