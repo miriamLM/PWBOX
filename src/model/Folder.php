@@ -26,6 +26,7 @@ class Folder
         $this->id_user= $id_user;
         $this->id= $id;
         $this->id_folder= $id_folder;
+
     }
 
     /**

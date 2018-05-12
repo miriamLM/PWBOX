@@ -74,7 +74,6 @@ class HelloController
 
 
 
-
     public function landingAction(Request $request, Response $response)
     {
         try {
@@ -443,6 +442,7 @@ class HelloController
             $this->container
                 ->get('view')
                 ->render($response, 'dashboard.twig', ['folder' => $array]);
+
 
             //return $response->withStatus(302)->withHeader('Location', '/lp');
         }
