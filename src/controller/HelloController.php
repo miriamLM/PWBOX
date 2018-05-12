@@ -415,7 +415,25 @@ class HelloController
             $folder = $request->getParsedBody();
             $folder_name = $folder['nameFolder'];
             $servei = $this->container->get('add_folder_user_use_case');
-            $servei((int)$id,$folder_name,$id_parent);
+            $info = $servei((int)$id,$folder_name,$id_parent);
+
+            $num_folders = (int)$info[0];
+            // var_dump($num_items);
+            $img = "/assets/img/folder.jpg";
+
+
+            $array = [];
+            for ($i = 0; $i < $num_folders; $i++) {
+                $item = new Item($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], 0);
+                array_push($array, $item);
+            }
+
+
+            $this->container
+                ->get('view')
+                ->render($response, 'dashboard.twig', ['item' => $array]);
+
+            return $response->withStatus(302)->withHeader('Location', '/lp');
         }
     }
 
