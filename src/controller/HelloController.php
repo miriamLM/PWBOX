@@ -10,6 +10,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Dflydev\FigCookies\FigRequestCookies;
+use SlimApp\model\Folder;
 use SlimApp\model\Item;
 
 
@@ -409,31 +410,34 @@ class HelloController
     {
         if(isset($_POST['addSubmit']))
         {
-            echo"ADD FOLDER";
+
             $id = $_SESSION['id'];
             $id_parent= "0";
-            $folder = $request->getParsedBody();
-            $folder_name = $folder['nameFolder'];
+            $foldern = $request->getParsedBody();
+            $folder_name = $foldern['nameFolder'];
             $servei = $this->container->get('add_folder_user_use_case');
             $info = $servei((int)$id,$folder_name,$id_parent);
 
             $num_folders = (int)$info[0];
-            // var_dump($num_items);
+            //var_dump($num_folders);
+
             $img = "/assets/img/folder.jpg";
 
+            //var_dump($info[1][1]['name']);
 
             $array = [];
             for ($i = 0; $i < $num_folders; $i++) {
-                $item = new Item($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], 0);
-                array_push($array, $item);
+
+                $folder = new Folder($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], 0);
+                var_dump($folder);
+                array_push($array, $folder);
+
             }
-
-
             $this->container
                 ->get('view')
-                ->render($response, 'dashboard.twig', ['item' => $array]);
+                ->render($response, 'dashboard.twig', ['folder' => $array]);
 
-            return $response->withStatus(302)->withHeader('Location', '/lp');
+            //return $response->withStatus(302)->withHeader('Location', '/lp');
         }
     }
 

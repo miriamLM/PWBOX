@@ -53,8 +53,8 @@
 
 
     <button type="submit" class="btn" data-toggle="modal" data-target="#modalAddFolder" name="addFolder" value="addFolder" >Add Folder</button>
-    <div class="modal" id="modalAddFolder" role="dialog">
-        <div class="modal-dialog" role="document">
+    <div class="modal" id="modalAddFolder">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Add Folder</h4>
@@ -72,6 +72,39 @@
 
         </div>
     </div>
+
+    {% for array in folder %}
+        <img src="{{ array.img }}" width="82" height="86">
+        <input type="text"  name="nombre" value= "{{ array.nom }}"/>
+        <form action="/deleteFolder" method="post">
+        <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
+            <button type="submit" class="btn" name="deleteFolder" value="deleteFolder">Delete</button>
+        </form>
+        <button type="submit" class="btn" data-toggle="modal" data-target="#ModalRenameFolderForm" name="renameFolder" value="renameFile">Rename</button>
+        <div class="modal fade" id="ModalRenameFolderForm">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Rename Folder</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/renameFolder" method="post">
+                            <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
+                            <input type="hidden"  value="{{ array.nom }}" name="folder_name"/>
+                            <input type="text" name="titleFolder" placeholder="New Folder Name"/>
+                            <input type="submit" name="submit" value="Submit"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+
+
 
 
     {% for array in item %}
