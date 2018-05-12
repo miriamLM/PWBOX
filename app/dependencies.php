@@ -145,6 +145,34 @@ $container['add_folder_user_use_case'] = function($container){
     );
     return $useCase;
 };
+/*
+ * Servei rename folders
+ */
+$container['rename_folder_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\RenameFolderUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+/*
+ * Servei check folders
+ */
+$container['check_folder_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\CheckFolderUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+/*
+ * Servei delete folder
+ */
+$container['delete_folder_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\DeleteFolderUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
 
 
 ?>

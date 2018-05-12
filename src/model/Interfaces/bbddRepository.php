@@ -75,5 +75,19 @@ interface bbddRepository
      */
     public function newFolder($id,$folder_name,$id_parent);
 
+    /**
+     * Rename folder
+     */
+    public function renamefolder($name,$new_name);
+
+    /**
+     * Check folders
+     */
+    public function checkfolders();
+
+    /**
+     * Delete folder
+     */
+    public function deletefolder($folder_id);
 
 }

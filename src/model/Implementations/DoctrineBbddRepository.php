@@ -155,5 +155,32 @@ class DoctrineBbddRepository implements bbddRepository
         }
     }
 
+    public function renamefolder($name, $new_name)
+    {
+        $sql = "UPDATE folder AS f SET f.name = :newname WHERE f.name = :name";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue("newname", $new_name, 'string');
+        $stmt->bindValue("name", $name, 'string');
+        if($stmt->execute()){
+            $info = $this->checkfolders();
 
+        }
+        return $info;
+    }
+    public function checkfolders()
+    {
+        $query = "SELECT * FROM folder";
+        $info = $this->connection->fetchAll($query);
+        return $info;
+    }
+
+    public function deletefolder($folder_id){
+        $sql = "DELETE FROM folder WHERE id = ? ";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(1, $folder_id);
+        if($stmt->execute()){
+            $info = $this->checkfolders();
+        }
+        return $info;
+    }
 }

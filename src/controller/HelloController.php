@@ -131,6 +131,9 @@ class HelloController
 
     public function getLandingProfile(Request $request, Response $response)
     {
+        /*
+         * files
+         */
         $id = $_SESSION['id'];
         $id_folder = 0;
         $servei = $this->container->get('check_file_user_use_case');
@@ -149,11 +152,29 @@ class HelloController
             $item = new Item($info[$i]['name'],$img,$id,$info[$i]['id'],0);
             array_push($array,$item);
         }
+        /*
+         * folders
+         */
+        $servei2 = $this->container->get('check_folder_user_use_case');
 
+        /**
+         *Tota la informació dels fitxers
+         */
+        $info2 = $servei2();
+
+        $img2 = "/assets/img/folder.jpg";
+
+        $num_folders = sizeof($info2);
+
+        $array2 = [];
+        for($i=0;$i<$num_folders;$i++){
+            $folder = new Folder($info2[$i]['name'],$img2,$id,$info2[$i]['id'],0);
+            array_push($array2,$folder);
+        }
 
         return $this->container
             ->get('view')
-            ->render($response, 'dashboard.twig', ['item' => $array]);
+            ->render($response, 'dashboard.twig', ['item' => $array , 'folder' => $array2]);
 
     }
 
@@ -434,9 +455,77 @@ class HelloController
                 ->render($response, 'dashboard.twig', ['folder' => $array]);
 
 
-            //return $response->withStatus(302)->withHeader('Location', '/lp');
+            return $response->withStatus(302)->withHeader('Location', '/lp');
         }
     }
+
+    public function renameFolderProfile(Request $request, Response $response)
+    {
+        /**
+         * Rename file
+         */
+
+        if (isset($_POST['submit'])) {
+            var_dump($request->getParsedBody());
+            $folder = $request->getParsedBody();
+            $folder_name = $folder['folder_name'];
+            $folder_new_name = $folder['titleFolder'];
+
+            $servei = $this->container->get('rename_folder_user_use_case');
+            $info = $servei($folder_name,$folder_new_name);
+            var_dump($info);
+
+            $num_folders = sizeof($info);
+
+            $img = "/assets/img/folder.jpg";
+
+            $array = [];
+            for ($i = 0; $i < $num_folders; $i++) {
+                $folder = new Folder($info[$i]['name'], $img, $info[$i]['id_user'], $info[$i]['id'], 0);
+                array_push($array, $folder);
+            }
+
+            $this->container
+                ->get('view')
+                ->render($response, 'dashboard.twig', ['folder' => $array]);
+
+            return $response->withStatus(302)->withHeader('Location', '/lp');
+
+        }
+    }
+
+    public function deleteFolderProfile(Request $request, Response $response){
+        /**
+         * Delete file
+         */
+        if(isset($_POST['deleteFolder'])){
+            $file = $request->getParsedBody();
+            $folder_id = $file['folder_id'];
+            $servei = $this->container->get('delete_folder_user_use_case');
+            $info = $servei($folder_id);
+
+            $num_folders = sizeof($info);
+
+
+
+            $img = "/assets/img/file.png";
+
+            $array = [];
+            for($i=0;$i<$num_folders;$i++){
+                $folder = new Folder($info[$i]['name'],$img,$info[$i]['id_user'],$info[$i]['id'],0);
+                array_push($array,$folder);
+            }
+
+            $this->container
+                ->get('view')
+                ->render($response, 'dashboard.twig', ['folder' => $array]);
+
+            return $response->withStatus(302)->withHeader('Location', '/lp');
+
+        }
+
+    }
+
 
     /**
      * ROLE READER

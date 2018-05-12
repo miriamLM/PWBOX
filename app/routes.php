@@ -59,6 +59,11 @@ $app->post('/downloadFile','SlimApp\controller\HelloController:downloadFileProfi
 
 $app->post('/addFolder','SlimApp\controller\HelloController:addFolderProfile');
 
+$app->post('/renameFolder','SlimApp\controller\HelloController:renameFolderProfile');
+
+$app->post('/deleteFolder','SlimApp\controller\HelloController:deleteFolderProfile');
+
+
 
 
 //->add('SlimApp\controller\Middleware\TestMiddleware') // afegir mes middlewares
