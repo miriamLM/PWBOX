@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: carmeperseguerbarragan
- * Date: 9/5/18
- * Time: 18:53
+ * User: len
+ * Date: 12/05/2018
+ * Time: 12:12
  */
 
 namespace SlimApp\model\UseCase;
@@ -11,7 +11,7 @@ namespace SlimApp\model\UseCase;
 
 use SlimApp\model\Interfaces\bbddRepository;
 
-class FolderUserUseCase
+class AddFolderUserUseCase
 {
     private $repository;
 
@@ -24,9 +24,8 @@ class FolderUserUseCase
 
     public function __invoke($id,$folder_name,$id_parent)
     {
-        $stmt = $this->repository->newFolder($id,$folder_name,$id_parent);
-        return $stmt;
-
+        [$num_folders, $info] = $this->repository->newFolder($id,$folder_name,$id_parent);
+        return [$num_folders,$info];
     }
 
 }

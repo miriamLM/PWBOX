@@ -6,9 +6,9 @@ return [
       'displayErrorDetails' => true,
       'database' => [
           'dbname' => 'bbdd',
-          'user' => 'homestead',
-          'password' => 'secret',
-          'host' => '192.168.10.10',
+          'user' => 'root',
+          'password' => 'mysql',
+          'host' => 'localhost',
           'driver' => 'pdo_mysql',
 
       ]

@@ -405,6 +405,20 @@ class HelloController
 
     }
 
+    public function addFolderProfile(Request $request, Response $response)
+    {
+        if(isset($_POST['addSubmit']))
+        {
+            echo"ADD FOLDER";
+            $id = $_SESSION['id'];
+            $id_parent= "0";
+            $folder = $request->getParsedBody();
+            $folder_name = $folder['nameFolder'];
+            $servei = $this->container->get('add_folder_user_use_case');
+            $servei((int)$id,$folder_name,$id_parent);
+        }
+    }
+
     /**
      * ROLE READER
      */
@@ -516,7 +530,6 @@ class HelloController
                 break;
         }
     }
-
     function test_input($data)
     {
         $data = trim($data);

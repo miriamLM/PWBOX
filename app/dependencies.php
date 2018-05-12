@@ -135,5 +135,16 @@ $container['rename_file_user_use_case'] = function($container){
     return $useCase;
 };
 
+/*
+ * Servei add folder
+ *
+ */
+$container['add_folder_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\AddFolderUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
 
 ?>

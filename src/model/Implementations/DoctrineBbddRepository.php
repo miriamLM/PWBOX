@@ -137,12 +137,25 @@ class DoctrineBbddRepository implements bbddRepository
     }
     public function newFolder($id, $folder_name, $id_parent)
     {
-        $sql = "INSERT INTO folder (name, id_parent, id_user) VALUES (:name, :id_parent, :id_user)";
+        $sql = "INSERT INTO folder (name, id_user, id_parent) VALUES (:name, :id_user, :id_parent)";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue("name", $folder_name, 'string');
-        $stmt->bindValue("id_parent", $id_parent, 'int');
-        $stmt->bindValue("id_user", $id, 'int');
+        $stmt->bindValue("name", $folder_name);
+        $stmt->bindValue("id_user", $id);
+        $stmt->bindValue("id_parent", $id_parent);
         $stmt->execute();
+        if($stmt->execute()){
+            $sql = "SELECT COUNT(*) FROM folder";
+            $stmt = $this->connection->query($sql);
+            $num_folders= $stmt->fetchColumn();
+            var_dump($num_folders);
+
+            $query = "SELECT * FROM folder";
+            $info = $this->connection->fetchAll($query);
+            var_dump($info);
+
+            return [$num_folders,$info];
+
+        }
     }
 
 
