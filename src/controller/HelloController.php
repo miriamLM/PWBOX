@@ -3,7 +3,7 @@ namespace SlimApp\controller;
 
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
-use PHPUnit\Runner\Exception;
+//use PHPUnit\Runner\Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

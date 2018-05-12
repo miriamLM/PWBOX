@@ -151,7 +151,6 @@ class DoctrineBbddRepository implements bbddRepository
             $query = "SELECT * FROM folder";
             $info = $this->connection->fetchAll($query);
             //var_dump($info);
-
             return [$num_folders,$info];
 
         }
