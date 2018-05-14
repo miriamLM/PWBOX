@@ -2,9 +2,11 @@
 
 {%  block content  %}
 
-    <form action="/prof" method="POST">
+    <form action="/prof" class="form" method="POST">
         <div class="container">
             <h1 class="h1-reg-log">Update Profile</h1>
+            <input type="submit" name="delete" value="delete" class="delete">
+
             <hr>
             <div class="row">
                 <div class="col-lg-2">
@@ -75,6 +77,24 @@
         </div>
 
     </form>
+    <button type="submit" class="btn" data-toggle="modal" data-target="#ModalDeleteForm" name="deleteAccount" value="deleteAccount">Delete Account</button>
+    <div class="modal fade" id="ModalDeleteForm">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Account</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/deleteAccount" method="post" enctype="multipart/form-data">
+                        <h6>Warning: Estas seguro que quieres eliminar tu cuenta?</h6>
+                        <input type="submit" name="cancel" value="Cancel"/>
+                        <input type="submit" name="continue" value="Continue"/>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
 {% endblock %}
 

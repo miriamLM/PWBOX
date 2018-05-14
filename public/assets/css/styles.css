@@ -1,6 +1,11 @@
 body{
     background-color: ghostwhite;
 }
+.h1-dashboard {
+    color: whitesmoke;
+    padding-top: 20px;
+    padding-left: 20px;
+}
 .h1menu{
     text-align: center;
     font-size: 1000%;
@@ -91,7 +96,7 @@ header{
 .sec-center{
     text-align: center;
 }
-form{
+.form{
     text-align: left;
     padding: 20px;
     margin-left: 500px;
@@ -106,6 +111,7 @@ input{
     text-align: center;
     /*border-bottom: 1.5px solid gray;*/
 }
+
 label{
     font-weight: bold;
 }
@@ -231,4 +237,38 @@ label{
 .redirect:hover {
     color: darkslateblue;
     text-decoration: underline darkslateblue;
+}
+
+.redirectprof{
+    color: whitesmoke;
+    text-decoration: none;
+    position: absolute;
+    font-size: 150%;
+    margin-left: 90%;
+    margin-top: -40px;
+
+}
+.redirectprof:link{
+    color: whitesmoke;
+    text-decoration: whitesmoke;
+}
+.redirectprof:hover {
+    color: whitesmoke;
+    text-decoration: underline whitesmoke;
+}
+
+.modal-body{
+    text-align: center;
+}
+#nameFolder{
+    border: 1px solid darkslateblue;
+}
+.items{
+    text-align: center;
+    float: left;
+    padding: 20px;
+}
+.add-upload{
+    text-align: center;
+    padding-bottom: 50px;
 }

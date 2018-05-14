@@ -162,7 +162,7 @@ class HelloController
          */
         $info2 = $servei2($id_folder);
 
-        $img2 = "/assets/img/folder.jpg";
+        $img2 = "/assets/img/folder.png";
 
         $num_folders = sizeof($info2);
 
@@ -315,7 +315,7 @@ class HelloController
          */
 
         if(isset($_POST['cancel'])){
-            return $response->withStatus(302)->withHeader('Location', '/lp');
+            return $response->withStatus(302)->withHeader('Location', '/prof');
         }
         if(isset($_POST['continue'])){
 
@@ -325,8 +325,8 @@ class HelloController
             if($stmt->execute()){
                 echo "<script>alert(\"Record Deleted\");location.href='/'</script>";
                 $_SESSION['id']= null;
-                //$response->getBody()->write("Warning");
-                //return $response->withStatus(302)->withHeader('Location', '/');
+                $response->getBody()->write("Warning");
+                return $response->withStatus(302)->withHeader('Location', '/');
             }
         }
     }
@@ -483,36 +483,59 @@ class HelloController
         if(isset($_POST['addSubmit']))
         {
 
-
             $id = $_SESSION['id'];
             $id_parent= "0";
             $foldern = $request->getParsedBody();
-            var_dump($foldern);
-
             $folder_name = $foldern['nameFolder'];
             $servei = $this->container->get('add_folder_user_use_case');
             $info = $servei((int)$id,$folder_name,$id_parent);
 
             $num_folders = (int)$info[0];
 
-            $img = "/assets/img/folder.jpg";
-
+            $img = "/assets/img/folder.png";
 
 
             $array = [];
             for ($i = 0; $i < $num_folders; $i++) {
-                    $folder = new Folder($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], $folder_id);
-                    array_push($array, $folder);
 
+
+                if($num_folders == 1){
+                    $id_parent = $info[1][$i]['id'] -1;
+                    $folder = new Folder($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], 0);
+                    array_push($array, $folder);
+                }else {
+                    $id_parent = (int)$info[1][$i]['id'] -1;
+                    var_dump($id_parent);
+
+                    $folder = new Folder($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], $id_parent);
+                    array_push($array, $folder);
+                }
 
             }
+
+
+
+            /*for ($i = 0; $i < $num_folders; $i++) {
+
+
+                if($num_folders == 1){
+                    $folder = new Folder($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], 0);
+                    array_push($array, $folder);
+                }else {
+
+                    $folder = new Folder($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], $folder_id);
+                    array_push($array, $folder);
+                }
+
+            }
+            */
             $this->container
                 ->get('view')
                 ->render($response, 'dashboard.twig', ['folder' => $array]);
 
 
 
-            //return $response->withStatus(302)->withHeader('Location', '/lp');
+            return $response->withStatus(302)->withHeader('Location', '/lp');
         }
     }
 
@@ -535,7 +558,7 @@ class HelloController
 
             $num_folders = sizeof($info);
 
-            $img = "/assets/img/folder.jpg";
+            $img = "/assets/img/folder.png";
 
             $array = [];
             for ($i = 0; $i < $num_folders; $i++) {
