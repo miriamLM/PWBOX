@@ -635,7 +635,6 @@ class HelloController
                 var_dump($folder_shared);
             }
 
-
         }
         //return  $response->withStatus(302)->withHeader('Location', '/lp');
     }

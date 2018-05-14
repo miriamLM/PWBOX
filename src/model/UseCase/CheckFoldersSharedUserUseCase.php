@@ -28,7 +28,6 @@ class CheckFoldersSharedUserUseCase
     public function __invoke($id_shared) {
 
 
-
         $info = $this->repository->checkFoldersShared($id_shared);
 
         return $info;
