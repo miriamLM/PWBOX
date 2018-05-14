@@ -107,4 +107,12 @@ interface bbddRepository
      */
 
     public function foldershareduser($id_usershared);
+
+    /**
+     * Get folders of id_shared
+     */
+
+    public function checkFoldersShared($id_shared);
+
+
 }

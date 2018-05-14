@@ -207,5 +207,18 @@ $container['folders_shared_user_use_case'] = function($container){
     return $useCase;
 };
 
+/*
+ * Servei get info folders shared
+ *
+ */
+$container['check_folders_shared_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\CheckFoldersSharedUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+
+
 
 ?>

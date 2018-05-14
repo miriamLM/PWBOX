@@ -189,10 +189,25 @@ class HelloController
         $data = $request->getParsedBody();
         $servei = $this->container->get('post_user_use_case');
         $errors = $this->validacions($data, 0);
-        if ($errors[0] == "" && $errors[1] == "" && $errors[2] == "" && $errors[3] == "" && $errors[4] == "") {
+        if ($errors[0] == "" && $errors[1] == "" && $errors[2] == "" && $errors[3] == "" && $errors[4] == "" && $errors[5] == "") {
             /*
              * Guarda informació d'usuari a la BBDD
              */
+            echo "NO ERROR\n";
+            var_dump($_FILES["myfile"]);
+            if(empty($_FILES["myfile"])){
+                $data["myfile"] = "/assets/img/user.png";
+                echo"-------------------";
+                var_dump($data);
+            }else{
+                $name_img= $_FILES["myfile"]["name"];
+                $destination = "/assets/img/";
+                $data["myfile"] = "/assets/img/folder.png";
+                $test = move_uploaded_file($name_img,$destination);
+                var_dump($test);
+            }
+
+
             $servei($data);
             return $response->withStatus(302)->withHeader('Location','/log');
 
@@ -551,6 +566,8 @@ class HelloController
     }
 
 
+
+
     /**
      * ROLE READER
      */
@@ -573,7 +590,6 @@ class HelloController
      */
 
     public function shareFolder(Request $request, Response $response){
-
         if(isset($_POST['sharesubmit'])){
             $folder = $request->getParsedBody();
             $mail= $folder['mail'];
@@ -582,7 +598,6 @@ class HelloController
             $type = $folder['checkbox'];
             $servei = $this->container->get('check_email_share_user_use_case');
             $id_usershared = $servei($mail);
-
             /**
              * Si el email no existe -> el id sera 0 el que me devuelve
              * Saltara error
@@ -595,16 +610,11 @@ class HelloController
                 }else{
                     $type = 'reader';
                 }
-
                 $servei = $this->container->get('add_share_user_use_case');
                 $servei($id_owner,$id_usershared,$id_folder,$type);
-
                 return $response->withStatus(302)->withHeader('Location', '/lp');
-
             }
-
         }
-
     }
 
 
@@ -619,11 +629,15 @@ class HelloController
             var_dump($folders);
             for($i=0; $i<$num_folders;$i++){
                 $shared = $folders[$i]['id_folder'];
-                array_push($array, $shared);
-                var_dump($shared);
+                $servei = $this->container->get('check_folders_shared_user_use_case');
+                $folder_shared = $servei($shared);
+                array_push($array, $folder_shared);
+                var_dump($folder_shared);
             }
 
+
         }
+        //return  $response->withStatus(302)->withHeader('Location', '/lp');
     }
 
 
@@ -634,6 +648,7 @@ class HelloController
         $birthErr = "";
         $pswErr = "";
         $confirmpswErr = "";
+        $imageErr="";
         switch ($opcio) {
             /*REGISTRE*/
             case 0:
@@ -686,7 +701,21 @@ class HelloController
                         $confirmpswErr = "Incorrect Password";
                     }
                 }
-                return [$usernameErr, $emailErr, $birthErr, $pswErr, $confirmpswErr];
+                /*image*/
+
+                if($_FILES["myfile"]["error"]>0){
+                    echo"error";
+                    var_dump($_FILES["myfile"]["error"]);
+                    if($_FILES["myfile"]["error"]==2){
+                        $imageErr = "size error";
+                    }
+                }else{
+                    echo "NO ERROR IMG";
+                    //var_dump($_FILES["myfile"]);
+                }
+
+
+                return [$usernameErr, $emailErr, $birthErr, $pswErr, $confirmpswErr, $imageErr];
                 break;
             /*LOGIN*/
             case 1:

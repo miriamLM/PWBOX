@@ -2,7 +2,7 @@
 
 namespace SlimApp\model\UseCase;
 
-use phpDocumentor\Reflection\Types\Array_;
+//use phpDocumentor\Reflection\Types\Array_;
 use SlimApp\model\Interfaces\bbddRepository;
 use SlimApp\model\User;
 
@@ -31,7 +31,8 @@ class PostUserUseCase
             $rawData['birthdate'],
             $psswH,
             $now,
-            $now
+            $now,
+            $rawData['myfile']
         );
 
 
