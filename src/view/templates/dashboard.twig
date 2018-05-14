@@ -98,12 +98,12 @@
 
     {% for array in item %}
         <div class="items">
-
+            <form>
                 <input type="hidden"  value="{{ array.id }}" name="file_id"/>
                 <button type="submit" class="btn" name="file" value="{{ array.nom }}">
                     <img src="{{ array.img }}" width="82" height="86">
                 </button>
-
+            </form>
             <!--<img src= "{{ array.img }}" width="82" height="86">-->
             <input type="text"  name="nombre" readonly="readonly" value= "{{ array.nom }}"/>
             <form action="/deleteFile" method="post">
