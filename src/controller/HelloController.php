@@ -11,6 +11,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Dflydev\FigCookies\FigRequestCookies;
 use SlimApp\model\Folder;
+use SlimApp\model\FolderShared;
 use SlimApp\model\Item;
 
 
@@ -179,6 +180,10 @@ class HelloController
 
     }
 
+    public function logout(Request $request, Response $response){
+        $_SESSION['id'] = null;
+        return $response->withStatus(302)->withHeader('Location','/');
+    }
 
 
 
@@ -620,6 +625,7 @@ class HelloController
 
             $num_folders = sizeof($folders);
             $array = [];
+            $array2 = [];
             $img2 = "/assets/img/folder.png";
             $id= $_SESSION['id'];
             $id_parent = 1; // si esta en share, necesito la id_parent?
@@ -629,30 +635,39 @@ class HelloController
                 $servei = $this->container->get('check_folders_shared_user_use_case');
                 $folder_shared = $servei($shared);
                 var_dump($folder_shared);
-                echo "-------------";
-                $folder = new Folder($folder_shared[$i]['name'],$img2,$id,$folder_shared[$i]['id'],1);
-                var_dump($folder_shared[$i]['id']);
-                array_push($array,$folder);
+                echo "-------------\n";
+                $folder = new FolderShared($folder_shared[$i]['id'],$id,$img2,$folder_shared[$i]['name'],$folder_shared[$i]['id_parent']);
+                //var_dump($folder_shared[$i]['id']);
+                array_push($array2,$folder);
+                array_push($array,$folder_shared);
 
             }
 
 
 
-            echo"-----";
+            echo"-----\n\n";
 
-            //var_dump($folder_shared);
+            var_dump($array2[1]);
 
-            echo "-------";
+            echo "-------\n\n\n";
 
-            var_dump($array);
+            //var_dump($array);
 
             die();
-
-
-
-            return $this->container
+            $this->container
                 ->get('view')
                 ->render($response, 'dashboard.twig', ['folder' => $array]);
+
+            //return $response->withStatus(302)->withHeader('Location', '/lp');
+
+
+
+            /*return $this->container
+                ->get('view')
+                ->render($response, 'dashboard.twig', ['folder' => $array]);
+            */
+
+
 
 
         }
