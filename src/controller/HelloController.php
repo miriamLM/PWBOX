@@ -506,6 +506,120 @@ class HelloController
 
     }
 
+    public function uploadFileInsideShare(Request $request, Response $response){
+        /**
+         * Upload file
+         */
+        if(isset($_POST['uploadSubmit'])){
+            $file = $_FILES['addFile'];
+            $filesize = $file['size'];
+            /**
+             * El size del fitxer no pot superar el 2MB
+             */
+            if($filesize > 2000000){
+                //$message='Error, File Size Superior of 2MB';
+                echo "<script>alert(\"Error, File Size Superior of 2MB\");location.href='/lp'</script>";
+
+                /*return $response->withStatus(302)->withHeader('Location', '/lp')
+                                ->getBody()->write($message);*/
+
+            }else{
+
+                $allowed =  array('gif','png' ,'jpg','pdf','md','txt');
+                $filename = $_FILES['addFile']['name'];
+                $ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+
+                if(!in_array($ext,$allowed) ) {
+                    /**
+                     * Aqui deberia Salir un Error WARNING
+                     * i despues creo que se deberia ridireccionar al dashboard otra vez
+                     */
+
+                    echo "<script>alert(\"Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)\");location.href='/lp'</script>";
+
+                    /*$message='Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)';
+                    return $response->withStatus(302)->withHeader('Location', '/lp')
+                        ->getBody()->write($message);*/
+                }else {
+
+                    /**
+                     * Servei para mirar la capacidad que tiene el usuario
+                     */
+
+                    $servei_capacity = $this->container->get('capacity_user_use_case');
+                    $capacity = $servei_capacity();
+
+                    if($capacity>$filesize) {
+                        $restarcapacity= $capacity - $filesize;
+
+                        //POTS AFEGIR FITXER
+                        //HI HA QUE RESTAR LA CAPACITAT DEL USER
+                        /**
+                         * Servei per restar capacitat del arxiu a la capacitat del usuari
+                         */
+
+                        $servei_actualitzar_capacitity = $this->container->get('actualitzar_capacity_user_use_case');
+                        $servei_actualitzar_capacitity($restarcapacity);
+
+
+
+                        $id = $_SESSION['id'];
+
+                        $item = $request->getParsedBody();
+                        $id_folder = $item['uploadSubmit'];
+
+
+
+
+                        if ($id_folder == '') {
+                            $id_folder = 0;
+                        }
+
+                        $servei_share = $this->container->get('check_share_user_use_case');
+                        $info_share = $servei_share($id_folder);
+
+                        $id_owner=$info_share[0]['id_owner'];
+
+                        $servei = $this->container->get('add_inside_share_file_user_use_case');
+
+                        /**
+                         * Et retorna el número de fitxers
+                         * i tota la informació dels fitxers
+                         */
+                        $info = $servei($file, $id_owner, $id_folder,$filesize);
+
+
+                        // Pq mho guardava com a string i ho vui amb int
+                        $num_items = (int)$info[0];
+                        // var_dump($num_items);
+                        $img = "/assets/img/file.png";
+
+
+                        $array = [];
+                        for ($i = 0; $i < $num_items; $i++) {
+                            $item = new Item($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], $id_folder);
+                            array_push($array, $item);
+                        }
+
+
+                        $this->container
+                            ->get('view')
+                            ->render($response, 'dashboard.twig', ['item' => $array]);
+
+                        return $response->withStatus(302)->withHeader('Location', '/lp');
+
+                    }else{
+                        echo "<script>alert(\"Error, Not Enough Capactity to Upload File\");location.href='/lp'</script>";
+
+                    }
+
+                }
+            }
+
+        }
+
+    }
 
     /**
      *FOLDER
@@ -547,6 +661,65 @@ class HelloController
                 ->render($response, 'dashboard.twig', ['folder' => $array]);
 
                 return $response->withStatus(302)->withHeader('Location', '/lp');
+
+        }
+    }
+
+    public function addFolderInsideShare(Request $request, Response $response){
+        if(isset($_POST['addSubmit'])) {
+
+            $id = $_SESSION['id'];
+
+            $foldern = $request->getParsedBody();
+            $folder_name = $foldern['nameFolder'];
+            $id_parent = $foldern['addSubmit'];
+
+
+
+
+            //hacemos un servicio para saber el id_user de la carpeta
+            $servei_id_user = $this->container->get('check_user_folder_use_case');
+            $info_user = $servei_id_user($foldern['folder_id']);
+            $id_user = $info_user[0]['id_user'];
+
+           // $id_folder = $foldern['folder_id'];
+
+            $servei_share = $this->container->get('folders_shared_user_use_case');
+            $info_share = $servei_share($id);
+            var_dump($info_share);
+            echo "------------";
+            var_dump($info_share[0]['id_owner']);
+
+            $id_owner = $info_share[0]['id_owner'];
+
+
+            if($id_parent == ''){
+                $id_parent=0;
+            }
+
+            /*$servei = $this->container->get('add_folder_user_use_case');
+            $info = $servei((int)$id,$folder_name,$id_parent);
+            */
+            $servei = $this->container->get('add_inside_share_folder_user_use_case');
+            $info = $servei($id_owner,$folder_name,$id_parent);
+            $num_folders = (int)$info[0];
+
+            $img = "/assets/img/folder.png";
+
+
+            $array = [];
+            for ($i = 0; $i < $num_folders -1; $i++) {
+
+                $folder = new Folder($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], $id_parent);
+                array_push($array, $folder);
+
+            }
+
+            $this->container
+                ->get('view')
+                ->render($response, 'dashboard.twig', ['folder' => $array]);
+
+            return $response->withStatus(302)->withHeader('Location', '/lp');
 
         }
     }
@@ -638,14 +811,22 @@ class HelloController
 
         $id_folder = $fold['folder_id'];
 
+        $servei_share = $this->container->get('folders_shared_user_use_case');
+        $info_share = $servei_share($id);
+        var_dump($info_share);
+        echo "------------";
+        var_dump($info_share[0]['id_owner']);
 
+        $id_owner = $info_share[0]['id_owner'];
 
-        $servei = $this->container->get('check_file_user_use_case');
+       // $servei = $this->container->get('check_file_user_use_case');
+        $servei = $this->container->get('check_share_file_user_use_case');
 
         /**
          *Tota la informació dels fitxers
          */
-        $info= $servei($id_folder,$id);
+        //$info= $servei($id_folder,$id);
+        $info= $servei($id_folder,$id_owner);
 
 
         $img = "/assets/img/file.png";
@@ -661,12 +842,14 @@ class HelloController
         /*
          * folders
          */
-        $servei2 = $this->container->get('check_folder_user_use_case');
+        //$servei2 = $this->container->get('check_folder_user_use_case');
+        $servei2 = $this->container->get('check_share_folder_user_use_case');
 
         /**
          *Tota la informació de la carpeta
          */
-        $info2 = $servei2($id_folder,$id);
+       // $info2 = $servei2($id_folder,$id);
+        $info2 = $servei2($id_folder,$id_owner);
 
         $img2 = "/assets/img/folder.png";
 
