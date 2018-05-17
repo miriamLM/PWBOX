@@ -208,17 +208,20 @@ class HelloController
              */
             echo "NO ERROR\n";
             var_dump($_FILES["myfile"]);
-            if(empty($_FILES["myfile"])){
+            if(!isset($_FILES)){
                 $data["myfile"] = "/assets/img/user.png";
                 echo"-------------------";
                 var_dump($data);
             }else{
                 $name_img= $_FILES["myfile"]["name"];
-                $destination = "/assets/img/";
+                //$destination ="assets/img/".$data["name"];
+                $destination ="assets/img/".$_FILES["myfile"]["name"];
                 $data["myfile"] = "/assets/img/folder.png";
-                $test = move_uploaded_file($name_img,$destination);
+                $test = move_uploaded_file($_FILES['myfile']['tmp_name'],$destination);
                 var_dump($test);
+                var_dump($destination);
             }
+
 
            // $servei($data);
             $servei($data,$capacity);
@@ -265,7 +268,8 @@ class HelloController
         $errors = $this->validacions($data, 0);
         if ($errors[0] == "" && $errors[1] == "" && $errors[2] == "" && $errors[3] == "" && $errors[4] == "") {
             $servei($data);
-            return $response->withStatus(302)->withHeader('Location', '/prof');
+            //QUE DEVUELVA AL JS
+           // return $response->withStatus(302)->withHeader('Location', '/prof');
         }
     }
 
@@ -697,12 +701,35 @@ class HelloController
          * Delete file
          */
         if(isset($_POST['deleteFolder'])){
+            $id=$_SESSION['id'];
             $folder = $request->getParsedBody();
             $folder_id = $folder['folder_id'];
+            /*
+             * mirem els fitxer que hi han, si es que hi han
+             */
+            $servei = $this->container->get('check_file_user_use_case');
+            $files = $servei($folder_id,$id);
+            /*
+             * mirem els folder que hi ha dins, si es que hi han
+             */
+            $servei2 = $this->container->get('check_folder_user_use_case');
+            $folders = $servei2($folder_id,$id);
+            if(count($files)>0 || count($folders)>0){
+                echo"YAAAAAS";
+                $this->deleteAllFolder($files, $folders);
+            }
+            $servei3 = $this->container->get('delete_folder_user_use_case');
+            $servei3($folder_id);
+            /*
+             * mira si hi esta compartit i ho elimina
+             */
+            $servei4= $this->container->get('delete_share_user_use_case');
+            $servei4($folder_id);
 
-            var_dump($folder);
-            $servei = $this->container->get('delete_folder_user_use_case');
-            $servei($folder_id);
+            //var_dump($folder);
+
+            //$servei = $this->container->get('delete_folder_user_use_case');
+            //$servei($folder_id);
 
 
 
@@ -712,7 +739,67 @@ class HelloController
         }
 
     }
+    /*
+     * funcio recursiva per eliminar tot el contingut d'una folder
+     */
+    public function deleteAllFolder($info_files, $info_folders){
+        $id=$_SESSION['id'];
+        /*
+         * for de files
+         */
+        for ($i=0; $i<count($info_files); $i++){
+            /**
+             * Servei per agafar el size del fitxer
+             *per despres fer un altre servei que
+             * sumi aquest size a la capacitat que
+             * te el usuari per emmagatzemar info
+             */
 
+            $servei_get_file_size = $this->container->get('file_size_user_use_case');
+            $filesize=$servei_get_file_size($info_files[$i]['id']);
+
+            $servei_capacity = $this->container->get('capacity_user_use_case');
+            $capacity = $servei_capacity();
+
+            $sum_capacity = $capacity + $filesize;
+            $servei_actualitzar_capacitity = $this->container->get('actualitzar_capacity_user_use_case');
+            $servei_actualitzar_capacitity($sum_capacity);
+                /*
+                 * delete the files
+                 */
+                $servei = $this->container->get('delete_file_user_use_case');
+                $servei($info_files[$i]['id']);
+        }
+        /*
+         * for de folders
+         */
+        for ($i=0;$i<count($info_folders);$i++){
+            /*
+             * mirem els fitxer que hi han, si es que hi han
+             */
+            $folder_id=$info_folders[$i]['id'];
+            $servei = $this->container->get('check_file_user_use_case');
+            $files = $servei($folder_id,$id);
+            /*
+             * mirem els folder que hi ha dins, si es que hi han
+             */
+            $servei2 = $this->container->get('check_folder_user_use_case');
+            $folders = $servei2($folder_id,$id);
+            if(count($files)>0 || count($folders)>0){
+                echo"YAAAAAS";
+                $this->deleteAllFolder($files, $folders);
+            }
+            $servei3 = $this->container->get('delete_folder_user_use_case');
+            $servei3($folder_id);
+            /*
+             * mira si esta compartit i ho elimina de share
+             */
+            $servei4= $this->container->get('delete_share_user_use_case');
+            $servei4($folder_id);
+
+        }
+
+    }
 
 
 

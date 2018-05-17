@@ -138,4 +138,9 @@ interface bbddRepository
 
     public function filesize($file_id);
 
+    /**
+     * deletede share si se elimina una carpeta compartida
+     */
+    public function deleteshare($id_folder);
+
 }

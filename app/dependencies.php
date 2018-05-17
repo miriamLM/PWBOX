@@ -262,5 +262,16 @@ $container['file_size_user_use_case'] = function($container){
     );
     return $useCase;
 };
+ /*
+  * Servei per eliminar de la taula share si una carpeta compartida s'elimina
+  */
+
+$container['delete_share_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\DeleteShareUserUsecase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
 
 ?>

@@ -29,7 +29,7 @@ class DoctrineBbddRepository implements bbddRepository
      */
     public function save(User $user,$capacity)
     {
-        $sql = "INSERT INTO user(username, email,birthdate, password, created_at, updated_at,capacity) VALUES(:username, :email,:birthdate ,:password, :created_at, :updated_at, :capacity)";
+        $sql = "INSERT INTO user(username, email,birthdate, password, created_at, updated_at,image,capacity) VALUES(:username, :email,:birthdate ,:password, :created_at, :updated_at,:image,:capacity)";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue("username", $user->getUsername(), 'string');
         $stmt->bindValue("email", $user->getEmail(), 'string');
@@ -37,6 +37,7 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt->bindValue("password", $user->getPassword(), 'string');
         $stmt->bindValue("created_at", $user->getCreatedAt()->format(self::DATE_FORMAT));
         $stmt->bindValue("updated_at", $user->getCreatedAt()->format(self::DATE_FORMAT));
+        $stmt->bindValue("image", $user->getImage(), 'string');
         $stmt->bindValue("capacity", $capacity);
 
         //$stmt->bindValue("image", $user->getImage(), 'string');
@@ -289,6 +290,16 @@ class DoctrineBbddRepository implements bbddRepository
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue("id", $_SESSION['id']);
         $stmt->bindValue("capacity", $file_size);
+        $stmt->execute();
+    }
+
+    /**
+     * @param $id_folder
+     */
+    public function deleteshare($id_folder){
+        $sql = "DELETE FROM share WHERE id_folder = ? ";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(1, $id_folder);
         $stmt->execute();
     }
 
