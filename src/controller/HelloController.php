@@ -514,19 +514,24 @@ class HelloController
              * Si este file esta dentro de una carpeta
              */
             if($folder_id != null){
-                $servei_info = $this->container->get('check_share_user_use_case');
+                /*$servei_info = $this->container->get('check_share_user_use_case');
                 $info = $servei_info($folder_id);
                 $id_owner = $info[0]['id_owner'];
-                if($id_owner == $_SESSION['id']){
-                    $tipo = 2;
-                }else{
-                    $tipo=1;
+                */
+                $servei_infofolder=  $this->container->get('check_this_folder_user_use_case');
+                $info_folder = $servei_infofolder($folder_id);
+                $id_owner = $info_folder[0]['id_user'];
+
+
+                if($id_owner != $_SESSION['id']){
+                    $tipo = 1;
+                    $servei = $this->container->get('check_user_use_case');
+                    $user = $servei($_SESSION['id']);
+                    $notificacion = " El usuario ".$user[0]['username']." te ha renombrado el file ".$file_name."";
+                    $servei_save_notificacion = $this->container->get('save_notificacion');
+                    $servei_save_notificacion($id_owner,$_SESSION['id'],$folder_id,$notificacion,$tipo);
                 }
-                $servei = $this->container->get('check_user_use_case');
-                $user = $servei($_SESSION['id']);
-                $notificacion = " El usuario ".$user[0]['username']." te ha renombrado el file ".$file_name."";
-                $servei_save_notificacion = $this->container->get('save_notificacion');
-                $servei_save_notificacion($id_owner,$_SESSION['id'],$folder_id,$notificacion,$tipo);
+
 
 
             }
@@ -545,6 +550,7 @@ class HelloController
             $file = $request->getParsedBody();
 
             $file_id = $file['file_id'];
+
             $id = $_SESSION['id'];
 
             /*
@@ -553,7 +559,7 @@ class HelloController
             $servei_file = $this->container->get('check_file_id_user_use_case');
             $info_file = $servei_file($file_id);
             $name_file = $info_file[0]['name'];
-
+            $folder_id= $info_file[0]['id_folder'];
 
             /**
              * Servei per agafar el size del fitxer
@@ -589,27 +595,33 @@ class HelloController
              * Servei per buscar el folder de la file
              */
 
-            $servei_folder = $this->container->get('folder_file_user_use_case');
-            $folder_id = $servei_folder($file_id);
+            /*$servei_folder = $this->container->get('folder_file_user_use_case');
+            $folder_info = $servei_folder($file_id);
+            $folder_id = $folder_info[0]['id_folder'];
+            */
 
             /**
              * Si este file esta dentro de una carpeta
              */
             if($folder_id != null){
-                $servei_info = $this->container->get('check_share_user_use_case');
+                /*$servei_info = $this->container->get('check_share_user_use_case');
                 $info = $servei_info($folder_id);
-                $id_owner = $info[0]['id_owner'];
-                if($id_owner == $_SESSION['id']){
-                    $tipo = 2;
-                }else{
-                    $tipo=1;
+                $id_owner = $info[0]['id_owner'];*/
+                $servei_infofolder=  $this->container->get('check_this_folder_user_use_case');
+                $info_folder = $servei_infofolder($folder_id);
+                $id_owner = $info_folder[0]['id_user'];
+
+
+                if($id_owner != $_SESSION['id']){
+                    $tipo = 1;
+                    $servei = $this->container->get('check_user_use_case');
+                    $user = $servei($_SESSION['id']);
+                    $notificacion = " El usuario ".$user[0]['username']." te ha eliminado el file ".$file['file_name']."";
+                    $servei_save_notificacion = $this->container->get('save_notificacion');
+                    $servei_save_notificacion($id_owner,$_SESSION['id'],$folder_id,$notificacion,$tipo);
+
                 }
 
-                $servei = $this->container->get('check_user_use_case');
-                $user = $servei($_SESSION['id']);
-                $notificacion = " El usuario ".$user[0]['username']." te ha eliminado el file ".$file['file_name']."";
-                $servei_save_notificacion = $this->container->get('save_notificacion');
-                $servei_save_notificacion($id_owner,$_SESSION['id'],$folder_id,$notificacion,$tipo);
 
             }
 
@@ -623,7 +635,7 @@ class HelloController
     }
 
     public function uploadFileProfile(Request $request, Response $response){
-
+        $num=0;
         $id = $_SESSION['id'];
         /*
          * Check user para la imagen
@@ -635,121 +647,150 @@ class HelloController
          * Upload file
          */
         if(isset($_POST['uploadSubmit'])){
+
             $file = $_FILES['addFile'];
             /*
              * mirar el numero de files i hacer un bucle
              */
+            $num_files = count($_FILES);
+
+
             $filesize = $file['size'];
-            /**
-             * El size del fitxer no pot superar el 2MB
-             */
-            if($filesize > 2000000){
-                //$message='Error, File Size Superior of 2MB';
-                echo "<script>alert(\"Error, File Size Superior of 2MB\");location.href='/lp'</script>";
-
-                /*return $response->withStatus(302)->withHeader('Location', '/lp')
-                                ->getBody()->write($message);*/
-
-            }else{
-
-                $allowed =  array('gif','png' ,'jpg','pdf','md','txt');
-                $filename = $_FILES['addFile']['name'];
-                $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            for($i=0;$i<$num_files;$i++){
+                if($num==0){
+                    $file = $_FILES['addFile'];
+                    var_dump($_FILES['addFile']);
 
 
-                if(!in_array($ext,$allowed) ) {
-                    /**
-                     * Aqui deberia Salir un Error WARNING
-                     * i despues creo que se deberia ridireccionar al dashboard otra vez
-                     */
 
-                    echo "<script>alert(\"Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)\");location.href='/lp'</script>";
 
-                    /*$message='Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)';
-                    return $response->withStatus(302)->withHeader('Location', '/lp')
-                        ->getBody()->write($message);*/
-                }else {
+                }else{
+                    $file = $_FILES['addFile'.$num];
+                }
+                $filesize= $file['size'];
+                /**
+                 * El size del fitxer no pot superar el 2MB
+                 */
+                echo"HASTA AQUI SI";
 
-                    /**
-                     * Servei para mirar la capacidad que tiene el usuario
-                     */
+                if($filesize > 2000000){
 
-                    $servei_capacity = $this->container->get('capacity_user_use_case');
-                    $capacity = $servei_capacity();
+                    //$message='Error, File Size Superior of 2MB';
+                    echo "<script>alert(\"Error, File Size Superior of 2MB\");location.href='/lp'</script>";
 
-                    if($capacity>$filesize) {
-                        $restarcapacity= $capacity - $filesize;
+                    /*return $response->withStatus(302)->withHeader('Location', '/lp')
+                                    ->getBody()->write($message);*/
 
-                        //POTS AFEGIR FITXER
-                        //HI HA QUE RESTAR LA CAPACITAT DEL USER
+                }else{
+
+                    $allowed =  array('gif','png' ,'jpg','pdf','md','txt');
+                    $filename = $file['name'];
+                    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+
+                    if(!in_array($ext,$allowed) ) {
                         /**
-                         * Servei per restar capacitat del arxiu a la capacitat del usuari
+                         * Aqui deberia Salir un Error WARNING
+                         * i despues creo que se deberia ridireccionar al dashboard otra vez
                          */
 
-                        $servei_actualitzar_capacitity = $this->container->get('actualitzar_capacity_user_use_case');
-                        $servei_actualitzar_capacitity($restarcapacity);
 
+                        echo "<script>alert(\"Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)\");location.href='/lp'</script>";
 
-
-                        $id = $_SESSION['id'];
-
-                        $item = $request->getParsedBody();
-                        $id_folder = $item['uploadSubmit'];
-
-                        if ($id_folder == '') {
-                            $id_folder = 0;
-                        }
-
-                        $servei = $this->container->get('add_file_user_use_case');
+                        /*$message='Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)';
+                        return $response->withStatus(302)->withHeader('Location', '/lp')
+                            ->getBody()->write($message);*/
+                    }else {
 
                         /**
-                         * Et retorna el número de fitxers
-                         * i tota la informació dels fitxers
+                         * Servei para mirar la capacidad que tiene el usuario
                          */
-                        $info = $servei($file, $id, $id_folder,$filesize);
-                        /*
-                         * guardar el fitxer a la carpeta item (ens el guardem al el id de la session)
-                         */
-                        $name_img= $_FILES["addFile"]["name"];
-                        $destination ="assets/item/".$id.".".$_FILES["addFile"]["name"];
-                        $test = move_uploaded_file($_FILES['addFile']['tmp_name'],$destination);
+
+                        $servei_capacity = $this->container->get('capacity_user_use_case');
+                        $capacity = $servei_capacity();
+
+                        if($capacity>$filesize) {
+                            $restarcapacity= $capacity - $filesize;
+
+                            //POTS AFEGIR FITXER
+                            //HI HA QUE RESTAR LA CAPACITAT DEL USER
+                            /**
+                             * Servei per restar capacitat del arxiu a la capacitat del usuari
+                             */
+
+                            $servei_actualitzar_capacitity = $this->container->get('actualitzar_capacity_user_use_case');
+                            $servei_actualitzar_capacitity($restarcapacity);
+
+
+
+                            $id = $_SESSION['id'];
+
+                            $item = $request->getParsedBody();
+                            $id_folder = $item['uploadSubmit'];
+
+                            if ($id_folder == '') {
+                                $id_folder = 0;
+                            }
+
+                            $servei = $this->container->get('add_file_user_use_case');
+
+                            /**
+                             * Et retorna el número de fitxers
+                             * i tota la informació dels fitxers
+                             */
+                            $info = $servei($file, $id, $id_folder,$filesize);
+
+                            /*
+                             * guardar el fitxer a la carpeta item (ens el guardem al el id de la session)
+                             */
+                            $name_img= $_FILES["addFile"]["name"];
+                            $destination ="assets/item/".$id.".".$file["name"];
+                            $test = move_uploaded_file($file['tmp_name'],$destination);
 
 
 
 
-                        // Pq mho guardava com a string i ho vui amb int
-                        $num_items = (int)$info[0];
-                        // var_dump($num_items);
-                        $img = "/assets/img/file.png";
 
+                        }else{
+                            echo "<script>alert(\"Error, Not Enough Capactity to Upload File\");location.href='/lp'</script>";
 
-                        $array = [];
-                        for ($i = 0; $i < $num_items; $i++) {
-                            $item = new Item($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], $id_folder);
-                            array_push($array, $item);
                         }
-
-
-                        $this->container
-                            ->get('view')
-                            ->render($response, 'dashboard.twig', ['item' => $array,'image' => $image]);
-
-                        return $response->withStatus(302)->withHeader('Location', '/lp');
-
-                    }else{
-                        echo "<script>alert(\"Error, Not Enough Capactity to Upload File\");location.href='/lp'</script>";
 
                     }
-
                 }
+                $num++;
             }
 
         }
+        /*
+         * CHECK ALL FILES!!!!!!!!!!!!
+         */
+            // Pq mho guardava com a string i ho vui amb int
+            $num_items = (int)$info[0];
+            // var_dump($num_items);
+            $img = "/assets/img/file.png";
+
+
+            $array = [];
+            for ($i = 0; $i < $num_items; $i++) {
+                $item = new Item($info[1][$i]['name'], $img, $id, $info[1][$i]['id'], $id_folder);
+                array_push($array, $item);
+            }
+
+
+            $this->container
+                ->get('view')
+                ->render($response, 'dashboard.twig', ['item' => $array,'image' => $image]);
+
+            return $response->withStatus(302)->withHeader('Location', '/lp');
+
+
 
     }
 
     public function uploadFileInsideShare(Request $request, Response $response){
         $id = $_SESSION['id'];
+        $num=0;
         /*
          * Check user para la imagen
          */
@@ -760,122 +801,137 @@ class HelloController
         /**
          * Upload file
          */
+        $num_files = count($_FILES);
         if(isset($_POST['uploadSubmit'])){
             $file = $_FILES['addFile'];
             $filesize = $file['size'];
-            /**
-             * El size del fitxer no pot superar el 2MB
-             */
-            if($filesize > 2000000){
-                //$message='Error, File Size Superior of 2MB';
-                echo "<script>alert(\"Error, File Size Superior of 2MB\");location.href='/lp'</script>";
-
-                /*return $response->withStatus(302)->withHeader('Location', '/lp')
-                                ->getBody()->write($message);*/
-
-            }else{
-
-                $allowed =  array('gif','png' ,'jpg','pdf','md','txt');
-                $filename = $_FILES['addFile']['name'];
-                $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            for($i=0;$i<$num_files;$i++) {
+                if ($num == 0) {
+                    $file = $_FILES['addFile'];
 
 
-                if(!in_array($ext,$allowed) ) {
-                    /**
-                     * Aqui deberia Salir un Error WARNING
-                     * i despues creo que se deberia ridireccionar al dashboard otra vez
-                     */
+                } else {
+                    $file = $_FILES['addFile'.$num];
+                }
+                $filesize = $file['size'];
+                /**
+                 * El size del fitxer no pot superar el 2MB
+                 */
+                if ($filesize > 2000000) {
+                    //$message='Error, File Size Superior of 2MB';
+                    echo "<script>alert(\"Error, File Size Superior of 2MB\");location.href='/lp'</script>";
 
-                    echo "<script>alert(\"Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)\");location.href='/lp'</script>";
+                    /*return $response->withStatus(302)->withHeader('Location', '/lp')
+                                    ->getBody()->write($message);*/
 
-                    /*$message='Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)';
-                    return $response->withStatus(302)->withHeader('Location', '/lp')
-                        ->getBody()->write($message);*/
-                }else {
+                } else {
 
-                    /**
-                     * Servei para mirar la capacidad que tiene el usuario
-                     */
+                    $allowed = array('gif', 'png', 'jpg', 'pdf', 'md', 'txt');
+                    $filename = $file['name'];
+                    $ext = pathinfo($filename, PATHINFO_EXTENSION);
 
-                    $servei_capacity = $this->container->get('capacity_user_use_case');
-                    $capacity = $servei_capacity();
 
-                    if($capacity>$filesize) {
-                        $restarcapacity= $capacity - $filesize;
-
-                        //POTS AFEGIR FITXER
-                        //HI HA QUE RESTAR LA CAPACITAT DEL USER
+                    if (!in_array($ext, $allowed)) {
                         /**
-                         * Servei per restar capacitat del arxiu a la capacitat del usuari
+                         * Aqui deberia Salir un Error WARNING
+                         * i despues creo que se deberia ridireccionar al dashboard otra vez
                          */
 
-                        $servei_actualitzar_capacitity = $this->container->get('actualitzar_capacity_user_use_case');
-                        $servei_actualitzar_capacitity($restarcapacity);
+                        echo "<script>alert(\"Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)\");location.href='/lp'</script>";
 
+                        /*$message='Error Type File Incorrect:Types Availables: 1.PDF (.pdf) 2.JPG, PNG and GIF  3.MARKDOWN (.md) 4.TEXT (.txt)';
+                        return $response->withStatus(302)->withHeader('Location', '/lp')
+                            ->getBody()->write($message);*/
+                    } else {
 
-
-                        $id = $_SESSION['id'];
-
-                        $item = $request->getParsedBody();
-                        $id_folder = $item['uploadSubmit'];
-
-
-                        /*
-                         * Si me printas un fichero fuera de una carpeta
-                         * estara en la carpeta principal
+                        /**
+                         * Servei para mirar la capacidad que tiene el usuario
                          */
 
-                        if ($id_folder == '') {
-                            $id_folder = 0;
+                        $servei_capacity = $this->container->get('capacity_user_use_case');
+                        $capacity = $servei_capacity();
+
+                        if ($capacity > $filesize) {
+                            $restarcapacity = $capacity - $filesize;
+
+                            //POTS AFEGIR FITXER
+                            //HI HA QUE RESTAR LA CAPACITAT DEL USER
+                            /**
+                             * Servei per restar capacitat del arxiu a la capacitat del usuari
+                             */
+
+                            $servei_actualitzar_capacitity = $this->container->get('actualitzar_capacity_user_use_case');
+                            $servei_actualitzar_capacitity($restarcapacity);
+
+
+                            $id = $_SESSION['id'];
+
+                            $item = $request->getParsedBody();
+                            $id_folder = $item['uploadSubmit'];
+
+
+                            /*
+                             * Si me printas un fichero fuera de una carpeta
+                             * estara en la carpeta principal
+                             */
+
+                            if ($id_folder == '') {
+                                $id_folder = 0;
+                            }
+
+                            /**
+                             * En el share se guarda el id_parent ,de la folder
+                             * AQUIII MAL ESTA ALGO!!
+                             */
+
+
+                            //$servei_share = $this->container->get('check_share_user_use_case');
+
+                            /*NO ME SIRVE
+                             * $servei_share = $this->container->get('check_share_user_use_case');
+                            $info_share = $servei_share($id_folder);
+
+
+
+                            $id_owner=$info_share[0]['id_owner'];
+                             /**
+                             * voy a buscar en checkFolders el id_user, para que sea mi id_owner
+                             * siendo que el id_folder (de mi fichero) es el mismo que el id de la folder que busco
+                             */
+                            $servei_infofolder = $this->container->get('check_this_folder_user_use_case');
+                            $info_folder = $servei_infofolder($id_folder);
+                            $id_owner = $info_folder[0]['id_user'];
+
+
+                            $servei = $this->container->get('add_inside_share_file_user_use_case');
+
+                            /**
+                             * Et retorna el número de fitxers
+                             * i tota la informació dels fitxers
+                             */
+                            $info = $servei($file, $id_owner, $id_folder, $filesize);
+
+
+                            /*
+                             * guardar el fitxer a la carpeta item (ens el guardem al el id de la session)
+                             */
+                            $name_img = $file["name"];
+                            $destination = "assets/item/" . $id_owner . "." . $file["name"];
+                            $test = move_uploaded_file($file['tmp_name'], $destination);
+
+
+                        } else {
+                            echo "<script>alert(\"Error, Not Enough Capactity to Upload File\");location.href='/lp'</script>";
+
                         }
 
-                        /**
-                         * En el share se guarda el id_parent ,de la folder
-                         * AQUIII MAL ESTA ALGO!!
-                         */
+                    }
+                }
+                $num++;
+            }
 
-
-
-
-
-                        //$servei_share = $this->container->get('check_share_user_use_case');
-
-                        /*NO ME SIRVE
-                         * $servei_share = $this->container->get('check_share_user_use_case');
-                        $info_share = $servei_share($id_folder);
-
-
-
-                        $id_owner=$info_share[0]['id_owner'];
-                        */
-                        /**
-                         * voy a buscar en checkFolders el id_user, para que sea mi id_owner
-                         * siendo que el id_folder (de mi fichero) es el mismo que el id de la folder que busco
-                         */
-                        $servei_infofolder=  $this->container->get('check_this_folder_user_use_case');
-                        $info_folder = $servei_infofolder($id_folder);
-                        $id_owner = $info_folder[0]['id_user'];
-
-
-
-
-                        $servei = $this->container->get('add_inside_share_file_user_use_case');
-
-                        /**
-                         * Et retorna el número de fitxers
-                         * i tota la informació dels fitxers
-                         */
-                        $info = $servei($file, $id_owner, $id_folder,$filesize);
-
-
-                        /*
-                         * guardar el fitxer a la carpeta item (ens el guardem al el id de la session)
-                         */
-                        $name_img= $_FILES["addFile"]["name"];
-                        $destination ="assets/item/".$id_owner.".".$_FILES["addFile"]["name"];
-                        $test = move_uploaded_file($_FILES['addFile']['tmp_name'],$destination);
-
-                        // Pq mho guardava com a string i ho vui amb int
+        }
+         // Pq mho guardava com a string i ho vui amb int
                         $num_items = (int)$info[0];
                         // var_dump($num_items);
                         $img = "/assets/img/file.png";
@@ -887,17 +943,16 @@ class HelloController
                             array_push($array, $item);
                         }
 
-                        if($id_owner == $_SESSION['id']){
-                            $tipo = 2;
-                        }else{
-                            $tipo=1;
+                        if($id_owner != $_SESSION['id']){
+                            $tipo = 1;
+                            $servei = $this->container->get('check_user_use_case');
+                            $user = $servei($_SESSION['id']);
+                            $notificacion = " El usuario ".$user[0]['username']." te ha upload el file ".$filename."";
+                            $servei_save_notificacion = $this->container->get('save_notificacion');
+                            $servei_save_notificacion($id_owner,$_SESSION['id'],$id_folder,$notificacion,$tipo);
                         }
 
-                        $servei = $this->container->get('check_user_use_case');
-                        $user = $servei($_SESSION['id']);
-                        $notificacion = " El usuario ".$user[0]['username']." te ha upload el file ".$filename."";
-                        $servei_save_notificacion = $this->container->get('save_notificacion');
-                        $servei_save_notificacion($id_owner,$_SESSION['id'],$id_folder,$notificacion,$tipo);
+
 
 
 
@@ -907,15 +962,6 @@ class HelloController
 
                         return $response->withStatus(302)->withHeader('Location', '/lp');
 
-                    }else{
-                        echo "<script>alert(\"Error, Not Enough Capactity to Upload File\");location.href='/lp'</script>";
-
-                    }
-
-                }
-            }
-
-        }
 
     }
 
@@ -1035,18 +1081,17 @@ class HelloController
             $servei_info = $this->container->get('check_share_user_use_case');
             $infor = $servei_info($id_parent);
             $id_owner = $infor[0]['id_owner'];
-            if($id_owner == $_SESSION['id']){
-                $tipo = 2;
-            }else{
-                $tipo=1;
+            if($id_owner != $_SESSION['id']){
+                $tipo = 1;
+                $servei = $this->container->get('check_user_use_case');
+                $user = $servei($_SESSION['id']);
+                $notificacion = " El usuario ".$user[0]['username']." te ha upload la carpeta ".$folder_name."";
+                $servei_save_notificacion = $this->container->get('save_notificacion');
+                $servei_save_notificacion($id_owner,$_SESSION['id'],$id_parent,$notificacion,$tipo);
             }
 
 
-            $servei = $this->container->get('check_user_use_case');
-            $user = $servei($_SESSION['id']);
-            $notificacion = " El usuario ".$user[0]['username']." te ha upload la carpeta ".$folder_name."";
-            $servei_save_notificacion = $this->container->get('save_notificacion');
-            $servei_save_notificacion($id_owner,$_SESSION['id'],$id_parent,$notificacion,$tipo);
+
 
 
 
@@ -1262,20 +1307,28 @@ class HelloController
             // significa que tengo que enviar notificacion del id_usershared al id_owner
                 //abfjasbfsbfjkbs
 
-            $servei_info = $this->container->get('check_share_user_use_case');
+            /*$servei_info = $this->container->get('check_share_user_use_case');
             $info = $servei_info($folder['folder_id']);
             $id_owner = $info[0]['id_owner'];
-            if($id_owner == $_SESSION['id']){
-                $tipo = 2;
-            }else{
-                $tipo=1;
+            */
+            $folder_id = $folder['folder_id'];
+            $servei_infofolder=  $this->container->get('check_this_folder_user_use_case');
+            $info_folder = $servei_infofolder($folder_id);
+            $id_owner = $info_folder[0]['id_user'];
+
+            if($id_owner != $_SESSION['id']){
+                $tipo = 1;
+                $servei = $this->container->get('check_user_use_case');
+                $user = $servei($_SESSION['id']);
+
+
+
+                $notificacion = " El usuario ".$user[0]['username']." te ha renombrado la carpeta ".$folder['folder_name']."";
+                $servei_save_notificacion = $this->container->get('save_notificacion');
+                $servei_save_notificacion($id_owner,$_SESSION['id'],$folder['folder_id'],$notificacion,$tipo);
             }
 
-            $servei = $this->container->get('check_user_use_case');
-            $user = $servei($_SESSION['id']);
-            $notificacion = " El usuario ".$user[0]['username']." te ha renombrado la carpeta ".$folder['folder_name']."";
-            $servei_save_notificacion = $this->container->get('save_notificacion');
-            $servei_save_notificacion($id_owner,$_SESSION['id'],$folder['folder_id'],$notificacion,$tipo);
+
 
 
 
@@ -1316,38 +1369,41 @@ class HelloController
              * del qual podrem treure el seu id_owner
              */
 
-
+            /*
             $servei_id_parent = $this->container->get('check_user_folder_use_case');
             $info_user = $servei_id_parent($folder_id);
 
             $id_parent = $info_user[0]['id_parent'];
 
+            */
+            $servei_infofolder=  $this->container->get('check_this_folder_user_use_case');
+            $info_folder = $servei_infofolder($folder_id);
+            $id_owner = $info_folder[0]['id_user'];
 
 
 
 
-            $servei_info = $this->container->get('check_share_user_use_case');
+            /*$servei_info = $this->container->get('check_share_user_use_case');
             $info = $servei_info($id_parent);
 
             $id_owner = $info[0]['id_owner'];
-
+            */
 
 
             $servei3 = $this->container->get('delete_folder_user_use_case');
             $servei3($folder_id);
 
-            if($id_owner == $_SESSION['id']){
-                $tipo = 2;
-            }else{
-                $tipo=1;
+            if($id_owner != $_SESSION['id']){
+                $tipo = 1;
+                $servei5 = $this->container->get('check_user_use_case');
+                $user = $servei5($_SESSION['id']);
+                $notificacion = " El usuario ".$user[0]['username']." te ha eliminado la carpeta ".$folder['folder_name']."";
+                $servei_save_notificacion = $this->container->get('save_notificacion');
+                $servei_save_notificacion($id_owner,$_SESSION['id'],$folder_id,$notificacion,$tipo);
+
             }
 
 
-            $servei5 = $this->container->get('check_user_use_case');
-            $user = $servei5($_SESSION['id']);
-            $notificacion = " El usuario ".$user[0]['username']." te ha eliminado la carpeta ".$folder['folder_name']."";
-            $servei_save_notificacion = $this->container->get('save_notificacion');
-            $servei_save_notificacion($id_owner,$_SESSION['id'],$folder_id,$notificacion,$tipo);
 
 
 
@@ -1512,16 +1568,15 @@ class HelloController
                     */
                     if($id_ownerP == $_SESSION['id']){
                         $tipo = 2;
-                    }else{
-                        $tipo=1;
+                        $servei = $this->container->get('check_user_use_case');
+                        $user = $servei($id_ownerP);
+
+
+                        $notificacion = " El usuario ".$user[0]['username']." te ha hecho Administrador de ".$folder['folder_name']."";
+                        $servei_save_notificacion = $this->container->get('save_notificacion');
+                        $servei_save_notificacion($id_ownerP,$id_usershared,$id_folder,$notificacion,$tipo);
                     }
-                    $servei = $this->container->get('check_user_use_case');
-                    $user = $servei($id_ownerP);
 
-
-                    $notificacion = " El usuario ".$user[0]['username']." te ha hecho Administrador de ".$folder['folder_name']."";
-                    $servei_save_notificacion = $this->container->get('save_notificacion');
-                    $servei_save_notificacion($id_ownerP,$id_usershared,$id_folder,$notificacion,$tipo);
                 }
 
 
@@ -1608,7 +1663,7 @@ class HelloController
             /**
              * Para el usuario que esta compartiendo
              */
-            if($notifications[$i]['tipo'] == 2 && $notifications[$i]['id_owner'] != $_SESSION['id']){
+            if($notifications[$i]['tipo'] == 2 && $notifications[$i]['id_owner'] != $_SESSION['id'] && $notifications[$i]['id_usershared'] == $_SESSION['id']){
                 array_push($array_owner_notifications,$notifications[$i]);
             }
             //$notifications[$i]['id_owner']
@@ -1616,7 +1671,7 @@ class HelloController
              * Para el usuario compartido
              */
 
-            if($notifications[$i]['tipo'] == 1 && $notifications[$i]['id_usershared'] == $_SESSION['id']){
+            if($notifications[$i]['tipo'] == 1 && $notifications[$i]['id_owner'] == $_SESSION['id'] && $notifications[$i]['id_usershared'] != $_SESSION['id']){
                  array_push($array_user_shared_notifications,$notifications[$i]);
             }
         }

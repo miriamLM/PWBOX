@@ -1,6 +1,7 @@
 window.onload = function(){
 
 };
+var i=0;
 
 function ajaxx(){
         $.ajax({
@@ -46,3 +47,16 @@ function myFunctionFo(){
     document.getElementById("myFo").submit();
 }
 
+//<input type="file" id="addFile" name="addFile" size="2Mb" />
+
+function uploadMore() {
+    i++;
+    var form = document.getElementById("upload");
+    var file = document.createElement("INPUT");
+    file.setAttribute("type", "file");
+    file.setAttribute("name", "addFile"+i);
+    file.setAttribute("size", "2Mb");
+    file.setAttribute("id", "2Mb");
+    form.appendChild(file);
+
+}

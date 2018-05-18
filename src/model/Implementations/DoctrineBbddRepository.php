@@ -429,7 +429,9 @@ class DoctrineBbddRepository implements bbddRepository
     public function folderfile($file_id){
         $query = "SELECT * FROM item WHERE id = ?";
         $info= $this->connection->fetchAll($query,array($file_id));
-        return $info[0]['id_folder'];
+        var_dump($info);
+        die();
+        return $info;
     }
 
 

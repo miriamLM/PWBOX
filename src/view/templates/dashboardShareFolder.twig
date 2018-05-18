@@ -43,8 +43,9 @@
                             <h4 class="modal-title">Upload File</h4>
                         </div>
                         <div class="modal-body">
-                            <form action="/uploadFileInsideShare" method="post" enctype="multipart/form-data">
+                            <form action="/uploadFileInsideShare" method="post" id="upload" enctype="multipart/form-data">
                                 <input type="file" id="addFile" name="addFile" size="2Mb" />
+                                <button type="button" name="loadmore" id="loadmore" onclick="uploadMore()">Load more</button>
                                 <button type="submit" name="uploadSubmit" value="{{ idFolder }}">Upload</button>
                             </form>
                         </div>

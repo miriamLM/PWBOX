@@ -31,9 +31,10 @@
                         <h4 class="modal-title">Upload File</h4>
                     </div>
                     <div class="modal-body">
-                        <form action="/uploadFile" method="post" enctype="multipart/form-data">
+                        <form action="/uploadFile" method="post" id="upload" enctype="multipart/form-data">
                             <input type="file" id="addFile" name="addFile" size="2Mb" />
-                            <button type="submit" name="uploadSubmit" value="{{ idFolder }}">Upload</button>
+                            <button type="button" name="loadmore" id="loadmore" onclick="uploadMore()">Load more</button>
+                            <button type="submit" class="btn" name="uploadSubmit" value="{{ idFolder }}">Upload</button>
                         </form>
                     </div>
                 </div>

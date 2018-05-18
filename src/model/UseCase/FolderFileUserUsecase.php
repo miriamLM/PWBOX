@@ -25,9 +25,9 @@ class FolderFileUserUsecase
     public function __invoke($file_id) {
 
 
-        $folder_id = $this->repository->folderfile($file_id);
+        $info = $this->repository->folderfile($file_id);
 
-        return $folder_id;
+        return $info;
 
     }
 
