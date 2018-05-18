@@ -182,6 +182,8 @@ class HelloController
         if($email == $data['email'] ) {
             // Iguales, el email ha de ser unico
             $ok = 0;
+        }else{
+            $ok=1;
         }
         if ($errors[0] == "" && $errors[1] == "" && $errors[2] == "" && $errors[3] == "" && $errors[4] == "" && $errors[5] == "" && $ok == 1) {
 

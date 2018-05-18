@@ -7,7 +7,7 @@
         <h1 class="h1-dashboard"> PWBOX DASHBOARD </h1>
         <a href="/inicio" class="redirectpaginici">PWBOX</a>
         <a  href="/prof" class="redirectprof">
-            <img src="assets/img/{{ image }}" />
+            <img src="assets/img/{{ image }}" class="image-profile"/>
         </a>
 
         <a  href="/notifications" class="redirectnotifications">Notificacions</a>
@@ -15,7 +15,7 @@
 
     </header>
     <form action="/logout" class="form" method="POST">
-        <button type="submit" class="btn"  name="logout" value="logout">logout</button>
+        <button type="submit" class="btn" id="logout" name="logout" value="logout">logout</button>
     </form>
 
 
@@ -78,6 +78,7 @@
 
 
     {% for array in folder %}
+        <div class="todo">
         <form action="/lp/{{ array.id }}" method="post" id="myForm">
                 <input type="hidden"  value="{{ array.id }}" name="folder_id"/>
                 <button type="button" class="btn" name="folder" value="{{ array.nom }}" ondblclick="myFunction();">
@@ -140,6 +141,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
 
     {% endfor %}

@@ -57,7 +57,7 @@ function validation() {
         alert('[ERROR] password tiene que tener un numero');
         return false;
     }
-    if(confirm !== pass){
+   if(confirm.match(pass)){
         alert('[ERROR] la password tiene que ser la misma');
 
         return false;
@@ -72,7 +72,6 @@ function validationLogin() {
     var email = document.getElementById("email").value;
     var username = document.getElementById("username").value;
     var pass = document.getElementById("psw").value;
-    var confirm = document.getElementById("confirmpsw");
     var max = 12;
     var min= 6;
 
@@ -97,12 +96,7 @@ function validationLogin() {
         alert('[ERROR] password tiene que tener un numero');
         return false;
     }
-    if(confirm !== pass){
-        alert('[ERROR] la password tiene que ser la misma');
 
-        return false;
-
-    }
 
 
 }

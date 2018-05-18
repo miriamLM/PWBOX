@@ -66,7 +66,7 @@ header{
 */
 .a{
     font-size: 200%;
-    margin-right: 40px;
+    margin-right: 100px;
     margin-top: 40px;
 
     color: whitesmoke;
@@ -271,4 +271,33 @@ label{
 .add-upload{
     text-align: center;
     padding-bottom: 50px;
+}
+
+.image-profile{
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right: -100px;
+}
+.redirectpaginici{
+    color: whitesmoke;
+    font-size: 120%;
+    text-align: center;
+    margin-left: 50px;
+}
+.redirectnotifications{
+    color: whitesmoke;
+    font-size: 120%;
+    margin-left: 500px;
+}
+footer{
+    margin-top: 35%;
+    text-align: center;
+    color: darkslateblue;
+}
+
+#logout{
+    position: absolute;
+    margin-top: 0px;
+    margin-left: 50%;
 }
