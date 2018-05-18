@@ -26,7 +26,7 @@
         </div>
         <p>{{ errors[1] }}</p>
 
-        <input type="submit" name="submit" value="Login" class="submit">
+        <input type="submit" name="submit" onclick="validationLogin()" value="Login" class="submit">
         {% if ok == 0 %}
             <label>WARNING : NO EXISTE EL USUARIO</label>
         {% endif %}

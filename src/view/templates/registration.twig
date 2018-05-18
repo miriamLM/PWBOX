@@ -3,7 +3,7 @@
 {%  block content  %}
 
     <section class="sec-center">
-        <form action="/registration" method="POST" class="form" enctype="multipart/form-data">
+        <form action="/registration" method="POST" id="registration" name="registration" class="form" enctype="multipart/form-data">
             <div class="container">
                 <h1 class="h1-reg-log">Registration</h1>
                 <a  href="/log" class="redirect">Login</a>
@@ -13,7 +13,7 @@
                         <label>Username</label>
                     </div>
                     <div class="col-lg-6" id="col-username">
-                        <input type="text" placeholder="Enter Username" name="username" >
+                        <input type="text" id="username" placeholder="Enter Username" name="username" >
                     </div>
                 </div>
                 <p class="error-r">{{ errors[0] }}</p>
@@ -23,7 +23,7 @@
                         <label>Email</label>
                     </div>
                     <div class="col-lg-6" id="col-email">
-                        <input type="text" placeholder="Enter Email" name="email" >
+                        <input type="text" id="email" placeholder="Enter Email" name="email" >
                     </div>
                 </div>
                 <p class="error-r">{{ errors[1] }}</p>
@@ -33,7 +33,7 @@
                         <label>BirthDate</label>
                     </div>
                     <div class="col-lg-6" id="col-birthdate">
-                        <input type="date" placeholder="Enter Birthdate" name="birthdate" >
+                        <input type="date" id="birthdate" placeholder="Enter Birthdate" name="birthdate" >
                     </div>
                 </div>
                 <p class="error-r">{{ errors[2] }}</p>
@@ -44,7 +44,7 @@
                         <label>Password</label>
                     </div>
                     <div class="col-lg-6" id="col-password">
-                        <input type="password" placeholder="Enter Password" name="psw" >
+                        <input type="password" id="psw" placeholder="Enter Password" name="psw" >
                     </div>
                 </div>
                 <p class="error-r">{{ errors[3] }}</p>
@@ -55,7 +55,7 @@
                         <label>Confirm Password</label>
                     </div>
                     <div class="col-lg-6" id="col-confirm">
-                        <input type="password" placeholder="Confirm Password" name="confirmpsw" >
+                        <input type="password" id="confirmpsw" placeholder="Confirm Password" name="confirmpsw" >
                     </div>
                 </div>
                 <p class="error-r">{{ errors[4] }}</p>
@@ -68,7 +68,7 @@
             </div>
             <!-- <p class="error-r">{{ errors[5] }}</p> -->
             <!--<button id="submit" type="button" class="btn btn-primary" name="submit">Sign up</button> -->
-            <input type="submit" name="submit" value="Sign Up" class="submit">
+            <input type="submit" name="submit" value="Sign Up" class="submit" onclick="validation()">
 
 
 
