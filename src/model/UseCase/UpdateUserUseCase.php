@@ -28,7 +28,7 @@ class UpdateUserUseCase
 
         $psswH = md5($rawData['psw']);
 
-        $this->repository->update($rawData['email'],$psswH);
+        $this->repository->update($rawData['email'],$psswH,$rawData['myfile']);
 
 
     }

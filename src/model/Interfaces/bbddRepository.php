@@ -39,7 +39,7 @@ interface bbddRepository
      *   Actualiza información usuario
      */
 
-    public function update($email,$psw);
+    public function update($email,$psw,$img);
 
 
     /**
@@ -165,6 +165,7 @@ interface bbddRepository
     /**
      * ver los files que te han añadido el usershared
      */
+
     public function addfileInsideShare($file,$id,$id_folder,$filesize);
 
     /**
@@ -172,12 +173,16 @@ interface bbddRepository
      */
     public function checkshare($id_folder);
 
+    public function checkfilesId($file_id);
+
+
+
 
     /**
      * save notificacion
      */
 
-    public function savenotificacion($id_owner,$id_usershared,$id_folder,$notificacion);
+    public function savenotificacion($id_owner,$id_usershared,$id_folder,$notificacion,$tipo);
 
     /**
      * get folder of file
@@ -188,4 +193,6 @@ interface bbddRepository
     public function verification($id);
 
     public function getnotificationsuser();
+
+    public function checkThisFolder($folder_id);
 }

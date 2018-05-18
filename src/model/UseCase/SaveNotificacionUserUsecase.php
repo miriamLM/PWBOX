@@ -22,10 +22,10 @@ class SaveNotificacionUserUsecase
     }
 
 
-    public function __invoke($id_owner,$id_usershared,$id_folder,$notificacion) {
+    public function __invoke($id_owner,$id_usershared,$id_folder,$notificacion,$tipo) {
 
 
-        $this->repository->savenotificacion($id_owner,$id_usershared,$id_folder,$notificacion);
+        $this->repository->savenotificacion($id_owner,$id_usershared,$id_folder,$notificacion,$tipo);
 
     }
 

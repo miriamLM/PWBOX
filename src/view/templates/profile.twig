@@ -3,7 +3,7 @@
 {%  block content  %}
 
     <!-- action="/prof"-->
-    <form  class="form" method="POST">
+    <form  class="form" action="/prof" method="POST" enctype="multipart/form-data">
         <div class="container">
             <h1 class="h1-reg-log">Update Profile</h1>
             <input type="submit" name="delete" value="delete" class="delete">
@@ -57,20 +57,12 @@
             </div>
             <p class="error-r">{{ errors[4] }}</p>
 
-
-
-
             <div class="row">
                 <div class="col-lg-2">
                     <label>Profile Image</label>
                 </div>
-                <div class="col-lg-6" id="col-file">
-                    <div class="upload-btn-wrapper">
-                        <button class="btn">Upload a file</button>
-                        <input type="file" id="image" name="myfile" />
-                    </div>
-                </div>
-            </div>
+                <input type="file" id="myfile" name="myfile" multiple accept=".jpg, .jpeg, .png" size="500Kb"/> </div>
+        </div>
 
 
             <input type="submit" name="submit" value="Submit" class="submit" onclick="profile()">

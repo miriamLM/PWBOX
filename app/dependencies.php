@@ -343,6 +343,19 @@ $container['save_notificacion'] = function($container){
 };
 
 /*
+ * Servei per agafar la info de un file sabent la id
+ */
+$container['check_file_id_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\CheckFileIdUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
+
+
+
+/*
  * Servei per buscar el folder del file que renombrem
  */
 
@@ -380,6 +393,15 @@ $container['get_notifications_user'] = function($container){
     );
     return $useCase;
 };
+
+
+$container['check_this_folder_user_use_case'] = function($container){
+    $useCase = new \SlimApp\model\UseCase\CheckThisFolderUserUseCase(
+        $container->get('bbdd_repository')
+    );
+    return $useCase;
+};
+
 
 
 ?>

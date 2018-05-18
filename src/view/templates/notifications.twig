@@ -22,7 +22,7 @@
 
 
      {% for array in notificationsUserShared %}
-        {% if array.id_usershared == id %}
+        {% if array.id_usershared != id %}
         <br>
         <label> {{ array.notificacion }} </label>
         </br>

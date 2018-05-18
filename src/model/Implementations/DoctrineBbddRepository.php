@@ -99,11 +99,12 @@ class DoctrineBbddRepository implements bbddRepository
 
     }
 
-    public function update($email,$psw){
-        $sql = "UPDATE user  AS u SET u.email = :email, u.password = :password WHERE u.id = :id";
+    public function update($email,$psw,$img){
+        $sql = "UPDATE user  AS u SET u.email = :email, u.password = :password, u.image= :image WHERE u.id = :id";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue("email", $email, 'string');
         $stmt->bindValue("password", $psw, 'string');
+        $stmt->bindValue("image", $img, 'string');
         $stmt->bindValue("id", $_SESSION['id'], 'integer');
         $stmt->execute();
     }
@@ -403,19 +404,21 @@ class DoctrineBbddRepository implements bbddRepository
         }
     }
 
+
     public function checkshare($id_folder){
         $query = "SELECT * FROM share WHERE id_folder = ? and id_usershared = ?";
         $info= $this->connection->fetchAll($query,array($id_folder,$_SESSION['id']));
         return $info;
     }
 
-    public function savenotificacion($id_owner,$id_usershared,$id_folder,$notificacion){
-        $sql = "INSERT INTO notificacion(id_owner, id_usershared,id_folder, notificacion) VALUES(:idowner, :idusershared,:idfolder ,:notificacion)";
+    public function savenotificacion($id_owner,$id_usershared,$id_folder,$notificacion,$tipo){
+        $sql = "INSERT INTO notificacion(id_owner, id_usershared,id_folder, notificacion, tipo) VALUES(:idowner, :idusershared,:idfolder ,:notificacion, :tipo)";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue("idowner",$id_owner);
         $stmt->bindValue("idusershared", $id_usershared);
         $stmt->bindValue("idfolder",$id_folder);
         $stmt->bindValue("notificacion", $notificacion, 'string');
+        $stmt->bindValue("tipo",$tipo);
         $stmt->execute();
     }
 
@@ -436,4 +439,19 @@ class DoctrineBbddRepository implements bbddRepository
 
 
 
+    public function checkfilesId($file_id){
+        $query = "SELECT * FROM item WHERE id =?";
+
+        $info = $this->connection->fetchAll($query,array($file_id));
+
+        return $info;
+    }
+
+
+
+    public function checkThisFolder($folder_id){
+        $query = "SELECT * FROM folder WHERE id = ?";
+        $info = $this->connection->fetchAll($query,array($folder_id));
+        return $info;
+    }
 }
